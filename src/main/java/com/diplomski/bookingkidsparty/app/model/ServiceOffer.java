@@ -31,7 +31,7 @@ public class ServiceOffer {
         name = "UUID",
         strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
 	private UUID id;
 	
 	@Column(name = "start_date")

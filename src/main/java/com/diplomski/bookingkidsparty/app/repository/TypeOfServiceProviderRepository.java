@@ -1,5 +1,6 @@
 package com.diplomski.bookingkidsparty.app.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,8 @@ import com.diplomski.bookingkidsparty.app.model.TypeOfServiceProvider;
 
 @Repository
 public interface TypeOfServiceProviderRepository extends JpaRepository<TypeOfServiceProvider, UUID>{
+
+	Optional<TypeOfServiceProvider> findOneById(UUID id);
 
 	
 }

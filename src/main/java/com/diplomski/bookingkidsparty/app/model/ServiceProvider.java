@@ -18,10 +18,13 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 @Table(name = "service_provider")
 @Entity
-@Data
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class ServiceProvider {
 	
 	@Id
@@ -30,7 +33,7 @@ public class ServiceProvider {
         name = "UUID",
         strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
 	private UUID id;
 	
 	private String name;
@@ -76,4 +79,5 @@ public class ServiceProvider {
 	@JoinTable(name = "cooperation", joinColumns = @JoinColumn(name = "cooperation_service_id"), inverseJoinColumns = @JoinColumn(name="play_room_id"))
 	private Set<ServiceProvider> cooperationService;
 
+	
 }

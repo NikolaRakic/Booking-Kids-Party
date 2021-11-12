@@ -1,16 +1,22 @@
 package com.diplomski.bookingkidsparty.app.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
 
-import com.diplomski.bookingkidsparty.app.model.TypeOfServiceProvider;
+import com.diplomski.bookingkidsparty.app.dto.request.TypeOfServiceProviderDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.response.TypeOfServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.service.TypeOfServiceProviderService;
 
 @Controller("")
@@ -19,22 +25,43 @@ public class TypeOfServiceProviderController {
 	@Autowired
 	TypeOfServiceProviderService typeOfServiceProviderService;
 	
-	@PostMapping("/typeOfServiceProvider")
-	public ResponseEntity<String> addTypeOfService(@RequestBody TypeOfServiceProvider request){
+	@PostMapping("/typesOfServiceProvider")
+	public ResponseEntity<UUID> addTypeOfService(@RequestBody TypeOfServiceProviderDTOreq typeOfServiceProviderDTO) throws Exception{
+			UUID id = typeOfServiceProviderService.add(typeOfServiceProviderDTO);
+			return new ResponseEntity<UUID>(id, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/typesOfServiceProvider")
+	public ResponseEntity<List<TypeOfServiceProviderDTOres>> findAll(){
+			List<TypeOfServiceProviderDTOres> typesDTO = typeOfServiceProviderService.findAll();
+			return new ResponseEntity<List<TypeOfServiceProviderDTOres>>(typesDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("/typesOfServiceProvider/{id}")
+	public ResponseEntity<TypeOfServiceProviderDTOres> findOne(@PathVariable("id") UUID id) throws Exception{
+			TypeOfServiceProviderDTOres typeOfServiceProviderDTO = typeOfServiceProviderService.findOne(id);
+			return new ResponseEntity<TypeOfServiceProviderDTOres>(typeOfServiceProviderDTO, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/typesOfServiceProvider/{id}")
+	public ResponseEntity<?> delete(@PathVariable("id") UUID id) throws Exception{
+		if(typeOfServiceProviderService.delete(id)) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@PutMapping("/typesOfServiceProvider/{id}")
+	public ResponseEntity<?> edit(@PathVariable("id") UUID id, @RequestBody TypeOfServiceProviderDTOreq typeOfServiceProviderDTO){
 		try {
-			return new ResponseEntity<String>(typeOfServiceProviderService.add(request), HttpStatus.CREATED);
+			typeOfServiceProviderService.edit(id, typeOfServiceProviderDTO);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} catch (NotFound e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
 		}catch (Exception e) {
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);	
 		}
 	}
 	
-	@GetMapping("/typeOfServiceProvider")
-	public ResponseEntity<?> getAll(){
-		try {
-			return new ResponseEntity<List<TypeOfServiceProvider>>(typeOfServiceProviderService.getAll(), HttpStatus.OK);
-		}catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
-	}
-
+	
 }

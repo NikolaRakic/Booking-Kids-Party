@@ -8,23 +8,22 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Table(name = "type_of_service_provider")
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter @NoArgsConstructor
 public class TypeOfServiceProvider {
 	
 	@Id
@@ -33,7 +32,7 @@ public class TypeOfServiceProvider {
         name = "UUID",
         strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
 	private UUID id;
 	
 	private String name;
@@ -41,5 +40,16 @@ public class TypeOfServiceProvider {
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "typeOfServiceProvider")
 	@JsonIgnore
 	private Set<ServiceProvider> serviceProviders;
+
+	public TypeOfServiceProvider(UUID id, String name) throws Exception {
+		super();
+		if(name == "" || name == null) {
+			throw new Exception("The name of the service provider type is incorrect!");
+		}
+		this.id = id;
+		this.name = name;
+	}
+	
+	
 }
 

@@ -19,23 +19,12 @@ import lombok.Setter;
 
 
 //@Getter @Setter @NoArgsConstructor @AllArgsConstructor
-//public class Cooperation {
-//	
-//	@Id
-//    @GeneratedValue(generator = "UUID")
-//    @GenericGenerator(
-//        name = "UUID",
-//        strategy = "org.hibernate.id.UUIDGenerator"
-//    )
-//    @Column(name = "id", updatable = false, nullable = false)
-//	private UUID id;
-//	
-//	@ManyToMany(mappedBy = "cooperations")
-//	@Column(name = "play_room_id")
-//	private Set<ServiceProvider> playRoom;
-//	
-//	@ManyToMany(mappedBy = "cooperations")
-//	@Column(name = "cooperation_service_id")
-//	private Set<ServiceProvider> cooperationService;
-//
-//}
+public class Cooperation {
+	
+	private UUID id;
+	
+	private Set<ServiceProvider> playRoom;
+	
+	private Set<ServiceProvider> cooperationService;
+
+}
