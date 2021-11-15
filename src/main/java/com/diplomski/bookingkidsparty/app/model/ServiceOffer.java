@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -54,8 +53,6 @@ public class ServiceOffer {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "service_provider_id")
 	private ServiceProvider serviceProvider;
-	
-	
 	
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "serviceOffer")
 	private Set<Reservation> reservations;

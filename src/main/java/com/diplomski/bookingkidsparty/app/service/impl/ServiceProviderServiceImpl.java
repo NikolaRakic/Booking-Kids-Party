@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.TypeOfServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.mapper.ServiceProviderMapper;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
-import com.diplomski.bookingkidsparty.app.model.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.repository.TypeOfServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.ServiceProviderService;
@@ -37,8 +35,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	@Override
 	public List<ServiceProviderDTOres> findAll() {
 		List<ServiceProvider> services = serviceProviderRepository.findAll();
-		List<ServiceProviderDTOres> servicesDTO = serviceMapper.convertListToListDTO(services);
-		return servicesDTO;
+		return serviceMapper.convertListToListDTO(services);
 	}
 
 	@Override
@@ -64,7 +61,6 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
 	@Override
 	public void edit(UUID id, ServiceProviderDTOres serviceProviderDTO) {
-		try {
 			Optional<ServiceProvider> serviceProviderOptional = serviceProviderRepository.findById(id);
 			if(serviceProviderOptional.isPresent()) {
 				ServiceProvider serviceProviderForEdit = serviceProviderOptional.get();
@@ -79,12 +75,9 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 				serviceProviderForEdit.setTelephoneNumber(serviceProviderDTO.getTelephoneNumber());
 				serviceProviderForEdit.setTypeOfServiceProvider(typeOfServiceProviderRepository.findById(
 						serviceProviderDTO.getTypeOfServiceProviderId()).get());
+				
 				serviceProviderRepository.saveAndFlush(serviceProviderForEdit);
 			}
-		} catch (Exception e) {
-			e.getMessage();
-		}
-		
 	}
 
 }

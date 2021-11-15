@@ -68,8 +68,8 @@ public class ServiceProvider {
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "serviceProvider")
 	private Set<ServiceOffer> serviceOffers;
 	
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "serviceProvider")
-	private Set<Evaluation> evalutions;
+//	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "serviceProvider")
+//	private Set<Evaluation> evalutions;
 	
 	@ManyToMany
 	@JoinTable(name = "cooperation", joinColumns = @JoinColumn(name = "play_room_id"), inverseJoinColumns = @JoinColumn(name="cooperation_service_id"))

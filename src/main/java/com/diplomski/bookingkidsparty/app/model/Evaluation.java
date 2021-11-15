@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -39,11 +37,7 @@ public class Evaluation {
 	
 	private String comment;
 	
-	//private Reservation reservation;
-	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "service_provider_id")
-	private ServiceProvider serviceProvider;
+	private int rate;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	private Reservation reservation;

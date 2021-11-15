@@ -18,7 +18,6 @@ import org.springframework.web.client.HttpClientErrorException.NotFound;
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.service.ServiceProviderService;
-import com.diplomski.bookingkidsparty.app.service.TypeOfServiceProviderService;
 
 @Controller("")
 public class ServiceProviderController {
