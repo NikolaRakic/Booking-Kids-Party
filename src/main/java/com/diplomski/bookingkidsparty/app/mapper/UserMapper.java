@@ -3,6 +3,7 @@ package com.diplomski.bookingkidsparty.app.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +18,10 @@ public class UserMapper {
 
 	@Autowired
 	SecurityConfiguration configuration;
+	@Autowired
+	ModelMapper modelMapper;
 	
-	public User convertDTOreqToEntity(UserDTOreq userDTOreq) {
+	public User DTOreqToEntity(UserDTOreq userDTOreq) {
 		User user = new User();
 		user.setEmail(userDTOreq.getEmail());
 		user.setName(userDTOreq.getName());
@@ -32,25 +35,14 @@ public class UserMapper {
 		return user;
 	}
 	
-	public UserDTOres convertEntityToDTOres(User user) {
-		UserDTOres userDTOres = new UserDTOres();
-		userDTOres.setBlocked(user.isBlocked());
-		userDTOres.setEmail(user.getEmail());
-		userDTOres.setId(user.getId());
-		userDTOres.setName(user.getName());
-		userDTOres.setPassword(user.getPassword());
-		userDTOres.setSurname(user.getSurname());
-		userDTOres.setTelephoneNumber(user.getTelephoneNumber());
-		userDTOres.setUsername(user.getUsername());
-		userDTOres.setUserRole(user.getUserRole());
-		
-		return userDTOres;
+	public UserDTOres EntityToDTOres(User user) {
+		return modelMapper.map(user, UserDTOres.class);
 	}
 	
-	public List<UserDTOres> convertListToListDTO(List<User> users){
+	public List<UserDTOres> ListToListDTO(List<User> users){
 		List<UserDTOres> usersDTO = new ArrayList<UserDTOres>();
 		for (User user : users) {
-			usersDTO.add(convertEntityToDTOres(user));
+			usersDTO.add(EntityToDTOres(user));
 		}
 		return usersDTO;
 	}

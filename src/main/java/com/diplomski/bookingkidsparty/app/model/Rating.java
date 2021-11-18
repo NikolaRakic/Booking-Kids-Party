@@ -22,7 +22,7 @@ import lombok.Setter;
 @Table(name = "Evaluation")
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Evaluation {
+public class Rating {
 
 	@Id
     @GeneratedValue(generator = "UUID")

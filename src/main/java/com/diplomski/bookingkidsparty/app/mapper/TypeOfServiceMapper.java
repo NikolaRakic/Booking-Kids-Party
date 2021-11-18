@@ -3,6 +3,8 @@ package com.diplomski.bookingkidsparty.app.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.diplomski.bookingkidsparty.app.dto.request.TypeOfServiceProviderDTOreq;
@@ -13,26 +15,22 @@ import com.diplomski.bookingkidsparty.app.model.TypeOfServiceProvider;
 @Component
 public class TypeOfServiceMapper {
 	
-		public TypeOfServiceProvider convertTypeOfServiceDTOtoTypeOfService(TypeOfServiceProviderDTOreq typeOfServiceDTO) throws Exception {
-			TypeOfServiceProvider typeOfServiceProvider = new TypeOfServiceProvider();
-			typeOfServiceProvider.setName(typeOfServiceDTO.getName());
-				
-			return typeOfServiceProvider;
-		}
+	@Autowired
+	ModelMapper modelMapper;
+	
+	public TypeOfServiceProvider dtoToEntity(TypeOfServiceProviderDTOreq typeOfServiceDTO) throws Exception {
+		return modelMapper.map(typeOfServiceDTO, TypeOfServiceProvider.class);
+	}
 
-		public TypeOfServiceProviderDTOres convertTypeOfServiceToTypeOfServiceDTO(TypeOfServiceProvider typeOfServiceProvider) {
-			TypeOfServiceProviderDTOres typeOfServiceProviderDTO = new TypeOfServiceProviderDTOres(
-					typeOfServiceProvider.getId(),
-					typeOfServiceProvider.getName()
-					);
-			return typeOfServiceProviderDTO;
-		}
+	public TypeOfServiceProviderDTOres entityToDTO(TypeOfServiceProvider typeOfServiceProvider) {
+		return modelMapper.map(typeOfServiceProvider, TypeOfServiceProviderDTOres.class);
+	}
 		
-		public List<TypeOfServiceProviderDTOres> convertListToListDTO(List<TypeOfServiceProvider> types){
-			List<TypeOfServiceProviderDTOres> typesDTO = new ArrayList<TypeOfServiceProviderDTOres>();
-			for (TypeOfServiceProvider typeOfServiceProvider : types) {
-				typesDTO.add(convertTypeOfServiceToTypeOfServiceDTO(typeOfServiceProvider));
-			}
-			return typesDTO;
+	public List<TypeOfServiceProviderDTOres> ListToListDTO(List<TypeOfServiceProvider> types){
+		List<TypeOfServiceProviderDTOres> typesDTO = new ArrayList<TypeOfServiceProviderDTOres>();
+		for (TypeOfServiceProvider typeOfServiceProvider : types) {
+			typesDTO.add(entityToDTO(typeOfServiceProvider));
 		}
+		return typesDTO;
+	}
 }

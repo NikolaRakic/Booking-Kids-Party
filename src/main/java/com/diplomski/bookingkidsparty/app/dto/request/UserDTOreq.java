@@ -11,4 +11,5 @@ public class UserDTOreq {
 	private String password;
 	private String email;
 	private String telephoneNumber;
+	private boolean blocked;
 }

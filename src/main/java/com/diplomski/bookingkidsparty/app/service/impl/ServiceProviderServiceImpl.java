@@ -27,7 +27,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	
 	@Override
 	public UUID add(ServiceProviderDTOreq serviceProviderDTO) throws Exception {
-		ServiceProvider serviceProvider = serviceMapper.convertServiceDTOreqToService(serviceProviderDTO);
+		ServiceProvider serviceProvider = serviceMapper.dtoReqToEntity(serviceProviderDTO);
 		serviceProviderRepository.saveAndFlush(serviceProvider);
 		return serviceProvider.getId();
 	}
@@ -35,7 +35,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	@Override
 	public List<ServiceProviderDTOres> findAll() {
 		List<ServiceProvider> services = serviceProviderRepository.findAll();
-		return serviceMapper.convertListToListDTO(services);
+		return serviceMapper.ListToListDTO(services);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 			throw new Exception("The type with this id does not exist!");
 		}
 		ServiceProviderDTOres serviceProviderDTO = serviceMapper
-				.convertServiceToServiceDTOres(serviceProviderOptional.get());
+				.entityToDTOres(serviceProviderOptional.get());
 		return serviceProviderDTO;
 	}
 
@@ -70,11 +70,10 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 				serviceProviderForEdit.setCity(serviceProviderDTO.getCity());
 				serviceProviderForEdit.setEmail(serviceProviderDTO.getEmail());
 				serviceProviderForEdit.setMaxNumberOfKids(serviceProviderDTO.getMaxNumberOfKids());
-				serviceProviderForEdit.setPassword(serviceProviderDTO.getPassword());
 				serviceProviderForEdit.setPib(serviceProviderDTO.getPib());
 				serviceProviderForEdit.setTelephoneNumber(serviceProviderDTO.getTelephoneNumber());
-				serviceProviderForEdit.setTypeOfServiceProvider(typeOfServiceProviderRepository.findById(
-						serviceProviderDTO.getTypeOfServiceProviderId()).get());
+				serviceProviderForEdit.setTypeOfServiceProvider(typeOfServiceProviderRepository
+						.findByName(serviceProviderDTO.getTypeOfServiceProviderName()).get());
 				
 				serviceProviderRepository.saveAndFlush(serviceProviderForEdit);
 			}

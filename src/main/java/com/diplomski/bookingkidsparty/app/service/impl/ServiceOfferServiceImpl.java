@@ -28,12 +28,12 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 	@Override
 	public List<ServiceOfferDTOres> findAll() {
 		List<ServiceOffer> serviceOffers = serviceOfferRepository.findAll();
-		return serviceOfferMapper.convertListToListDTO(serviceOffers);
+		return serviceOfferMapper.ListToListDTO(serviceOffers);
 	}
 
 	@Override
 	public UUID add(ServiceOfferDTOreq serviceOfferDTOreq) {
-		ServiceOffer serviceOffer = serviceOfferMapper.convertServiceOfferDTOtoServiceOffer(serviceOfferDTOreq);
+		ServiceOffer serviceOffer = serviceOfferMapper.dtoToEntity(serviceOfferDTOreq);
 		serviceOfferRepository.saveAndFlush(serviceOffer);
 		return serviceOffer.getId();
 	}
@@ -45,7 +45,7 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 			throw new Exception("Offer with this id does not exist!");
 		}
 		ServiceOfferDTOres serviceOfferDTOres = serviceOfferMapper
-				.convertServiceOfferToServiceOfferDTO(serviceOfferOptional.get());
+				.entityToDTO(serviceOfferOptional.get());
 		return serviceOfferDTOres;
 	}
 

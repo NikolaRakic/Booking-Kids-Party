@@ -66,6 +66,6 @@ public class Reservation {
 	private ServiceOffer serviceOffer;
 	
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "reservation")
-	private Evaluation evaluation;
+	private Rating evaluation;
 
 }

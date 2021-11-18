@@ -1,6 +1,9 @@
 package com.diplomski.bookingkidsparty.app.dto.response;
 
+import java.util.Set;
 import java.util.UUID;
+
+import com.diplomski.bookingkidsparty.app.model.Photo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,11 +17,11 @@ public class ServiceProviderDTOres {
 	private String name;
 	private String accountNumber;
 	private String email;
-	private String password;
 	private String pib;
 	private int maxNumberOfKids;
-	private UUID typeOfServiceProviderId;
+	private String typeOfServiceProviderName;
 	private String city;
 	private String adress;
 	private String telephoneNumber;
+	private Set<Photo> photos;
 }

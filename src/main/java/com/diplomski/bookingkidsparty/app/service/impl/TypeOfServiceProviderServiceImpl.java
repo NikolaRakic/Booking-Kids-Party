@@ -29,20 +29,20 @@ public class TypeOfServiceProviderServiceImpl implements TypeOfServiceProviderSe
 			throw new Exception("The type with this id does not exist!");
 		}
 		TypeOfServiceProviderDTOres typeOfServiceProviderDTO = typeOfServiceMapper
-				.convertTypeOfServiceToTypeOfServiceDTO(typeOfServiceProviderOptional.get());
+				.entityToDTO(typeOfServiceProviderOptional.get());
 		return typeOfServiceProviderDTO;
 	}
 	
 	@Override
 	public List<TypeOfServiceProviderDTOres> findAll() {
 		List<TypeOfServiceProvider> types = typeOfServiceProviderRepository.findAll();
-		List<TypeOfServiceProviderDTOres> typesDTO = typeOfServiceMapper.convertListToListDTO(types);
+		List<TypeOfServiceProviderDTOres> typesDTO = typeOfServiceMapper.ListToListDTO(types);
 		return typesDTO;
 	}
 	
 	@Override
 	public UUID add(TypeOfServiceProviderDTOreq typeOfServiceProviderDTO) throws Exception {
-		TypeOfServiceProvider typeOfServiceProvider = typeOfServiceMapper.convertTypeOfServiceDTOtoTypeOfService(typeOfServiceProviderDTO);
+		TypeOfServiceProvider typeOfServiceProvider = typeOfServiceMapper.dtoToEntity(typeOfServiceProviderDTO);
 		typeOfServiceProviderRepository.saveAndFlush(typeOfServiceProvider);
 		return typeOfServiceProvider.getId();
 	}

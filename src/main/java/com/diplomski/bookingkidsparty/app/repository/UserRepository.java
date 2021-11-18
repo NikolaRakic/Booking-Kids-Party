@@ -1,5 +1,6 @@
 package com.diplomski.bookingkidsparty.app.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,7 @@ import com.diplomski.bookingkidsparty.app.model.User;
 public interface UserRepository extends JpaRepository<User, UUID>{
 
 	User findByUsername(String username);
+
+	Optional<User> findByUsernameOrEmail(String username, String email);
 
 }

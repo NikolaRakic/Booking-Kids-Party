@@ -13,5 +13,7 @@ public interface TypeOfServiceProviderRepository extends JpaRepository<TypeOfSer
 
 	Optional<TypeOfServiceProvider> findOneById(UUID id);
 
+	Optional<TypeOfServiceProvider> findByName(String typeOfServiceProviderName);
+
 	
 }
