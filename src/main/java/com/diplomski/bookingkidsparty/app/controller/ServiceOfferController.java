@@ -19,6 +19,8 @@ import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
 import com.diplomski.bookingkidsparty.app.service.ServiceOfferService;
 
+import javassist.NotFoundException;
+
 @Controller
 public class ServiceOfferController {
 	
@@ -45,10 +47,8 @@ public class ServiceOfferController {
 	
 	@DeleteMapping("/serviceOffer/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") UUID id) throws Exception{
-		if(serviecOfferService.delete(id)) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		HttpStatus status = serviecOfferService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND;
+		return new ResponseEntity<>(status);
 	}
 	
 	@PutMapping("/serviceOffer/{id}")
@@ -56,7 +56,7 @@ public class ServiceOfferController {
 		try {
 			serviecOfferService.edit(id, serviceOfferDTO);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (NotFound e) {
+		} catch (NotFoundException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
 		}catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);	

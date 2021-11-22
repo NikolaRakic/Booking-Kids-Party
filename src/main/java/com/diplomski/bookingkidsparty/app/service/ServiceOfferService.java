@@ -16,6 +16,6 @@ public interface ServiceOfferService {
 
 	boolean delete(UUID id);
 
-	void edit(UUID id, ServiceOfferDTOreq serviceOfferDTO);
+	void edit(UUID id, ServiceOfferDTOreq serviceOfferDTO) throws Exception;
 
 }

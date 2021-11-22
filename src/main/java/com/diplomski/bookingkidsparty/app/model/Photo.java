@@ -32,6 +32,7 @@ public class Photo {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
 	private UUID id;
 	
+	@Column(unique = true)
 	private String name;
 	
 	@ManyToOne(fetch = FetchType.EAGER)

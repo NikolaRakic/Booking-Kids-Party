@@ -15,6 +15,8 @@ import com.diplomski.bookingkidsparty.app.repository.ServiceOfferRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.ServiceOfferService;
 
+import javassist.NotFoundException;
+
 @Service
 public class ServiceOfferServiceImpl implements ServiceOfferService{
 
@@ -60,7 +62,7 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 	}
 
 	@Override
-	public void edit(UUID id, ServiceOfferDTOreq serviceOfferDTO) {
+	public void edit(UUID id, ServiceOfferDTOreq serviceOfferDTO) throws Exception {
 		Optional<ServiceOffer> serviceOfferOptional = serviceOfferRepository.findById(id);
 		if(serviceOfferOptional.isPresent()) {
 			ServiceOffer serviceOfferForEdit = serviceOfferOptional.get();
@@ -72,7 +74,9 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 			serviceOfferForEdit.setStartDate(serviceOfferDTO.getStartDate());
 			
 			serviceOfferRepository.saveAndFlush(serviceOfferForEdit);
+			return;
 		}
+		throw new NotFoundException("ServiceOffer with this id doesn't exist!");
 	}
 
 }

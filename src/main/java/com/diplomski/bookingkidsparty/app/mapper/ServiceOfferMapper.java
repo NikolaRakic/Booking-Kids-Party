@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,12 @@ public class ServiceOfferMapper {
 	}
 	
 	public ServiceOffer dtoToEntity(ServiceOfferDTOreq serviceOfferDTOreq) {
+		modelMapper.addMappings(new PropertyMap<ServiceOfferDTOreq, ServiceOffer>() {
+            @Override
+            protected void configure() {
+                skip(destination.getId());
+            }
+        });
 		return modelMapper.map(serviceOfferDTOreq, ServiceOffer.class);
 	}
 }
