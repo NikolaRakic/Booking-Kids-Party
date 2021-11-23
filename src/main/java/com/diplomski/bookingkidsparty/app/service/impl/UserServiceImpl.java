@@ -25,6 +25,8 @@ import com.diplomski.bookingkidsparty.app.security.SecurityConfiguration;
 import com.diplomski.bookingkidsparty.app.security.TokenUtils;
 import com.diplomski.bookingkidsparty.app.service.UserService;
 
+import javassist.NotFoundException;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -43,19 +45,23 @@ public class UserServiceImpl implements UserService{
 	TokenUtils tokenUtils;
 	
 	@Override
-	public UUID registration(UserDTOreq userDTOreq) {
+	public UUID registration(UserDTOreq userDTOreq) throws Exception {
 		User user = userMapper.DTOreqToEntity(userDTOreq);
-		userRepository.saveAndFlush(user);
-		return user.getId();
+		Optional<User> userOptional = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
+		if(!userOptional.isPresent()) {
+			userRepository.saveAndFlush(user);
+			return user.getId();
+		}
+		throw new Exception("User with this username or email arleady exist!");
 	}
 
 	@Override
-	public UserDTOres findOne(UUID id) {
+	public UserDTOres findById(UUID id) throws NotFoundException {
 		Optional<User> userOptional = userRepository.findById(id);
 		if(userOptional.isPresent()) {
 			return userMapper.EntityToDTOres(userOptional.get());
 		}
-		return null;
+		throw new NotFoundException("User with this id doesn't exist!");
 	}
 
 	@Override
@@ -64,7 +70,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void edit(UUID id, UserDTOreq userDTOreq) {
+	public void edit(UUID id, UserDTOreq userDTOreq) throws NotFoundException {
 		Optional<User> userOptional = userRepository.findById(id);
 		if(userOptional.isPresent()) {
 			User userForEdit = userOptional.get();
@@ -77,6 +83,8 @@ public class UserServiceImpl implements UserService{
 			userForEdit.setUsername(userDTOreq.getUsername());
 			
 			userRepository.saveAndFlush(userForEdit);
+		}else {
+			throw new NotFoundException("User with this id doesn't exist!");
 		}
 	}
 

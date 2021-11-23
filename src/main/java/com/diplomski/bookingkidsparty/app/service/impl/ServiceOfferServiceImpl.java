@@ -41,14 +41,14 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 	}
 
 	@Override
-	public ServiceOfferDTOres findOne(UUID id) throws Exception {
+	public ServiceOfferDTOres findById(UUID id) throws Exception {
 		Optional<ServiceOffer> serviceOfferOptional = serviceOfferRepository.findById(id);
-		if(!serviceOfferOptional.isPresent()) {
-			throw new Exception("Offer with this id does not exist!");
+		if(serviceOfferOptional.isPresent()) {
+			ServiceOfferDTOres serviceOfferDTOres = serviceOfferMapper
+					.entityToDTO(serviceOfferOptional.get());
+			return serviceOfferDTOres;
 		}
-		ServiceOfferDTOres serviceOfferDTOres = serviceOfferMapper
-				.entityToDTO(serviceOfferOptional.get());
-		return serviceOfferDTOres;
+		throw new Exception("ServiceOffer with this id doesn't exist!");
 	}
 
 	@Override
@@ -74,9 +74,9 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 			serviceOfferForEdit.setStartDate(serviceOfferDTO.getStartDate());
 			
 			serviceOfferRepository.saveAndFlush(serviceOfferForEdit);
-			return;
+		}else {
+			throw new NotFoundException("ServiceOffer with this id doesn't exist!");
 		}
-		throw new NotFoundException("ServiceOffer with this id doesn't exist!");
 	}
 
 }

@@ -14,6 +14,8 @@ import com.diplomski.bookingkidsparty.app.model.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.TypeOfServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.TypeOfServiceProviderService;
 
+import javassist.NotFoundException;
+
 @Service
 public class TypeOfServiceProviderServiceImpl implements TypeOfServiceProviderService{
 
@@ -23,10 +25,10 @@ public class TypeOfServiceProviderServiceImpl implements TypeOfServiceProviderSe
 	TypeOfServiceMapper typeOfServiceMapper;
 	
 	@Override
-	public TypeOfServiceProviderDTOres findOne(UUID id) throws Exception {
+	public TypeOfServiceProviderDTOres findById(UUID id) throws Exception {
 		Optional<TypeOfServiceProvider> typeOfServiceProviderOptional = typeOfServiceProviderRepository.findById(id);
 		if(!typeOfServiceProviderOptional.isPresent()) {
-			throw new Exception("The type with this id does not exist!");
+			throw new NotFoundException("TypeOfServiceProvider with this id doesn't exist!");
 		}
 		TypeOfServiceProviderDTOres typeOfServiceProviderDTO = typeOfServiceMapper
 				.entityToDTO(typeOfServiceProviderOptional.get());
@@ -58,17 +60,15 @@ public class TypeOfServiceProviderServiceImpl implements TypeOfServiceProviderSe
 	}
 
 	@Override
-	public void edit(UUID id, TypeOfServiceProviderDTOreq typeOfServiceProviderDTO) {
-		try {
-			Optional<TypeOfServiceProvider> typeOfServiceProviderOptional = typeOfServiceProviderRepository.findById(id);
-			if(typeOfServiceProviderOptional.isPresent()) {
-				TypeOfServiceProvider typeOfServiceProviderForEdit = typeOfServiceProviderOptional.get();
-				typeOfServiceProviderForEdit.setName(typeOfServiceProviderDTO.getName());
-				typeOfServiceProviderRepository.saveAndFlush(typeOfServiceProviderForEdit);
-			}
-		} catch (Exception e) {
-			e.getMessage();
+	public void edit(UUID id, TypeOfServiceProviderDTOreq typeOfServiceProviderDTO) throws NotFoundException {
+		Optional<TypeOfServiceProvider> typeOfServiceProviderOptional = typeOfServiceProviderRepository.findById(id);
+		if(typeOfServiceProviderOptional.isPresent()) {
+			TypeOfServiceProvider typeOfServiceProviderForEdit = typeOfServiceProviderOptional.get();
+			typeOfServiceProviderForEdit.setName(typeOfServiceProviderDTO.getName());
+			typeOfServiceProviderRepository.saveAndFlush(typeOfServiceProviderForEdit);
+		}else {
+			throw new NotFoundException("TypeOfServiceProvider with this id doesn't exist!");
 		}
-	}
+	}	
 
 }

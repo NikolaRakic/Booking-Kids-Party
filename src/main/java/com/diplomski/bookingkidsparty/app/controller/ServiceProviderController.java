@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.service.ServiceProviderService;
+
+import javassist.NotFoundException;
 
 @Controller("")
 public class ServiceProviderController {
@@ -38,17 +39,18 @@ public class ServiceProviderController {
 	}
 	
 	@GetMapping("/serviceProvider/{id}")
-	public ResponseEntity<ServiceProviderDTOres> findOne(@PathVariable("id") UUID id) throws Exception{
-			ServiceProviderDTOres ServiceProviderDTO = serviceProviderService.findOne(id);
+	public ResponseEntity<?> findById(@PathVariable("id") UUID id) throws Exception{
+		try {
+			ServiceProviderDTOres ServiceProviderDTO = serviceProviderService.findById(id);
 			return new ResponseEntity<ServiceProviderDTOres>(ServiceProviderDTO, HttpStatus.OK);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
+		}				
 	}
 	
 	@DeleteMapping("/serviceProvider/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") UUID id) throws Exception{
-		if(serviceProviderService.delete(id)) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(serviceProviderService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 	
 	@PutMapping("/serviceProvider/{id}")
@@ -56,7 +58,7 @@ public class ServiceProviderController {
 		try {
 			serviceProviderService.edit(id, serviceProviderDTO);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (NotFound e) {
+		} catch (NotFoundException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
 		}catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);	

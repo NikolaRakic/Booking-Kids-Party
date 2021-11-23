@@ -15,6 +15,8 @@ import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.repository.TypeOfServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.ServiceProviderService;
 
+import javassist.NotFoundException;
+
 @Service
 public class ServiceProviderServiceImpl implements ServiceProviderService {
 
@@ -39,14 +41,14 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	}
 
 	@Override
-	public ServiceProviderDTOres findOne(UUID id) throws Exception {
+	public ServiceProviderDTOres findById(UUID id) throws Exception {
 		Optional<ServiceProvider> serviceProviderOptional = serviceProviderRepository.findById(id);
-		if(!serviceProviderOptional.isPresent()) {
-			throw new Exception("The type with this id does not exist!");
+		if(serviceProviderOptional.isPresent()) {
+			ServiceProviderDTOres serviceProviderDTO = serviceMapper
+					.entityToDTOres(serviceProviderOptional.get());
+			return serviceProviderDTO;
 		}
-		ServiceProviderDTOres serviceProviderDTO = serviceMapper
-				.entityToDTOres(serviceProviderOptional.get());
-		return serviceProviderDTO;
+		throw new NotFoundException("ServiceProvider with this id doesn't exist!");
 	}
 
 	@Override
@@ -60,7 +62,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	}
 
 	@Override
-	public void edit(UUID id, ServiceProviderDTOres serviceProviderDTO) {
+	public void edit(UUID id, ServiceProviderDTOres serviceProviderDTO) throws NotFoundException {
 			Optional<ServiceProvider> serviceProviderOptional = serviceProviderRepository.findById(id);
 			if(serviceProviderOptional.isPresent()) {
 				ServiceProvider serviceProviderForEdit = serviceProviderOptional.get();
@@ -76,6 +78,8 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 						.findByName(serviceProviderDTO.getTypeOfServiceProviderName()).get());
 				
 				serviceProviderRepository.saveAndFlush(serviceProviderForEdit);
+			}else {
+				throw new NotFoundException("ServiceProvider with this id doesn't exist!");
 			}
 	}
 

@@ -12,7 +12,7 @@ public interface ServiceOfferService {
 
 	UUID add(ServiceOfferDTOreq serviceOfferDTOreq);
 
-	ServiceOfferDTOres findOne(UUID id) throws Exception;
+	ServiceOfferDTOres findById(UUID id) throws Exception;
 
 	boolean delete(UUID id);
 

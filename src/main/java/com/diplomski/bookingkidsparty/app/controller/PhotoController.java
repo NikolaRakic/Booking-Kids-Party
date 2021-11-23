@@ -31,9 +31,7 @@ public class PhotoController {
 	
 	@DeleteMapping("/photo/{photoId}")
 	public ResponseEntity<?> delete(@PathVariable("photoId") UUID photoId) throws Exception{
-		if(photoService.delete(photoId)) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	} 
+		return new ResponseEntity<>(photoService.delete(photoId) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
+	}
+	
 }

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.service.ServiceOfferService;
 
 import javassist.NotFoundException;
@@ -34,9 +34,14 @@ public class ServiceOfferController {
 	}
 	
 	@GetMapping("/serviceOffer/{id}")
-	public ResponseEntity<ServiceOfferDTOres> findOne(@PathVariable("id") UUID id) throws Exception{
-		ServiceOfferDTOres serviceOfferDto = serviecOfferService.findOne(id);
-		return new ResponseEntity<ServiceOfferDTOres>(serviceOfferDto, HttpStatus.OK);
+	public ResponseEntity<?> findById(@PathVariable("id") UUID id) throws Exception{
+		try {
+			ServiceOfferDTOres serviceOfferDto = serviecOfferService.findById(id);
+			return new ResponseEntity<ServiceOfferDTOres>(serviceOfferDto, HttpStatus.OK);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
+		}			
+		
 	}
 
 	@PostMapping("/serviceOffer")
@@ -47,8 +52,7 @@ public class ServiceOfferController {
 	
 	@DeleteMapping("/serviceOffer/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") UUID id) throws Exception{
-		HttpStatus status = serviecOfferService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND;
-		return new ResponseEntity<>(status);
+		return new ResponseEntity<>(serviecOfferService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 	
 	@PutMapping("/serviceOffer/{id}")

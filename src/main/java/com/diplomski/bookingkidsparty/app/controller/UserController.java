@@ -4,16 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,15 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 import com.diplomski.bookingkidsparty.app.dto.request.LoginDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.request.UserDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.LoggedInUserDTOres;
 import com.diplomski.bookingkidsparty.app.dto.response.UserDTOres;
-import com.diplomski.bookingkidsparty.app.model.User;
-import com.diplomski.bookingkidsparty.app.security.TokenUtils;
 import com.diplomski.bookingkidsparty.app.service.UserService;
+
+import javassist.NotFoundException;
 
 @Controller
 public class UserController {
@@ -38,15 +30,24 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/user")
-	public ResponseEntity<UUID> registration (@RequestBody UserDTOreq userDTOreq){
-		UUID id = userService.registration(userDTOreq);
-		return new ResponseEntity<UUID>(id, HttpStatus.OK);
+	public ResponseEntity<?> registration (@RequestBody UserDTOreq userDTOreq){
+		UUID id;
+		try {
+			id = userService.registration(userDTOreq);
+			return new ResponseEntity<UUID>(id, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		}
 	}
 	
 	@GetMapping("/user/{id}")
-	public ResponseEntity<UserDTOres> findOne(@PathVariable("id") UUID id){
-		UserDTOres userDTOres = userService.findOne(id);
-		return new ResponseEntity<UserDTOres>(userDTOres, HttpStatus.OK);
+	public ResponseEntity<?> findById(@PathVariable("id") UUID id){
+		try {
+			UserDTOres userDTOres = userService.findById(id);
+			return new ResponseEntity<UserDTOres>(userDTOres, HttpStatus.OK);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
+		}		
 	}
 	
 	@GetMapping("/user")
@@ -60,7 +61,7 @@ public class UserController {
 		try {
 			userService.edit(id, userDTOreq);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (NotFound e) {
+		} catch (NotFoundException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
 		}catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);	
@@ -69,10 +70,7 @@ public class UserController {
 	
 	@DeleteMapping("user/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") UUID id) throws Exception{
-		if(userService.delete(id)) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(userService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 	
 	@PostMapping(value="/login", consumes = MediaType.APPLICATION_JSON_VALUE)

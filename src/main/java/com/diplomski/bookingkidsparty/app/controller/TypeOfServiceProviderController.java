@@ -19,6 +19,8 @@ import com.diplomski.bookingkidsparty.app.dto.request.TypeOfServiceProviderDTOre
 import com.diplomski.bookingkidsparty.app.dto.response.TypeOfServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.service.TypeOfServiceProviderService;
 
+import javassist.NotFoundException;
+
 @Controller("")
 public class TypeOfServiceProviderController {
 	
@@ -38,17 +40,18 @@ public class TypeOfServiceProviderController {
 	}
 	
 	@GetMapping("/typesOfServiceProvider/{id}")
-	public ResponseEntity<TypeOfServiceProviderDTOres> findOne(@PathVariable("id") UUID id) throws Exception{
-			TypeOfServiceProviderDTOres typeOfServiceProviderDTO = typeOfServiceProviderService.findOne(id);
+	public ResponseEntity<?> findById(@PathVariable("id") UUID id) throws Exception{
+		try {
+			TypeOfServiceProviderDTOres typeOfServiceProviderDTO = typeOfServiceProviderService.findById(id);
 			return new ResponseEntity<TypeOfServiceProviderDTOres>(typeOfServiceProviderDTO, HttpStatus.OK);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
+		}			
 	}
 	
 	@DeleteMapping("/typesOfServiceProvider/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") UUID id) throws Exception{
-		if(typeOfServiceProviderService.delete(id)) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(typeOfServiceProviderService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 	
 	@PutMapping("/typesOfServiceProvider/{id}")

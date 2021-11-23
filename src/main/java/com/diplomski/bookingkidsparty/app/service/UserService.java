@@ -9,15 +9,17 @@ import com.diplomski.bookingkidsparty.app.dto.response.LoggedInUserDTOres;
 import com.diplomski.bookingkidsparty.app.dto.response.UserDTOres;
 import com.diplomski.bookingkidsparty.app.model.User;
 
+import javassist.NotFoundException;
+
 public interface UserService {
 
-	UUID registration(UserDTOreq userDTOreq);
+	UUID registration(UserDTOreq userDTOreq) throws Exception;
 
-	UserDTOres findOne(UUID id);
+	UserDTOres findById(UUID id) throws NotFoundException;
 
 	List<UserDTOres> findAll();
 
-	void edit(UUID id, UserDTOreq userDTOreq);
+	void edit(UUID id, UserDTOreq userDTOreq) throws NotFoundException;
 
 	boolean delete(UUID id);
 
