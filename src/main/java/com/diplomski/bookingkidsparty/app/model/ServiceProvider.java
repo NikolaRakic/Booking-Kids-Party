@@ -1,5 +1,6 @@
 package com.diplomski.bookingkidsparty.app.model;
 
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -47,6 +48,12 @@ public class ServiceProvider {
 	private String password;
 	
 	private String pib;
+	
+	@Column(name = "start_of_work")
+	private LocalTime startOfWork;
+	
+	@Column(name = "end_of_work")
+	private LocalTime endOfWork;
 	
 	@Column(name = "max_number_of_kids")
 	private int maxNumberOfKids;

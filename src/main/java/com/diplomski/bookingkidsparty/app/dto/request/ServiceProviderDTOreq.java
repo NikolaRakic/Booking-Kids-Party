@@ -1,5 +1,6 @@
 package com.diplomski.bookingkidsparty.app.dto.request;
 
+import java.time.LocalTime;
 import java.util.UUID;
 
 import lombok.Data;
@@ -12,6 +13,8 @@ public class ServiceProviderDTOreq {
 	private String email;
 	private String password;
 	private String pib;
+	private LocalTime startOfWork;
+	private LocalTime endOfWork;
 	private int maxNumberOfKids;
 	private UUID typeOfServiceProviderId;
 	private String city;

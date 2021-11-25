@@ -11,6 +11,7 @@ import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
 import com.diplomski.bookingkidsparty.app.mapper.ServiceOfferMapper;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
+import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceOfferRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.ServiceOfferService;
@@ -77,6 +78,16 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 		}else {
 			throw new NotFoundException("ServiceOffer with this id doesn't exist!");
 		}
+	}
+
+	@Override
+	public List<ServiceOfferDTOres> findAllByServiceProvider(UUID id) throws NotFoundException {
+		Optional<ServiceProvider> serviceProviderOptional = serviceProviderRepository.findById(id);
+		if(!serviceProviderOptional.isPresent()) {
+			throw new NotFoundException("ServiceProvider with this id doesn't exist!");
+		}
+		List<ServiceOffer> serviceOffers = serviceOfferRepository.findAllByServiceProvider(serviceProviderOptional.get());
+		return serviceOfferMapper.ListToListDTO(serviceOffers);
 	}
 
 }

@@ -65,5 +65,15 @@ public class ServiceProviderController {
 		}
 	}
 	
+	@GetMapping("/serviceProvider/type/{id}")
+	public ResponseEntity<?> findAllByType(@PathVariable("id") UUID typeId){
+			try {
+				List<ServiceProviderDTOres> typesDTO = serviceProviderService.findAllByType(typeId);
+				return new ResponseEntity<List<ServiceProviderDTOres>>(typesDTO, HttpStatus.OK);
+			} catch (NotFoundException e) {
+				return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+			}
+			
+	}
 	
 }

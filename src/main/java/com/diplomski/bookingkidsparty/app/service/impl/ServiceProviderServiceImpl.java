@@ -11,6 +11,7 @@ import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.mapper.ServiceProviderMapper;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
+import com.diplomski.bookingkidsparty.app.model.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.repository.TypeOfServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.ServiceProviderService;
@@ -81,6 +82,16 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 			}else {
 				throw new NotFoundException("ServiceProvider with this id doesn't exist!");
 			}
+	}
+
+	@Override
+	public List<ServiceProviderDTOres> findAllByType(UUID typeId) throws NotFoundException {
+		Optional<TypeOfServiceProvider> typeOptional = typeOfServiceProviderRepository.findById(typeId);
+		if(typeOptional.isPresent()) {
+			List<ServiceProvider> services = serviceProviderRepository.findAllByTypeOfServiceProvider(typeOptional.get());
+			return serviceMapper.ListToListDTO(services);
+		}
+		throw new NotFoundException("TypeOfServiceProvider with this id doesn't exist!");
 	}
 
 }

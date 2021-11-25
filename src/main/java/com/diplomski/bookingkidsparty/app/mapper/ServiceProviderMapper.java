@@ -26,17 +26,23 @@ public class ServiceProviderMapper {
 	@Autowired
 	SecurityConfiguration configuration;
 	@Autowired
-	TypeOfServiceProviderRepository typeOfServiceProviderRepository;
+	TypeOfServiceProviderRepository typeOfServiceRepository;
 	
 	public ServiceProvider dtoReqToEntity(ServiceProviderDTOreq serviceProviderDTO) throws Exception {
-    	String encodedPassword = configuration.passwordEncoder().encode(serviceProviderDTO.getPassword());
-		modelMapper.addMappings(new PropertyMap<ServiceProviderDTOreq, ServiceProvider>() {
-            @Override
-            protected void configure() {
-                skip(destination.getId());
-                map().setPassword(encodedPassword);
-            }
-        });
+		TypeMap<ServiceProviderDTOreq, ServiceProvider> typeMap = modelMapper.getTypeMap(ServiceProviderDTOreq.class, ServiceProvider.class);
+		String encodedPassword = configuration.passwordEncoder().encode(serviceProviderDTO.getPassword());
+		if(typeMap == null) {
+			TypeOfServiceProvider typeOfService = typeOfServiceRepository.findById(serviceProviderDTO.getTypeOfServiceProviderId()).get();
+			modelMapper.addMappings(new PropertyMap<ServiceProviderDTOreq, ServiceProvider>() {
+	            @Override
+	            protected void configure() {
+	                skip(destination.getId());
+	                map().setPassword(encodedPassword);
+	                map().setTypeOfServiceProvider(typeOfService);
+	            }
+	        });
+		}
+			
 		 return modelMapper.map(serviceProviderDTO, ServiceProvider.class);
 	}
 

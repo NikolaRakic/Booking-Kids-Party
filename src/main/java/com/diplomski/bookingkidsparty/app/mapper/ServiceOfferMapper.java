@@ -5,12 +5,15 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
+import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 
 @Component
@@ -34,12 +37,18 @@ public class ServiceOfferMapper {
 	}
 	
 	public ServiceOffer dtoToEntity(ServiceOfferDTOreq serviceOfferDTOreq) {
-		modelMapper.addMappings(new PropertyMap<ServiceOfferDTOreq, ServiceOffer>() {
-            @Override
-            protected void configure() {
-                skip(destination.getId());
-            }
-        });
+		TypeMap<ServiceOfferDTOreq, ServiceOffer> typeMap = modelMapper.getTypeMap(ServiceOfferDTOreq.class, ServiceOffer.class);
+		if(typeMap == null) {
+			ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceOfferDTOreq.getServiceProviderId()).get();
+			modelMapper.addMappings(new PropertyMap<ServiceOfferDTOreq, ServiceOffer>() {
+	            @Override
+	            protected void configure() {
+	                skip(destination.getId());
+	                map().setServiceProvider(serviceProvider);
+	            }
+	        });
+		}
 		return modelMapper.map(serviceOfferDTOreq, ServiceOffer.class);
 	}
+	
 }

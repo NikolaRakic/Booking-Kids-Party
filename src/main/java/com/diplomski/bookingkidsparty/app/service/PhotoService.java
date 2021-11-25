@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface PhotoService {
 
-	UUID add(MultipartFile multipartFile, UUID serviceOfferId) throws IOException, Exception;
+	UUID add(MultipartFile multipartFile, UUID serviceProviderId) throws IOException, Exception;
 
 	boolean delete(UUID photoId);
 

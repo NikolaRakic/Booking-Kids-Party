@@ -20,4 +20,6 @@ public interface ServiceProviderService {
 
 	void edit(UUID id, ServiceProviderDTOres serviceProviderDTO) throws NotFoundException;
 
+	List<ServiceProviderDTOres> findAllByType(UUID typeId) throws NotFoundException;
+
 }

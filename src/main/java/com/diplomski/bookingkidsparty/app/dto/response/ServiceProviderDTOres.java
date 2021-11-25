@@ -1,5 +1,6 @@
 package com.diplomski.bookingkidsparty.app.dto.response;
 
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,6 +19,8 @@ public class ServiceProviderDTOres {
 	private String accountNumber;
 	private String email;
 	private String pib;
+	private LocalTime startOfWork;
+	private LocalTime endOfWork;
 	private int maxNumberOfKids;
 	private String typeOfServiceProviderName;
 	private String city;

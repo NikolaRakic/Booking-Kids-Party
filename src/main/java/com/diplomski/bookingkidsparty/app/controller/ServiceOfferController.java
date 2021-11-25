@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.service.ServiceOfferService;
 
 import javassist.NotFoundException;
@@ -41,7 +40,6 @@ public class ServiceOfferController {
 		} catch (NotFoundException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
 		}			
-		
 	}
 
 	@PostMapping("/serviceOffer")
@@ -64,6 +62,17 @@ public class ServiceOfferController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
 		}catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);	
+		}
+	}
+	
+	@GetMapping("/serviceOffer/serviceProvider/{id}")
+	public ResponseEntity<?> findAllByServiceProvider(@PathVariable("id") UUID id){
+		List<ServiceOfferDTOres> serviceOffersDto;
+		try {
+			serviceOffersDto = serviecOfferService.findAllByServiceProvider(id);
+			return new ResponseEntity<List<ServiceOfferDTOres>>(serviceOffersDto, HttpStatus.OK);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
 		}
 	}
 	

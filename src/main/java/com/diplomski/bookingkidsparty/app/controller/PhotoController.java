@@ -22,9 +22,9 @@ public class PhotoController {
 	@Autowired
 	PhotoService photoService;
 	
-	@PostMapping("/{serviceOfferId}/photo")
-    public ResponseEntity<UUID> savePhoto(@RequestParam("image") MultipartFile multipartFile, @PathVariable("serviceOfferId") UUID serviceOfferId) throws Exception {
-        UUID photoId = photoService.add(multipartFile, serviceOfferId);
+	@PostMapping("/photo/{serviceProviderId}")
+    public ResponseEntity<UUID> savePhoto(@RequestParam("image") MultipartFile multipartFile, @PathVariable("serviceProviderId") UUID serviceProviderId) throws Exception {
+        UUID photoId = photoService.add(multipartFile, serviceProviderId);
         
         return new ResponseEntity<UUID>(photoId, HttpStatus.OK);
     }
