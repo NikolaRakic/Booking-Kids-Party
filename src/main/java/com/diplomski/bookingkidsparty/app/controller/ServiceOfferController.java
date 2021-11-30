@@ -43,7 +43,7 @@ public class ServiceOfferController {
 	}
 
 	@PostMapping("/serviceOffer")
-	public ResponseEntity<UUID> add(@RequestBody ServiceOfferDTOreq serviceOfferDTOreq) {
+	public ResponseEntity<UUID> add(@RequestBody ServiceOfferDTOreq serviceOfferDTOreq) throws Exception {
 		UUID id = serviecOfferService.add(serviceOfferDTOreq);
 		return new ResponseEntity<UUID>(id, HttpStatus.CREATED);
 	}

@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.security.core.GrantedAuthority;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +18,5 @@ public class LoggedInUserDTOres {
 	private String username;
 	private String email;
 	private String role;
-	private Collection<? extends GrantedAuthority> authorities;
-	
-	
+	private Collection<? extends GrantedAuthority> authorities;	
 }

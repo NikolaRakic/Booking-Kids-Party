@@ -1,6 +1,7 @@
 package com.diplomski.bookingkidsparty.app.service.impl;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ import com.diplomski.bookingkidsparty.app.util.ReservationValidate;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 	
-
+	private static final String IGRAONICA = "Igraonica";
 
 	@Autowired
 	ReservationRepository reservationRepository;
@@ -38,6 +39,25 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	public List<ReservationDTOres> getAll() {
 		List<Reservation> reservations = reservationRepository.findAll();
+		return reservationMapper.listToListDTO(reservations);
+	}
+
+	@Override
+	public List<ReservationDTOres> getAllByParty(UUID playRoomId, LocalDate dateOfReservation, LocalTime startTime) {
+		List<Reservation> reservations = reservationRepository
+				.findAllByPlayroomIdAndDateOfReservationAndStartTime(playRoomId, dateOfReservation, startTime);
+		return reservationMapper.listToListDTO(reservations);
+	}
+
+	@Override
+	public List<ReservationDTOres> getAllByServisProvider(UUID serviceProviderId) {
+		List<Reservation> reservations = reservationRepository.findAllByServiceOfferServiceProviderId(serviceProviderId);
+		return reservationMapper.listToListDTO(reservations);
+	}
+
+	@Override
+	public List<ReservationDTOres> getAllByUser(UUID userId) {
+		List<Reservation> reservations = reservationRepository.findAllByUserId(userId);
 		return reservationMapper.listToListDTO(reservations);
 	}
 

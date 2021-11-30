@@ -15,6 +15,7 @@ import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceOfferRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.ServiceOfferService;
+import com.diplomski.bookingkidsparty.app.util.OfferValidate;
 
 import javassist.NotFoundException;
 
@@ -27,6 +28,8 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 	ServiceProviderRepository serviceProviderRepository;
 	@Autowired
 	ServiceOfferMapper serviceOfferMapper;
+	@Autowired
+	OfferValidate offerValidate;
 	
 	@Override
 	public List<ServiceOfferDTOres> findAll() {
@@ -35,8 +38,9 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 	}
 
 	@Override
-	public UUID add(ServiceOfferDTOreq serviceOfferDTOreq) {
+	public UUID add(ServiceOfferDTOreq serviceOfferDTOreq) throws Exception {
 		ServiceOffer serviceOffer = serviceOfferMapper.dtoToEntity(serviceOfferDTOreq);
+		offerValidate.dateValidate(serviceOffer);
 		serviceOfferRepository.saveAndFlush(serviceOffer);
 		return serviceOffer.getId();
 	}

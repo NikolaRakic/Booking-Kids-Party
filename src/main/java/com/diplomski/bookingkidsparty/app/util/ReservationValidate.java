@@ -13,8 +13,6 @@ import com.diplomski.bookingkidsparty.app.repository.ReservationRepository;
 public class ReservationValidate {
 	
 	private static final String IGRAONICA = "Igraonica";
-	private static final String KETERING = "Ketering";
-	private static final String ANIMATOR = "Animator";
 	
 	@Autowired
 	ReservationRepository reservationRepository;
@@ -39,11 +37,18 @@ public class ReservationValidate {
 		if(newReservation.getServiceOffer().getServiceProvider().getTypeOfServiceProvider().getName().equals(IGRAONICA)) {
 			validateForPlayroom(newReservation);
 		}
+		else {
+			//provera da li postoji rezervisana igraonica za dati termin
+			List<Reservation> res = reservationRepository.findAllByPlayroomIdAndDateOfReservationAndStartTime(newReservation.getPlayroom().getId(),
+					newReservation.getDateOfReservation(), newReservation.getStartTime());
+			if(res.isEmpty()) {
+				throw new Exception("Reservation for playroom doesn't exist");				
+			}
+		}
 	}
 
 	private void validateForPlayroom(Reservation newReservation) throws Exception {
-		//null mesto odrzavanja rodjenana
-		//newReservation.setPlayroom(null);
+		
 		List<Reservation> existsReservationsByDay = reservationRepository
 				.findAllByDateOfReservationAndServiceOfferServiceProviderId(newReservation.getDateOfReservation(), newReservation.getServiceOffer().getServiceProvider().getId());
 

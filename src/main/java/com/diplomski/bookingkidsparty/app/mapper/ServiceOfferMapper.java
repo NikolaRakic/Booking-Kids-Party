@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;

@@ -1,13 +1,11 @@
 package com.diplomski.bookingkidsparty.app.mapper;
 
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.modelmapper.TypeMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +39,9 @@ public class ReservationMapper {
 		
 		if(!serviceOffer.getServiceProvider().getTypeOfServiceProvider().getName().equals("Igraonica")) {
 			playroom = serviceProviderRepository.findById(reservationDTOreq.getPlayroomId()).get();
+		}
+		else {
+			playroom = serviceOfferRepository.findById(reservationDTOreq.getServiceOfferId()).get().getServiceProvider();
 		}
 		
 		Reservation reservation = new Reservation();
