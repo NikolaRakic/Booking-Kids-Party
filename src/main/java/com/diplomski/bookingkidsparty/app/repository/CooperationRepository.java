@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.diplomski.bookingkidsparty.app.model.Cooperation;
 
 
-//public interface CooperationRepository extends JpaRepository<Cooperation, UUID>{
+//public interface CooperationRepository extends JpaRepository<?, UUID>{
 //
 //}

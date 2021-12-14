@@ -18,10 +18,12 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Table(name = "service_offer")
 @Entity
 @Data
+@ToString
 public class ServiceOffer {
 	
 	@Id

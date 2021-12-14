@@ -38,7 +38,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	@Override
 	public List<ServiceProviderDTOres> findAll() {
 		List<ServiceProvider> services = serviceProviderRepository.findAll();
-		return serviceMapper.ListToListDTO(services);
+		return serviceMapper.listToListDTO(services);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 		Optional<TypeOfServiceProvider> typeOptional = typeOfServiceProviderRepository.findById(typeId);
 		if(typeOptional.isPresent()) {
 			List<ServiceProvider> services = serviceProviderRepository.findAllByTypeOfServiceProvider(typeOptional.get());
-			return serviceMapper.ListToListDTO(services);
+			return serviceMapper.listToListDTO(services);
 		}
 		throw new NotFoundException("TypeOfServiceProvider with this id doesn't exist!");
 	}

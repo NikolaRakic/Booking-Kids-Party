@@ -4,8 +4,6 @@ import java.time.LocalTime;
 import java.util.Set;
 import java.util.UUID;
 
-import com.diplomski.bookingkidsparty.app.model.Photo;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +24,5 @@ public class ServiceProviderDTOres {
 	private String city;
 	private String adress;
 	private String telephoneNumber;
-	private Set<Photo> photos;
+	private Set<PhotoDTOres> photos;
 }

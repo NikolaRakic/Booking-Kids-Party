@@ -86,6 +86,5 @@ public class ServiceProvider {
 	@ManyToMany
 	@JoinTable(name = "cooperation", joinColumns = @JoinColumn(name = "cooperation_service_id"), inverseJoinColumns = @JoinColumn(name="play_room_id"))
 	private Set<ServiceProvider> cooperationService;
-
 	
 }

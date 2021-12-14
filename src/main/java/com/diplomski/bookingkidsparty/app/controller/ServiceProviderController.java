@@ -34,15 +34,15 @@ public class ServiceProviderController {
 	
 	@GetMapping("/serviceProvider")
 	public ResponseEntity<List<ServiceProviderDTOres>> findAll(){
-			List<ServiceProviderDTOres> typesDTO = serviceProviderService.findAll();
-			return new ResponseEntity<List<ServiceProviderDTOres>>(typesDTO, HttpStatus.OK);
+			List<ServiceProviderDTOres> services = serviceProviderService.findAll();
+			return new ResponseEntity<List<ServiceProviderDTOres>>(services, HttpStatus.OK);
 	}
 	
 	@GetMapping("/serviceProvider/{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") UUID id) throws Exception{
 		try {
-			ServiceProviderDTOres ServiceProviderDTO = serviceProviderService.findById(id);
-			return new ResponseEntity<ServiceProviderDTOres>(ServiceProviderDTO, HttpStatus.OK);
+			ServiceProviderDTOres serviceProviderDTO = serviceProviderService.findById(id);
+			return new ResponseEntity<ServiceProviderDTOres>(serviceProviderDTO, HttpStatus.OK);
 		} catch (NotFoundException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
 		}				

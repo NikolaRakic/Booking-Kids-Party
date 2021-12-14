@@ -14,4 +14,8 @@ public interface ServiceProviderRepository extends JpaRepository<ServiceProvider
 
 	List<ServiceProvider> findAllByTypeOfServiceProvider(TypeOfServiceProvider typeOfServiceProvider);
 
+	List<ServiceProvider> findCooperationServiceByPlayRoomId(UUID serviceProviderId);
+
+	List<ServiceProvider> findCooperationServiceById(UUID serviceProviderId);
+
 }

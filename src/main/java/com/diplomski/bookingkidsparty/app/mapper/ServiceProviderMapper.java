@@ -50,7 +50,7 @@ public class ServiceProviderMapper {
 		 return modelMapper.map(serviceProvider, ServiceProviderDTOres.class);
 	}
 	
-	public List<ServiceProviderDTOres> ListToListDTO(List<ServiceProvider> services){
+	public List<ServiceProviderDTOres> listToListDTO(List<ServiceProvider> services){
 		List<ServiceProviderDTOres> servicesDTO = new ArrayList<ServiceProviderDTOres>();
 		for (ServiceProvider ServiceProvider : services) {
 			servicesDTO.add(entityToDTOres(ServiceProvider));

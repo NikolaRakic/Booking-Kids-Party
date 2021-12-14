@@ -39,7 +39,7 @@ public class ReservationController {
 		List<ReservationDTOres> reservationsDTOres = reservationService.getAll();
 		return new ResponseEntity<List<ReservationDTOres>>(reservationsDTOres, HttpStatus.OK);
 	}
-
+	//izmeniti primanje parametara
 	@GetMapping("/reservation/{playRoomId}/{dateOfReservation}/{startTime}")
 	public ResponseEntity<List<ReservationDTOres>> getAllByParty(@PathVariable("playRoomId") UUID playRoomId,
 			@PathVariable("dateOfReservation") String dateOfReservationStr,
