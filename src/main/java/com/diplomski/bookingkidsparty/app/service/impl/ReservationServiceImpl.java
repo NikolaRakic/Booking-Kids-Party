@@ -3,6 +3,7 @@ package com.diplomski.bookingkidsparty.app.service.impl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,6 @@ import com.diplomski.bookingkidsparty.app.util.ReservationValidate;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
-	
-	private static final String IGRAONICA = "Igraonica";
 
 	@Autowired
 	ReservationRepository reservationRepository;
@@ -59,6 +58,16 @@ public class ReservationServiceImpl implements ReservationService {
 	public List<ReservationDTOres> getAllByUser(UUID userId) {
 		List<Reservation> reservations = reservationRepository.findAllByUserId(userId);
 		return reservationMapper.listToListDTO(reservations);
+	}
+
+	@Override
+	public boolean delete(UUID id) {
+		Optional<Reservation> reservationOptional = reservationRepository.findById(id);
+		if(reservationOptional.isPresent()) {
+			reservationRepository.delete(reservationOptional.get());
+			return true;
+		}
+		return false;
 	}
 
 }

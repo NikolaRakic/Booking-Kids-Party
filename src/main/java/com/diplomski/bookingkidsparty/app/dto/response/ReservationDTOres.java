@@ -13,30 +13,18 @@ import lombok.Setter;
 public class ReservationDTOres {
 
 	private UUID id;
-	
 	private LocalDate dateOfReservation;
-	
 	private LocalTime startTime;
-	
 	private LocalTime endTime;
-
 	private int numberOfKids;
-	
 	private int numberOfAdults;
-	
 	private String additionalRequirements;
-	
 	private int ageOfKid;
-	
+	private long totalPrice;
 	private UUID userId;
-	
 	private String userUserName;
-	
 	private UUID serviceOfferId;
-	
 	private String serviceOfferName;
-	
 	private UUID playroomId;
-	
 	private String playroomName;
 }

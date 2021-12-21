@@ -16,7 +16,8 @@ public class ServiceOfferDTOres {
 	private LocalDate endDate;
 	private int maxNumberOfKids;
 	private int maxNumberOfAdults;
-	private int pricePerHour;
+	private int pricePerHourForKid;
+	private int pricePerHourForAdult;
 	private String name;
 	private UUID serviceProviderId;
 	private String serviceProviderName;

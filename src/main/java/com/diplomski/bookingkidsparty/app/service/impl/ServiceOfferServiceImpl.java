@@ -75,7 +75,8 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 			serviceOfferForEdit.setMaxNumberOfAdults(serviceOfferDTO.getMaxNumberOfAdults());
 			serviceOfferForEdit.setMaxNumberOfKids(serviceOfferDTO.getMaxNumberOfKids());
 			serviceOfferForEdit.setName(serviceOfferDTO.getName());
-			serviceOfferForEdit.setPricePerHour(serviceOfferDTO.getPricePerHour());
+			serviceOfferForEdit.setPricePerHourForAdult(serviceOfferDTO.getPricePerHourForAdult());
+			serviceOfferForEdit.setPricePerHourForKid(serviceOfferDTO.getPricePerHourForKid());
 			serviceOfferForEdit.setStartDate(serviceOfferDTO.getStartDate());
 			
 			serviceOfferRepository.saveAndFlush(serviceOfferForEdit);

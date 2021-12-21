@@ -20,4 +20,6 @@ public interface ReservationService {
 
 	List<ReservationDTOres> getAllByUser(UUID userId);
 
+	boolean delete(UUID id);
+
 }

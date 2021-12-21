@@ -47,8 +47,11 @@ public class ServiceOffer {
 	@Column(name = "max_number_of_adults")
 	private int maxNumberOfAdults;
 	
-	@Column(name = "price_per_hour")
-	private int pricePerHour;
+	@Column(name = "price_per_hour_for_kid")
+	private int pricePerHourForKid;
+	
+	@Column(name = "price_per_hour_for_adult")
+	private int pricePerHourForAdult;
 	
 	private String name;
 	

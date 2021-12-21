@@ -1,11 +1,11 @@
 package com.diplomski.bookingkidsparty.app.mapper;
 
-
+import static java.time.temporal.ChronoUnit.MINUTES;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -78,6 +78,18 @@ public class ReservationMapper {
 	}
 	
 	public ReservationDTOres entityToDTO(Reservation reservation) {
+		long minutes = MINUTES.between(reservation.getStartTime(), reservation.getEndTime());
+		double hours = (double)minutes / 60;
+		
+		long totalPrice = Math.round(reservation.getNumberOfKids() * reservation.getServiceOffer().getPricePerHourForKid() * hours
+		+ reservation.getNumberOfAdults() * reservation.getServiceOffer().getPricePerHourForAdult() * hours);
+		modelMapper.addMappings(new PropertyMap<Reservation, ReservationDTOres>() {
+            @Override
+            protected void configure() {
+                map().setTotalPrice(totalPrice);
+            }
+        });
+		
 		return modelMapper.map(reservation, ReservationDTOres.class);
 	}
 	
