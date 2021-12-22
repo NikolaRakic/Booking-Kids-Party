@@ -89,7 +89,6 @@ public class ReservationMapper {
                 map().setTotalPrice(totalPrice);
             }
         });
-		
 		return modelMapper.map(reservation, ReservationDTOres.class);
 	}
 	
