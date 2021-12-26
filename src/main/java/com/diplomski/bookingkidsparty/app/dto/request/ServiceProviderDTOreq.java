@@ -16,7 +16,7 @@ public class ServiceProviderDTOreq {
 	private LocalTime startOfWork;
 	private LocalTime endOfWork;
 	private int maxNumberOfKids;
-	private UUID typeOfServiceProviderId;
+	private String typeOfServiceProvider;
 	private String city;
 	private String adress;
 	private String telephoneNumber;

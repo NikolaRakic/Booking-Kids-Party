@@ -37,7 +37,7 @@ public class ReservationMapper {
 		ServiceProvider playroom = null;
 		ServiceOffer serviceOffer = serviceOfferRepository.findById(reservationDTOreq.getServiceOfferId()).get();
 		
-		if(!serviceOffer.getServiceProvider().getTypeOfServiceProvider().getName().equals("Igraonica")) {
+		if(serviceOffer.getServiceProvider().getTypeOfServiceProvider().valueOf("IGRAONICA") == null) {
 			playroom = serviceProviderRepository.findById(reservationDTOreq.getPlayroomId()).get();
 		}
 		else {

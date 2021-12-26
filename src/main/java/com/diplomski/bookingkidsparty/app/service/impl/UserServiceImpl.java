@@ -21,7 +21,7 @@ import com.diplomski.bookingkidsparty.app.dto.response.UserDTOres;
 import com.diplomski.bookingkidsparty.app.mapper.UserMapper;
 import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.repository.UserRepository;
-import com.diplomski.bookingkidsparty.app.security.SecurityConfiguration;
+//import com.diplomski.bookingkidsparty.app.security.SecurityConfiguration;
 import com.diplomski.bookingkidsparty.app.security.TokenUtils;
 import com.diplomski.bookingkidsparty.app.service.UserService;
 
@@ -34,10 +34,10 @@ public class UserServiceImpl implements UserService{
 	UserRepository userRepository;
 	@Autowired
 	UserMapper userMapper;
-	@Autowired
-	SecurityConfiguration configuration;
-	@Autowired
-	AuthenticationManager authenticationManager;
+//	@Autowired
+//	SecurityConfiguration configuration;
+//	@Autowired
+//	AuthenticationManager authenticationManager;
 	@Qualifier("userDetailsServiceImpl")
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService{
 			userForEdit.setBlocked(userDTOreq.isBlocked());
 			userForEdit.setEmail(userDTOreq.getEmail());
 			userForEdit.setName(userDTOreq.getName());
-			userForEdit.setPassword(configuration.passwordEncoder().encode(userDTOreq.getPassword()));
+			//userForEdit.setPassword(configuration.passwordEncoder().encode(userDTOreq.getPassword()));
 			userForEdit.setSurname(userDTOreq.getSurname());
 			userForEdit.setTelephoneNumber(userDTOreq.getTelephoneNumber());
 			userForEdit.setUsername(userDTOreq.getUsername());
@@ -111,8 +111,8 @@ public class UserServiceImpl implements UserService{
 	public LoggedInUserDTOres login(LoginDTOreq loginDTOreq) {
 		System.out.println(loginDTOreq.getUserNameOrEmail() + " " + loginDTOreq.getPassword());
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTOreq.getUserNameOrEmail(), loginDTOreq.getPassword());
-		Authentication authentication = authenticationManager.authenticate(token);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		//Authentication authentication = authenticationManager.authenticate(token);
+		//SecurityContextHolder.getContext().setAuthentication(authentication);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTOreq.getUserNameOrEmail());
 		User userFromDb = findByUsernameOrEmail(loginDTOreq.getUserNameOrEmail());
 		String role = userFromDb.getUserRole().toString();

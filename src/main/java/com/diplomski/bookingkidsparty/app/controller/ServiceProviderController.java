@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
@@ -65,10 +66,10 @@ public class ServiceProviderController {
 		}
 	}
 	
-	@GetMapping("/serviceProvider/type/{id}")
-	public ResponseEntity<?> findAllByType(@PathVariable("id") UUID typeId){
+	@GetMapping("/serviceProvider/type/{type}")
+	public ResponseEntity<?> findAllByType(@PathVariable("type") String typeOfServiceProvider){
 			try {
-				List<ServiceProviderDTOres> typesDTO = serviceProviderService.findAllByType(typeId);
+				List<ServiceProviderDTOres> typesDTO = serviceProviderService.findAllByType(typeOfServiceProvider);
 				return new ResponseEntity<List<ServiceProviderDTOres>>(typesDTO, HttpStatus.OK);
 			} catch (NotFoundException e) {
 				return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

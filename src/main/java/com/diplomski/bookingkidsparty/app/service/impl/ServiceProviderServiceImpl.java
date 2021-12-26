@@ -11,10 +11,9 @@ import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.mapper.ServiceProviderMapper;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
-import com.diplomski.bookingkidsparty.app.model.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
-import com.diplomski.bookingkidsparty.app.repository.TypeOfServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.ServiceProviderService;
+import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
 
 import javassist.NotFoundException;
 
@@ -25,8 +24,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	ServiceProviderRepository serviceProviderRepository;
 	@Autowired
 	ServiceProviderMapper serviceMapper;
-	@Autowired
-	TypeOfServiceProviderRepository typeOfServiceProviderRepository;
+	
 	
 	@Override
 	public UUID add(ServiceProviderDTOreq serviceProviderDTO) throws Exception {
@@ -75,9 +73,8 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 				serviceProviderForEdit.setMaxNumberOfKids(serviceProviderDTO.getMaxNumberOfKids());
 				serviceProviderForEdit.setPib(serviceProviderDTO.getPib());
 				serviceProviderForEdit.setTelephoneNumber(serviceProviderDTO.getTelephoneNumber());
-				serviceProviderForEdit.setTypeOfServiceProvider(typeOfServiceProviderRepository
-						.findByName(serviceProviderDTO.getTypeOfServiceProviderName()).get());
-				
+				//serviceProviderForEdit.setTypeOfServiceProvider(TypeOfServiceProvider.valueOf(serviceProviderDTO.getTypeOfServiceProvider()));
+						
 				serviceProviderRepository.saveAndFlush(serviceProviderForEdit);
 			}else {
 				throw new NotFoundException("ServiceProvider with this id doesn't exist!");
@@ -85,10 +82,9 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	}
 
 	@Override
-	public List<ServiceProviderDTOres> findAllByType(UUID typeId) throws NotFoundException {
-		Optional<TypeOfServiceProvider> typeOptional = typeOfServiceProviderRepository.findById(typeId);
-		if(typeOptional.isPresent()) {
-			List<ServiceProvider> services = serviceProviderRepository.findAllByTypeOfServiceProvider(typeOptional.get());
+	public List<ServiceProviderDTOres> findAllByType(String typeOfServiceProvider) throws NotFoundException {
+		if(TypeOfServiceProvider.valueOf(typeOfServiceProvider) != null) {
+			List<ServiceProvider> services = serviceProviderRepository.findAllByTypeOfServiceProvider(typeOfServiceProvider);
 			return serviceMapper.listToListDTO(services);
 		}
 		throw new NotFoundException("TypeOfServiceProvider with this id doesn't exist!");

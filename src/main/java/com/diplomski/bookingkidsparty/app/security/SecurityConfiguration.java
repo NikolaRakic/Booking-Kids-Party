@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		configuration.setAllowedOrigins(Arrays.asList("*"));
 //		configuration.setAllowedMethods(Arrays.asList(accessControlAllowedMethods.split(",")));
 //		configuration.setAllowedHeaders(Arrays.asList(accessControlAllowedHeaders.split(",")));
-		configuration.setAllowCredentials(true);
+		configuration.setAllowCredentials(false);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
@@ -76,7 +76,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().cors().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and().authorizeRequests()
-				.antMatchers("/korisnik/login").permitAll();
+				.antMatchers("/korisnik/login").permitAll()
+				.antMatchers(HttpMethod.GET, "/**").permitAll();
 				//.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				//.anyRequest().authenticated();
 		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);

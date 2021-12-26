@@ -13,9 +13,8 @@ import org.springframework.stereotype.Component;
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
-import com.diplomski.bookingkidsparty.app.model.TypeOfServiceProvider;
-import com.diplomski.bookingkidsparty.app.repository.TypeOfServiceProviderRepository;
-import com.diplomski.bookingkidsparty.app.security.SecurityConfiguration;
+//import com.diplomski.bookingkidsparty.app.security.SecurityConfiguration;
+import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
 
 @Component
 @Configuration
@@ -23,22 +22,27 @@ public class ServiceProviderMapper {
 
 	@Autowired
 	ModelMapper modelMapper;
-	@Autowired
-	SecurityConfiguration configuration;
-	@Autowired
-	TypeOfServiceProviderRepository typeOfServiceRepository;
+	//@Autowired
+	//SecurityConfiguration configuration;
+	
 	
 	public ServiceProvider dtoReqToEntity(ServiceProviderDTOreq serviceProviderDTO) throws Exception {
 		TypeMap<ServiceProviderDTOreq, ServiceProvider> typeMap = modelMapper.getTypeMap(ServiceProviderDTOreq.class, ServiceProvider.class);
-		String encodedPassword = configuration.passwordEncoder().encode(serviceProviderDTO.getPassword());
+		//String encodedPassword = configuration.passwordEncoder().encode(serviceProviderDTO.getPassword());
+		try {
+			TypeOfServiceProvider.valueOf(serviceProviderDTO.getTypeOfServiceProvider());
+		}
+		catch (Exception e) {
+			throw new Exception("TypeOfServiceProvider is invalid");
+		}
+		
 		if(typeMap == null) {
-			TypeOfServiceProvider typeOfService = typeOfServiceRepository.findById(serviceProviderDTO.getTypeOfServiceProviderId()).get();
 			modelMapper.addMappings(new PropertyMap<ServiceProviderDTOreq, ServiceProvider>() {
 	            @Override
 	            protected void configure() {
 	                skip(destination.getId());
-	                map().setPassword(encodedPassword);
-	                map().setTypeOfServiceProvider(typeOfService);
+	                //map().setPassword(encodedPassword);
+	                //map().setTypeOfServiceProvider(type);
 	            }
 	        });
 		}

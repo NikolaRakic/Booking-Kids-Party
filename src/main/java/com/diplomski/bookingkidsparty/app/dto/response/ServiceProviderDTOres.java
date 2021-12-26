@@ -20,7 +20,7 @@ public class ServiceProviderDTOres {
 	private LocalTime startOfWork;
 	private LocalTime endOfWork;
 	private int maxNumberOfKids;
-	private String typeOfServiceProviderName;
+	private String typeOfServiceProvider;
 	private String city;
 	private String adress;
 	private String telephoneNumber;

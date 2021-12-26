@@ -34,7 +34,7 @@ public class ReservationValidate {
 				newReservation.getDateOfReservation().isAfter(newReservation.getServiceOffer().getEndDate())){
 				throw new Exception("The offer is not valid for a this date");
 			}
-		if(newReservation.getServiceOffer().getServiceProvider().getTypeOfServiceProvider().getName().equals(IGRAONICA)) {
+		if(newReservation.getServiceOffer().getServiceProvider().getTypeOfServiceProvider().valueOf("IGRAONICA") != null) {
 			validateForPlayroom(newReservation);
 		}
 		else {

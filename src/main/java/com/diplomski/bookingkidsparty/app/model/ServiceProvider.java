@@ -7,6 +7,8 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -58,8 +62,8 @@ public class ServiceProvider {
 	@Column(name = "max_number_of_kids")
 	private int maxNumberOfKids;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "type_of_service_provider_id")
+	@Column(name = "type_of_service_provider")
+	@Enumerated(EnumType.STRING)
 	private TypeOfServiceProvider typeOfServiceProvider;
 	
 	private String city;
