@@ -22,7 +22,7 @@ public class ReservationValidate {
 			throw new Exception("DateOfReservation is in the past");
 		}
 		if(newReservation.getEndTime().isBefore(newReservation.getStartTime()) || newReservation.getEndTime().equals(newReservation.getStartTime())) {
-			throw new Exception("EndTime is must be after the startDate");
+			throw new Exception("EndTime is must be after the startTime");
 		}
 		if(newReservation.getNumberOfAdults() > newReservation.getServiceOffer().getMaxNumberOfAdults()) {
 			throw new Exception("NumberOfAdults is greater than MaxNumberOfAdults");

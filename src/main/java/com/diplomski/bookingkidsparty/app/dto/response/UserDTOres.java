@@ -4,9 +4,15 @@ import java.util.UUID;
 
 import com.diplomski.bookingkidsparty.app.util.Role;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTOres {
 
 	private UUID id;

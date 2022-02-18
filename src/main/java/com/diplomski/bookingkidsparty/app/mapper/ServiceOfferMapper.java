@@ -14,6 +14,7 @@ import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
+import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
 
 @Component
 public class ServiceOfferMapper {
@@ -36,14 +37,25 @@ public class ServiceOfferMapper {
 	}
 	
 	public ServiceOffer dtoToEntity(ServiceOfferDTOreq serviceOfferDTOreq) {
+		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceOfferDTOreq.getServiceProviderId()).get();
+		
+		 if(serviceProvider.getTypeOfServiceProvider() == TypeOfServiceProvider.KETERING) {
+			 serviceOfferDTOreq.setPricePerHour(0);
+	         }else {
+	        	 serviceOfferDTOreq.setPricePerAdult(0);
+	        	 serviceOfferDTOreq.setPricePerKid(0);
+	         }
+		
 		TypeMap<ServiceOfferDTOreq, ServiceOffer> typeMap = modelMapper.getTypeMap(ServiceOfferDTOreq.class, ServiceOffer.class);
 		if(typeMap == null) {
-			ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceOfferDTOreq.getServiceProviderId()).get();
+			
+			
 			modelMapper.addMappings(new PropertyMap<ServiceOfferDTOreq, ServiceOffer>() {
 	            @Override
 	            protected void configure() {
 	                skip(destination.getId());
 	                map().setServiceProvider(serviceProvider);
+	               
 	            }
 	        });
 		}

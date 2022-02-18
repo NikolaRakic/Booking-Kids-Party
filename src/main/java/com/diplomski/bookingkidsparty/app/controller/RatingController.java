@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.diplomski.bookingkidsparty.app.dto.request.RatingDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.response.StarRatingDTOres;
 import com.diplomski.bookingkidsparty.app.dto.response.RatingDTOres;
 import com.diplomski.bookingkidsparty.app.service.RatingService;
 
@@ -37,6 +39,13 @@ public class RatingController {
 	public ResponseEntity<List<RatingDTOres>> getAllRatingForServiceProvider(@PathVariable("serviceProviderId") UUID serviceProviderId){
 		List<RatingDTOres> ratings = ratingService.getAllByServiceProvider(serviceProviderId);
 		return new ResponseEntity<List<RatingDTOres>>(ratings, HttpStatus.OK);
+	}
+	
+	@GetMapping("/rating")
+	public ResponseEntity<StarRatingDTOres> getAverageRatingForServiceProvider(
+			@RequestParam(value="serviceProviderId", required=true) UUID serviceProviderId){
+		StarRatingDTOres averageRating = ratingService.getAverageRatingByServiceProvider(serviceProviderId);
+		return new ResponseEntity<StarRatingDTOres>(averageRating, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/rating/{id}")

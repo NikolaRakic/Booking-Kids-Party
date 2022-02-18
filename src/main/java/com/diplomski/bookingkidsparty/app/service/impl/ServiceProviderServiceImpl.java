@@ -83,11 +83,12 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
 	@Override
 	public List<ServiceProviderDTOres> findAllByType(String typeOfServiceProvider) throws NotFoundException {
-		if(TypeOfServiceProvider.valueOf(typeOfServiceProvider) != null) {
-			List<ServiceProvider> services = serviceProviderRepository.findAllByTypeOfServiceProvider(typeOfServiceProvider);
+		if(TypeOfServiceProvider.valueOf(typeOfServiceProvider.toUpperCase()) != null) {
+			TypeOfServiceProvider type = TypeOfServiceProvider.valueOf(typeOfServiceProvider.toUpperCase());
+			List<ServiceProvider> services = serviceProviderRepository.findAllByTypeOfServiceProvider(type);
 			return serviceMapper.listToListDTO(services);
 		}
-		throw new NotFoundException("TypeOfServiceProvider with this id doesn't exist!");
+		throw new NotFoundException("TypeOfServiceProvider with this type doesn't exist!");
 	}
 
 }

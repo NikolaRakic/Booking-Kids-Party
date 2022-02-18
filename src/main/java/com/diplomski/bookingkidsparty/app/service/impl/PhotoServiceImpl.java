@@ -31,7 +31,7 @@ public class PhotoServiceImpl implements PhotoService{
 		
 		Optional<ServiceProvider> serviceProviderOptional = serviceProviderRepository.findById(serviceProviderId);
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-		String uploadDir = "provider-photos/" + serviceProviderId;
+		String uploadDir = "../../../Documents/Projects/booking-kids-parties-front/src/assets/provider-photos/" + serviceProviderId;
 
 		if(serviceProviderOptional.isPresent()) {
 		     FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
@@ -39,6 +39,7 @@ public class PhotoServiceImpl implements PhotoService{
 			 Photo photo = new Photo();
 		     photo.setName(fileName);
 		     photo.setServiceProvider(serviceProviderOptional.get());
+		     
 		     photo.setPath(uploadDir);
 		     photoRepository.save(photo);
 		     

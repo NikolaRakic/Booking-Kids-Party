@@ -12,5 +12,6 @@ public class PhotoDTOres {
 
 	private UUID id;
 	private String name;
+	private UUID serviceProviderId;
 	private String path;
 }

@@ -1,5 +1,7 @@
 package com.diplomski.bookingkidsparty.app.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,4 +24,5 @@ public interface ServiceOfferService {
 
 	List<ServiceOfferDTOres> findAllByServiceProvider(UUID id) throws NotFoundException;
 
+	List<ServiceOfferDTOres> findAllPlayroomByBookingDetails(String city, int numberOfKids, int numberOfAdults, LocalDate date, LocalTime startTime, LocalTime endTime) throws NotFoundException, Exception;
 }

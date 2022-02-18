@@ -1,13 +1,17 @@
 package com.diplomski.bookingkidsparty.app.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import javax.persistence.Tuple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.diplomski.bookingkidsparty.app.dto.request.RatingDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.response.StarRatingDTOres;
 import com.diplomski.bookingkidsparty.app.dto.response.RatingDTOres;
 import com.diplomski.bookingkidsparty.app.mapper.RatingMapper;
 import com.diplomski.bookingkidsparty.app.model.Rating;
@@ -27,8 +31,8 @@ public class RatingServiceImpl implements RatingService {
 	
 	@Override
 	public UUID create(RatingDTOreq ratingDto) throws Exception {
-		if(ratingDto.getRate() < 0 || ratingDto.getRate() > 10) {
-			throw new Exception("Rate must be between 0 and 10!");
+		if(ratingDto.getRate() < 0 || ratingDto.getRate() > 5) {
+			throw new Exception("Rate must be between 0 and 5!");
 		}
 		if(ratingRespository.findByReservationId(ratingDto.getReservationId()).isPresent()) {
 			throw new Exception("Rating for this reservation arleady exists");
@@ -52,6 +56,21 @@ public class RatingServiceImpl implements RatingService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public StarRatingDTOres getAverageRatingByServiceProvider(UUID serviceProviderId) {
+		List<Tuple> avg = ratingRespository.avg(serviceProviderId);
+		StarRatingDTOres averageRatingDTOres = new StarRatingDTOres(0,0);
+		
+			for (Tuple long1 : avg) {
+				averageRatingDTOres.setCountOfRate( (long) long1.get(0));
+				if(long1.get(1) != null) {
+					averageRatingDTOres.setAverageRating( (double) long1.get(1));
+				}
+			}
+		
+		return averageRatingDTOres;
 	}
 
 }

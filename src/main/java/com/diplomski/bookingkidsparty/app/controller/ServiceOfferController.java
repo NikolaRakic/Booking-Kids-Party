@@ -1,5 +1,7 @@
 package com.diplomski.bookingkidsparty.app.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
@@ -75,5 +78,26 @@ public class ServiceOfferController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
 		}
 	}
+	
+	@GetMapping("/serviceOffers")
+	public ResponseEntity<?> findAllByBookingDetails(@RequestParam(value="city", required=true) String city,
+			@RequestParam(value="numberOfKids", required=true) int numberOfKids,
+			@RequestParam(value="numberOfAdults", required=true) int numberOfAdults,
+			@RequestParam(value="date", required=true) String dateStr,
+			@RequestParam(value="startTime", required=true) String startTimeStr,
+			@RequestParam(value="endTime", required=true) String endTimeStr) {
+		
+				LocalDate date = LocalDate.parse(dateStr);
+				LocalTime startTime = LocalTime.parse(startTimeStr);
+				LocalTime endTime = LocalTime.parse(endTimeStr);
+				
+				try {
+					List<ServiceOfferDTOres> services = serviecOfferService.findAllPlayroomByBookingDetails(city, numberOfKids, numberOfAdults, date, startTime, endTime);
+					return new ResponseEntity<>(services, HttpStatus.OK);
+				} catch (Exception e) {
+					return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+				}
+				
+			}
 	
 }
