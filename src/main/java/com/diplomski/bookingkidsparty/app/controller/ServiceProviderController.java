@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,7 @@ public class ServiceProviderController {
 			return new ResponseEntity<UUID>(id, HttpStatus.CREATED);
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@GetMapping("/serviceProvider")
 	public ResponseEntity<List<ServiceProviderDTOres>> findAll(){
 			List<ServiceProviderDTOres> services = serviceProviderService.findAll();

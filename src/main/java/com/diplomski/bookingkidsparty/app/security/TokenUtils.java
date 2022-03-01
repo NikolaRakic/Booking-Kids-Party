@@ -7,65 +7,117 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.diplomski.bookingkidsparty.app.model.User;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Component
 public class TokenUtils {
-	@Value("myXAuthSecret")
-	private String secret;
+	
+	@Value("spring-security-example")
+	private String APP_NAME;
+	
+	// Tajna koju samo backend aplikacija treba da zna kako bi mogla da generise i proveri JWT https://jwt.io/
+	@Value("somesecret")
+	public String SECRET;
 
-	@Value("18000")
-	private Long expiration;
+	// Period vazenja
+	@Value("300000")
+	private Long EXPIRES_IN;
 
+	// Naziv headera kroz koji ce se prosledjivati JWT u komunikaciji server-klijent
+	@Value("Authorization")
+	private String AUTH_HEADER;
+	
+	// Algoritam za potpisivanje JWT
+	private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+	
+	
+	// Funkcija za generisanje JWT token
+	public String generateToken(String username, String roles) {
+		return Jwts.builder()
+				.setIssuer(APP_NAME)
+				.setSubject(username)
+				.setIssuedAt(new Date())
+				.setExpiration(generateExpirationDate())
+				.claim("roles", roles)
+					// .claim("key", value) //moguce je postavljanje proizvoljnih podataka u telo JWT tokena
+				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
+	}
+		
+	private Date generateExpirationDate() {
+		return new Date(new Date().getTime() + EXPIRES_IN);
+	}
+	
+	private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
+		return (lastPasswordReset != null && created.before(lastPasswordReset));
+	}
+
+	
+	// Funkcija za validaciju JWT tokena
+	public Boolean validateToken(String token, UserDetails userDetails) {
+		User user = (User) userDetails;
+		final String username = getUsernameFromToken(token);
+		final Date created = getIssuedAtDateFromToken(token);
+		
+		return (username != null && username.equals(userDetails.getUsername())
+				&& !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate()));
+	}
+	
 	public String getUsernameFromToken(String token) {
 		String username;
 		try {
-			Claims claims = this.getClaimsFromToken(token);
+			final Claims claims = this.getAllClaimsFromToken(token);
 			username = claims.getSubject();
 		} catch (Exception e) {
 			username = null;
 		}
 		return username;
 	}
-
-	private Claims getClaimsFromToken(String token) {
+	
+	// Funkcija za citanje svih podataka iz JWT tokena
+	private Claims getAllClaimsFromToken(String token) {
 		Claims claims;
 		try {
-			claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
+			claims = Jwts.parser()
+					.setSigningKey(SECRET)
+					.parseClaimsJws(token)
+					.getBody();
 		} catch (Exception e) {
 			claims = null;
 		}
 		return claims;
 	}
-
-	public Date getExpirationDateFromToken(String token) {
-		Date expiration;
+	
+	public Date getIssuedAtDateFromToken(String token) {
+		Date issueAt;
 		try {
-			final Claims claims = this.getClaimsFromToken(token);
-			expiration = claims.getExpiration();
+			final Claims claims = this.getAllClaimsFromToken(token);
+			issueAt = claims.getIssuedAt();
 		} catch (Exception e) {
-			expiration = null;
+			issueAt = null;
 		}
-		return expiration;
+		return issueAt;
 	}
 
-	private boolean isTokenExpired(String token) {
-		final Date expiration = this.getExpirationDateFromToken(token);
-		return expiration.before(new Date(System.currentTimeMillis()));
+	public Long getExpiredIn() {
+		return EXPIRES_IN;
 	}
 
-	public boolean validateToken(String token, UserDetails userDetails) {
-		final String username = getUsernameFromToken(token);
-		return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+	public String getToken(HttpServletRequest request) {
+		String authHeader = getAuthHeaderFromHeader(request);
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.substring(7);
+		}
+		return null;
+	}
+	
+	public String getAuthHeaderFromHeader(HttpServletRequest request) {
+		return request.getHeader(AUTH_HEADER);
 	}
 
-	public String generateToken(UserDetails userDetails) {
-		Map<String, Object> claims = new HashMap<String, Object>();
-		claims.put("sub", userDetails.getUsername());
-		claims.put("created", new Date(System.currentTimeMillis()));
-		return Jwts.builder().setClaims(claims).setExpiration(new Date(System.currentTimeMillis() * 2))
-				.signWith(SignatureAlgorithm.HS512, secret).compact();
-	}
 }

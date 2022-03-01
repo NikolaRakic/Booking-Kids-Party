@@ -24,7 +24,8 @@ public interface UserService {
 	boolean delete(UUID id);
 
 	User findByUsernameOrEmail(String userNameOrEmail);
+
+	void changePassword(String oldPassword, String newPassword);
 	
-	LoggedInUserDTOres login(LoginDTOreq loginDTOreq);
 
 }

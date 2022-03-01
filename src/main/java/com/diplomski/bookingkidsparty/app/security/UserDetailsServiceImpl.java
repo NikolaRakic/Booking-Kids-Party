@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.repository.UserRepository;
 
-
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 

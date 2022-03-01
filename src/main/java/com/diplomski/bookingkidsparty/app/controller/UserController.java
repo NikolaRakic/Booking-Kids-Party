@@ -73,13 +73,4 @@ public class UserController {
 		return new ResponseEntity<>(userService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 	
-	@PostMapping(value="/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> login(@RequestBody LoginDTOreq loginDTO){
-		LoggedInUserDTOres loggedIn = userService.login(loginDTO);
-		if(loggedIn == null) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
-		return new ResponseEntity<>(loggedIn, HttpStatus.OK);
-	}
-	
 }

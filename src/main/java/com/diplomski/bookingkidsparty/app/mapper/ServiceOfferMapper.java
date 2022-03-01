@@ -48,8 +48,7 @@ public class ServiceOfferMapper {
 		
 		TypeMap<ServiceOfferDTOreq, ServiceOffer> typeMap = modelMapper.getTypeMap(ServiceOfferDTOreq.class, ServiceOffer.class);
 		if(typeMap == null) {
-			
-			
+
 			modelMapper.addMappings(new PropertyMap<ServiceOfferDTOreq, ServiceOffer>() {
 	            @Override
 	            protected void configure() {

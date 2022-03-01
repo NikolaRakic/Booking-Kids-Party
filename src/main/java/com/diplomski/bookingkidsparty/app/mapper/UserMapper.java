@@ -10,14 +10,16 @@ import org.springframework.stereotype.Component;
 import com.diplomski.bookingkidsparty.app.dto.request.UserDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.UserDTOres;
 import com.diplomski.bookingkidsparty.app.model.User;
+import com.diplomski.bookingkidsparty.app.security.WebSecurityConfig;
 //import com.diplomski.bookingkidsparty.app.security.SecurityConfiguration;
 import com.diplomski.bookingkidsparty.app.util.Role;
 
 @Component
 public class UserMapper {
 
-	//@Autowired
-	//SecurityConfiguration configuration;
+	@Autowired
+	WebSecurityConfig configuration;
+	
 	@Autowired
 	ModelMapper modelMapper;
 	
@@ -27,9 +29,9 @@ public class UserMapper {
 		user.setName(userDTOreq.getName());
 		user.setUsername(userDTOreq.getUsername());
 		user.setSurname(userDTOreq.getSurname());
-		//user.setPassword(configuration.passwordEncoder().encode(userDTOreq.getPassword()));
+		user.setPassword(configuration.passwordEncoder().encode(userDTOreq.getPassword()));
 		user.setTelephoneNumber(userDTOreq.getTelephoneNumber());
-		user.setUserRole(Role.USER);
+		user.setUserRole(Role.ROLE_USER);
 		user.setBlocked(false);
 		
 		return user;
