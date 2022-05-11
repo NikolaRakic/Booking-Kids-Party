@@ -14,9 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.diplomski.bookingkidsparty.app.dto.request.UserDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.UserDTOres;
-import com.diplomski.bookingkidsparty.app.mapper.UserMapper;
+import com.diplomski.bookingkidsparty.app.dto.request.ParentDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.response.ParentDTOres;
+import com.diplomski.bookingkidsparty.app.mapper.ParentMapper;
 import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.repository.UserRepository;
 import com.diplomski.bookingkidsparty.app.security.TokenUtils;
@@ -24,7 +24,7 @@ import com.diplomski.bookingkidsparty.app.service.UserService;
 
 import javassist.NotFoundException;
 
-@Service
+@Service("UserServiceImpl")
 public class UserServiceImpl implements UserService, UserDetailsService{
 
 	protected final Log LOGGER = LogFactory.getLog(getClass());
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	UserRepository userRepository;
 	
 	@Autowired
-	UserMapper userMapper;
+	ParentMapper userMapper;
 	
 	@Qualifier("userDetailsServiceImpl")
 	@Autowired
@@ -41,50 +41,33 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	
 	@Autowired
 	TokenUtils tokenUtils;
-	
-	@Override
-	public UUID registration(UserDTOreq userDTOreq) throws Exception {
-		User user = userMapper.DTOreqToEntity(userDTOreq);
-		Optional<User> userOptional = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
-		if(!userOptional.isPresent()) {
-			userRepository.saveAndFlush(user);
-			return user.getId();
-		}
-		throw new Exception("User with this username or email arleady exist!");
-	}
+	//-*-*-*-*-*-*-*-*-
+//	@Override
+//	public UUID registration(ParentDTOreq userDTOreq) throws Exception {
+//		User user = userMapper.DTOreqToEntity(userDTOreq);
+//		Optional<User> userOptional = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
+//		if(!userOptional.isPresent()) {
+//			userRepository.saveAndFlush(user);
+//			return user.getId();
+//		}
+//		throw new Exception("User with this username or email arleady exist!");
+//	}
 
-	@Override
-	public UserDTOres findById(UUID id) throws NotFoundException {
-		Optional<User> userOptional = userRepository.findById(id);
-		if(userOptional.isPresent()) {
-			return userMapper.EntityToDTOres(userOptional.get());
-		}
-		throw new NotFoundException("User with this id doesn't exist!");
-	}
+//	@Override
+//	public ParentDTOres findById(UUID id) throws NotFoundException {
+//		Optional<User> userOptional = userRepository.findById(id);
+//		if(userOptional.isPresent()) {
+//			return userMapper.EntityToDTOres(userOptional.get());
+//		}
+//		throw new NotFoundException("User with this id doesn't exist!");
+//	}
+//
+//	@Override
+//	public List<ParentDTOres> findAll() {
+//		return userMapper.ListToListDTO(userRepository.findAll());
+//	}
 
-	@Override
-	public List<UserDTOres> findAll() {
-		return userMapper.ListToListDTO(userRepository.findAll());
-	}
 
-	@Override
-	public void edit(UUID id, UserDTOreq userDTOreq) throws NotFoundException {
-		Optional<User> userOptional = userRepository.findById(id);
-		if(userOptional.isPresent()) {
-			User userForEdit = userOptional.get();
-			userForEdit.setBlocked(userDTOreq.isBlocked());
-			userForEdit.setEmail(userDTOreq.getEmail());
-			userForEdit.setName(userDTOreq.getName());
-			//userForEdit.setPassword(configuration.passwordEncoder().encode(userDTOreq.getPassword()));
-			userForEdit.setSurname(userDTOreq.getSurname());
-			userForEdit.setTelephoneNumber(userDTOreq.getTelephoneNumber());
-			userForEdit.setUsername(userDTOreq.getUsername());
-			
-			userRepository.saveAndFlush(userForEdit);
-		}else {
-			throw new NotFoundException("User with this id doesn't exist!");
-		}
-	}
 
 	@Override
 	public boolean delete(UUID id) {
@@ -98,7 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
 	@Override
 	public User findByUsernameOrEmail(String userNameOrEmail) {
-		Optional<User> userOptional = userRepository.findByUsernameOrEmail(userNameOrEmail, userNameOrEmail);
+		Optional<User> userOptional = userRepository.findByUsernameOrEmail(userNameOrEmail);
 		if(userOptional.isPresent()) {
 			return userOptional.get();
 		}
@@ -107,11 +90,12 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username);
-		if (user == null) {
+		System.out.println("loaduserbyusername -> userService");
+		Optional<User> userOptional = userRepository.findByUsernameOrEmail(username);
+		if (!userOptional.isPresent()) {
 			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
 		} else {
-			return user;
+			return userOptional.get();
 		}
 	}
 	

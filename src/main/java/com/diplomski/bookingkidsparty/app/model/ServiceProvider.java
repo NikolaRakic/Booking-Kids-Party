@@ -15,13 +15,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
+import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,8 +30,13 @@ import lombok.ToString;
 @Table(name = "service_provider")
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
-public class ServiceProvider {
+public class ServiceProvider extends User{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -42,14 +46,8 @@ public class ServiceProvider {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
 	private UUID id;
 	
-	private String name;
-	
 	@Column(name = "account_number")
 	private String accountNumber;
-	
-	private String email;
-	
-	private String password;
 	
 	private String pib;
 	
@@ -69,9 +67,6 @@ public class ServiceProvider {
 	private String city;
 	
 	private String adress;
-	
-	@Column(name = "telephone_number")
-	private String telephoneNumber;
 	
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "serviceProvider")
 	private Set<Photo> photos;

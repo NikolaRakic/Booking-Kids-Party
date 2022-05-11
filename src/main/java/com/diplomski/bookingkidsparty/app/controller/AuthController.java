@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.diplomski.bookingkidsparty.app.dto.request.LoginDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.request.UserDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.request.ParentDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.request.UserTokenStateDTO;
 import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.security.TokenUtils;
+import com.diplomski.bookingkidsparty.app.service.ParentService;
 import com.diplomski.bookingkidsparty.app.service.UserService;
 
 import java.security.Principal;
@@ -40,14 +42,16 @@ public class AuthController {
 	private UserService userService;
 	
 	@Autowired
+	private ParentService parentService;
+	
+	@Autowired
 	private AuthenticationManager authenticationManager;
 
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenStateDTO> createAuthenticationToken(@RequestBody LoginDTOreq loginDTOreq,
 			HttpServletResponse response) {
-
 		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(loginDTOreq.getUserNameOrEmail(),
+				.authenticate(new UsernamePasswordAuthenticationToken(loginDTOreq.getUsernameOrEmail(),
 						loginDTOreq.getPassword()));
 
 		// Ubaci korisnika u trenutni security kontekst
@@ -55,19 +59,19 @@ public class AuthController {
 
 		// Kreiraj token za tog korisnika
 		User user = (User) authentication.getPrincipal();
-		System.out.println( user.getEmail() + "-----------------");
-		String jwt = tokenUtils.generateToken(user.getUsername(), user.getUserRole().toString());
+		String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getUserRole().toString());
 		Long expiresIn = tokenUtils.getExpiredIn();
-
+		System.out.println(user.getAuthorities());
 		// Vrati token kao odgovor na uspesnu autentifikaciju
 		return ResponseEntity.ok(new UserTokenStateDTO(jwt, expiresIn));
 	}
 	
-	@PostMapping("/signup")
-	public ResponseEntity<UUID> addUser(@RequestBody UserDTOreq userRequest, UriComponentsBuilder ucBuilder) throws Exception {
-		UUID userId = userService.registration(userRequest);
-		return new ResponseEntity<>(userId, HttpStatus.CREATED);
+	@PostMapping("/parent/signup")
+	public ResponseEntity<UUID> registrationParent(@RequestBody ParentDTOreq parentRequest, UriComponentsBuilder ucBuilder) throws Exception {
+		UUID parentId = parentService.registration(parentRequest);
+		return new ResponseEntity<>(parentId, HttpStatus.CREATED);
 	}
+	
 	//@PreAuthorize("hasRole('USER')")
 	@PostMapping("/change-password")
 	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger, Principal p, Authentication auths) {

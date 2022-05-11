@@ -1,4 +1,4 @@
-package com.diplomski.bookingkidsparty.app.util;
+package com.diplomski.bookingkidsparty.app.model.enums;
 
 public enum TypeOfServiceProvider {
 

@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -39,7 +40,8 @@ public class Photo {
 	@JoinColumn(name = "service_provider_id")
 	private ServiceProvider serviceProvider;
 	
-	private String path;
+	 @Lob
+	 private byte[] data;
 	
 
 }

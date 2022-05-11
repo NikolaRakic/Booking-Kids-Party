@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
@@ -23,19 +25,20 @@ import com.diplomski.bookingkidsparty.app.service.ServiceOfferService;
 
 import javassist.NotFoundException;
 
-@Controller
+@RestController
+@RequestMapping("serviceOffers")
 public class ServiceOfferController {
 	
 	@Autowired
 	ServiceOfferService serviecOfferService;
 	
-	@GetMapping("/serviceOffer")
+	@GetMapping
 	public ResponseEntity<List<ServiceOfferDTOres>> findAll(){
 		List<ServiceOfferDTOres> serviceOffersDto = serviecOfferService.findAll();
 		return new ResponseEntity<List<ServiceOfferDTOres>>(serviceOffersDto, HttpStatus.OK);
 	}
 	
-	@GetMapping("/serviceOffer/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") UUID id) throws Exception{
 		try {
 			ServiceOfferDTOres serviceOfferDto = serviecOfferService.findById(id);
@@ -45,18 +48,18 @@ public class ServiceOfferController {
 		}			
 	}
 
-	@PostMapping("/serviceOffer")
+	@PostMapping
 	public ResponseEntity<UUID> add(@RequestBody ServiceOfferDTOreq serviceOfferDTOreq) throws Exception {
 		UUID id = serviecOfferService.add(serviceOfferDTOreq);
 		return new ResponseEntity<UUID>(id, HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping("/serviceOffer/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") UUID id) throws Exception{
 		return new ResponseEntity<>(serviecOfferService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 	
-	@PutMapping("/serviceOffer/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<?> edit(@PathVariable("id") UUID id, @RequestBody ServiceOfferDTOreq serviceOfferDTO){
 		try {
 			serviecOfferService.edit(id, serviceOfferDTO);
@@ -68,7 +71,7 @@ public class ServiceOfferController {
 		}
 	}
 	
-	@GetMapping("/serviceOffer/serviceProvider/{id}")
+	@GetMapping("/serviceProvider/{id}")
 	public ResponseEntity<?> findAllByServiceProvider(@PathVariable("id") UUID id){
 		List<ServiceOfferDTOres> serviceOffersDto;
 		try {
@@ -79,7 +82,7 @@ public class ServiceOfferController {
 		}
 	}
 	
-	@GetMapping("/serviceOffers")
+	@GetMapping("/bookingDetails")
 	public ResponseEntity<?> findAllByBookingDetails(@RequestParam(value="city", required=true) String city,
 			@RequestParam(value="numberOfKids", required=true) int numberOfKids,
 			@RequestParam(value="numberOfAdults", required=true) int numberOfAdults,

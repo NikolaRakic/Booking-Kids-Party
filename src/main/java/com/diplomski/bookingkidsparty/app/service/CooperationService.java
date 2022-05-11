@@ -6,12 +6,13 @@ import java.util.UUID;
 
 import com.diplomski.bookingkidsparty.app.dto.request.CooperationDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoDTOres;
 
 public interface CooperationService {
 
 	void add(CooperationDTOreq cooperationDTOreq) throws Exception;
 
-	List<ServiceProviderDTOres> findAllByServiceProvider(UUID serviceProviderId);
+	List<ServiceProviderOnePhotoDTOres> findAllByServiceProvider(UUID serviceProviderId);
 
 	boolean delete(CooperationDTOreq cooperationDTOreq);
 

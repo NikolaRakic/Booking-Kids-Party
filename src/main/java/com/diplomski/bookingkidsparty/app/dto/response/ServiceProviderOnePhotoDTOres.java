@@ -1,7 +1,6 @@
 package com.diplomski.bookingkidsparty.app.dto.response;
 
 import java.time.LocalTime;
-import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class ServiceProviderDTOres {
+public class ServiceProviderOnePhotoDTOres {
 
 	private UUID id;
 	private String username;
@@ -24,5 +23,5 @@ public class ServiceProviderDTOres {
 	private String city;
 	private String adress;
 	private String telephoneNumber;
-	//private List<PhotoDTOres> photos;
+	private PhotoDTOres photo;
 }

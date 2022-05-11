@@ -12,20 +12,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.diplomski.bookingkidsparty.app.dto.request.RatingDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.StarRatingDTOres;
 import com.diplomski.bookingkidsparty.app.dto.response.RatingDTOres;
 import com.diplomski.bookingkidsparty.app.service.RatingService;
 
-@Controller
+@RestController
+@RequestMapping("ratings")
 public class RatingController {
 
 	@Autowired
 	RatingService ratingService;
 	
-	@PostMapping("/rating")
+	@PostMapping
 	public ResponseEntity<?> create(@RequestBody RatingDTOreq ratingDto){
 		try {
 			UUID id = ratingService.create(ratingDto);
@@ -35,20 +38,20 @@ public class RatingController {
 		}
 	}
 	
-	@GetMapping("/rating/{serviceProviderId}")
+	@GetMapping("/{serviceProviderId}")
 	public ResponseEntity<List<RatingDTOres>> getAllRatingForServiceProvider(@PathVariable("serviceProviderId") UUID serviceProviderId){
 		List<RatingDTOres> ratings = ratingService.getAllByServiceProvider(serviceProviderId);
 		return new ResponseEntity<List<RatingDTOres>>(ratings, HttpStatus.OK);
 	}
 	
-	@GetMapping("/rating")
+	@GetMapping
 	public ResponseEntity<StarRatingDTOres> getAverageRatingForServiceProvider(
 			@RequestParam(value="serviceProviderId", required=true) UUID serviceProviderId){
 		StarRatingDTOres averageRating = ratingService.getAverageRatingByServiceProvider(serviceProviderId);
 		return new ResponseEntity<StarRatingDTOres>(averageRating, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/rating/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") UUID id){
 		return new ResponseEntity<>(ratingService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}

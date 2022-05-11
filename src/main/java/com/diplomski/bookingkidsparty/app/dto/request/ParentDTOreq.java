@@ -3,7 +3,7 @@ package com.diplomski.bookingkidsparty.app.dto.request;
 import lombok.Data;
 
 @Data
-public class UserDTOreq {
+public class ParentDTOreq {
 
 	private String name;
 	private String surname;

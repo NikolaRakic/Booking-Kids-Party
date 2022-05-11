@@ -4,9 +4,12 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class ServiceOfferDTOres {
 
 	private UUID id;

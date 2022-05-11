@@ -12,6 +12,7 @@ import com.diplomski.bookingkidsparty.app.model.User;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,7 +27,7 @@ public class TokenUtils {
 	public String SECRET;
 
 	// Period vazenja
-	@Value("300000")
+	@Value("30000000")
 	private Long EXPIRES_IN;
 
 	// Naziv headera kroz koji ce se prosledjivati JWT u komunikaciji server-klijent
@@ -38,13 +39,14 @@ public class TokenUtils {
 	
 	
 	// Funkcija za generisanje JWT token
-	public String generateToken(String username, String roles) {
+	public String generateToken(String username, UUID id, String roles) {
 		return Jwts.builder()
 				.setIssuer(APP_NAME)
 				.setSubject(username)
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())
 				.claim("roles", roles)
+				.claim("userId", id)
 					// .claim("key", value) //moguce je postavljanje proizvoljnih podataka u telo JWT tokena
 				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 	}

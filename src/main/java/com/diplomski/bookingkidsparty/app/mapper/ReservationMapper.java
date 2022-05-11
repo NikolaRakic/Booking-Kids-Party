@@ -18,10 +18,10 @@ import com.diplomski.bookingkidsparty.app.model.Reservation;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.model.User;
+import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceOfferRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.repository.UserRepository;
-import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
 
 import javassist.NotFoundException;
 
@@ -107,7 +107,7 @@ public class ReservationMapper {
 			reservationDto.setNumberOfAdults(reservation.getNumberOfAdults());
 			reservationDto.setNumberOfKids(reservation.getNumberOfKids());
 			reservationDto.setPlayroomId(reservation.getPlayroom().getId());
-			reservationDto.setPlayroomName(reservation.getPlayroom().getName());
+			reservationDto.setPlayroomName(reservation.getPlayroom().getUsername());
 			reservationDto.setServiceOfferId(reservation.getServiceOffer().getId());
 			reservationDto.setServiceOfferName(reservation.getServiceOffer().getName());
 			reservationDto.setStartTime(reservation.getStartTime());

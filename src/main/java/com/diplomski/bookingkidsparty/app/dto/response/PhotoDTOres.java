@@ -2,6 +2,8 @@ package com.diplomski.bookingkidsparty.app.dto.response;
 
 import java.util.UUID;
 
+import javax.persistence.Lob;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,6 @@ public class PhotoDTOres {
 
 	private UUID id;
 	private String name;
-	private UUID serviceProviderId;
-	private String path;
+	@Lob
+	private byte[] data;
 }

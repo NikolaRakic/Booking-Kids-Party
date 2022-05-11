@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -18,11 +19,11 @@ import com.diplomski.bookingkidsparty.app.mapper.ServiceOfferMapper;
 import com.diplomski.bookingkidsparty.app.model.Reservation;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
+import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceOfferRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.ServiceOfferService;
 import com.diplomski.bookingkidsparty.app.util.OfferValidate;
-import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
 
 import javassist.NotFoundException;
 
@@ -114,7 +115,13 @@ public class ServiceOfferServiceImpl implements ServiceOfferService{
 		List<ServiceOffer> offers = serviceOfferRepository.findAllByBookingDetails(
 				date, startTime, endTime, city, numberOfKids, numberOfAdults, TypeOfServiceProvider.IGRAONICA);
 		
+		//List<ServiceOffer> offersBetween = serviceOfferRepository.
+		
 		List<ServiceOffer> offersForDelete = new ArrayList<ServiceOffer>();
+		
+
+		
+		
 		
 		//prolazi kroz sve ponude koje su aktivne dobijenog datuma
 		for (ServiceOffer serviceOffer : offers) {

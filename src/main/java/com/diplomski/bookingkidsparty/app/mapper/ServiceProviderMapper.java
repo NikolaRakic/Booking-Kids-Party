@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoDTOres;
+import com.diplomski.bookingkidsparty.app.model.Photo;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
-//import com.diplomski.bookingkidsparty.app.security.SecurityConfiguration;
-import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
+import com.diplomski.bookingkidsparty.app.model.enums.Role;
+import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 
 @Component
 @Configuration
@@ -24,6 +26,8 @@ public class ServiceProviderMapper {
 	ModelMapper modelMapper;
 	//@Autowired
 	//SecurityConfiguration configuration;
+	@Autowired
+	PhotoMapper photoMapper;
 	
 	
 	public ServiceProvider dtoReqToEntity(ServiceProviderDTOreq serviceProviderDTO) throws Exception {
@@ -41,6 +45,7 @@ public class ServiceProviderMapper {
 	            @Override
 	            protected void configure() {
 	                skip(destination.getId());
+	                map().setUserRole(Role.ROLE_SERVICE_PROVIDER);
 	                //map().setPassword(encodedPassword);
 	                //map().setTypeOfServiceProvider(type);
 	            }
@@ -54,10 +59,18 @@ public class ServiceProviderMapper {
 		 return modelMapper.map(serviceProvider, ServiceProviderDTOres.class);
 	}
 	
-	public List<ServiceProviderDTOres> listToListDTO(List<ServiceProvider> services){
-		List<ServiceProviderDTOres> servicesDTO = new ArrayList<ServiceProviderDTOres>();
-		for (ServiceProvider ServiceProvider : services) {
-			servicesDTO.add(entityToDTOres(ServiceProvider));
+	public ServiceProviderOnePhotoDTOres entityToDTOresWithOnePhoto(ServiceProvider serviceProvider) {
+		return new ServiceProviderOnePhotoDTOres(serviceProvider.getId(), serviceProvider.getUsername(),
+				serviceProvider.getAccountNumber(), serviceProvider.getEmail(), serviceProvider.getPib(), serviceProvider.getStartOfWork(),
+				serviceProvider.getEndOfWork(), serviceProvider.getMaxNumberOfKids(), serviceProvider.getTypeOfServiceProvider().name(),
+				serviceProvider.getCity(), serviceProvider.getAdress(), serviceProvider.getTelephoneNumber(),
+				photoMapper.entityToDto(serviceProvider.getPhotos().stream().findFirst().orElse(new Photo())));
+	}
+	
+	public List<ServiceProviderOnePhotoDTOres> listToListDTO(List<ServiceProvider> services){
+		List<ServiceProviderOnePhotoDTOres> servicesDTO = new ArrayList<ServiceProviderOnePhotoDTOres>();
+		for (ServiceProvider serviceProvider : services) {
+			servicesDTO.add(entityToDTOresWithOnePhoto(serviceProvider));
 		}
 		return servicesDTO;
 	}

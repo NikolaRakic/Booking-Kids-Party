@@ -14,19 +14,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ReservationDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ReservationDTOres;
 import com.diplomski.bookingkidsparty.app.service.ReservationService;
 
-@Controller
+@RestController
+@RequestMapping("reservations")
 public class ReservationController {
 
 	@Autowired
 	ReservationService reservationService;
 
-	@PostMapping("/reservation")
+	@PostMapping
 	public ResponseEntity<?> add(@RequestBody ReservationDTOreq reservationDTOreq) {
 		try {
 			UUID id = reservationService.add(reservationDTOreq);
@@ -36,13 +39,13 @@ public class ReservationController {
 		}
 	}
 
-	@GetMapping("/reservation")
+	@GetMapping
 	public ResponseEntity<List<ReservationDTOres>> getAll() {
 		List<ReservationDTOres> reservationsDTOres = reservationService.getAll();
 		return new ResponseEntity<List<ReservationDTOres>>(reservationsDTOres, HttpStatus.OK);
 	}
 	
-	@GetMapping("/reservation/{playRoomId}")
+	@GetMapping("/{playRoomId}")
 	public ResponseEntity<List<ReservationDTOres>> getAllByParty(
 			@PathVariable("playRoomId") UUID playRoomId,
 			@RequestParam(value="dateOfReservation", required=true) String dateOfReservationStr,
@@ -54,19 +57,19 @@ public class ReservationController {
 		return new ResponseEntity<List<ReservationDTOres>>(reservationByParty, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/reservation/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") UUID id){
 		return new ResponseEntity<>(reservationService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 	
-	@GetMapping("/reservation/serviceProvider/{serviceProviderId}")
+	@GetMapping("/serviceProvider/{serviceProviderId}")
 	public ResponseEntity<List<ReservationDTOres>> getAllByServisProvider(
 			@PathVariable("serviceProviderId") UUID serviceProviderId) {
 		List<ReservationDTOres> reservationsDTOres = reservationService.getAllByServisProvider(serviceProviderId);
 		return new ResponseEntity<List<ReservationDTOres>>(reservationsDTOres, HttpStatus.OK);
 	}
 
-	@GetMapping("/reservation/user/{userId}")
+	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<ReservationDTOres>> getAllByUser(@PathVariable("userId") UUID userId) {
 		List<ReservationDTOres> reservationsDTOres = reservationService.getAllByUser(userId);
 		return new ResponseEntity<List<ReservationDTOres>>(reservationsDTOres, HttpStatus.OK);

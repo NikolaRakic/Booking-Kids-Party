@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
-import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
+import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 
 @Repository
 public interface ServiceProviderRepository extends JpaRepository<ServiceProvider, UUID>{

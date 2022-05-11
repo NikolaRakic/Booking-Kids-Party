@@ -3,12 +3,16 @@ package com.diplomski.bookingkidsparty.app.dto.request;
 import java.time.LocalTime;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class ServiceProviderDTOreq {
 
-	private String name;
+	private String username;
 	private String accountNumber;
 	private String email;
 	private String password;

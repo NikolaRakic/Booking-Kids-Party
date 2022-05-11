@@ -44,7 +44,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			if (username != null) {
 				// uzmi user-a na osnovu username-a
 				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-				
 				// proveri da li je prosledjeni token validan
 				if (tokenUtils.validateToken(authToken, userDetails)) {
 					// kreiraj autentifikaciju

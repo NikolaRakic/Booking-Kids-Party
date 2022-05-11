@@ -13,8 +13,8 @@ import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
+import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
-import com.diplomski.bookingkidsparty.app.util.TypeOfServiceProvider;
 
 @Component
 public class ServiceOfferMapper {

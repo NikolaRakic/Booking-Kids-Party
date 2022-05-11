@@ -2,7 +2,7 @@ package com.diplomski.bookingkidsparty.app.dto.response;
 
 import java.util.UUID;
 
-import com.diplomski.bookingkidsparty.app.util.Role;
+import com.diplomski.bookingkidsparty.app.model.enums.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTOres {
+public class ParentDTOres {
 
 	private UUID id;
 	private String name;

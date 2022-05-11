@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.diplomski.bookingkidsparty.app.dto.request.CooperationDTOreq;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoDTOres;
 import com.diplomski.bookingkidsparty.app.mapper.ServiceProviderMapper;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
@@ -41,7 +42,7 @@ public class CooperationServiceImpl implements CooperationService {
 	}
 
 	@Override
-	public List<ServiceProviderDTOres> findAllByServiceProvider(UUID serviceProviderId) {
+	public List<ServiceProviderOnePhotoDTOres> findAllByServiceProvider(UUID serviceProviderId) {
 		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId).get();
 		
 		List<ServiceProvider> servicesProvider = new ArrayList<ServiceProvider>();
