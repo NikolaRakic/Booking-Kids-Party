@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class LoggedInUserDTOres {
+public class LoggedInUserResponseDTO {
 
 	private UUID id;
 	private String token;

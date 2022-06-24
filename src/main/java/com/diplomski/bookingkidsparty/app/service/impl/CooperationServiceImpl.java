@@ -9,9 +9,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.diplomski.bookingkidsparty.app.dto.request.CooperationDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.CooperationRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.mapper.ServiceProviderMapper;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
@@ -26,7 +26,7 @@ public class CooperationServiceImpl implements CooperationService {
 	ServiceProviderMapper serviceProviderMapper;
 	
 	@Override
-	public void add(CooperationDTOreq cooperationDTOreq) throws Exception {
+	public void add(CooperationRequestDTO cooperationDTOreq) throws Exception {
 		Optional<ServiceProvider> playRoomOptional = serviceProviderRepository.findById(cooperationDTOreq.getPlayRoomId());
 		Optional<ServiceProvider> cooperationServiceOptional = serviceProviderRepository.findById(cooperationDTOreq.getCooperationServiceId());
 		if(playRoomOptional.isPresent() && cooperationServiceOptional.isPresent()) {
@@ -42,8 +42,9 @@ public class CooperationServiceImpl implements CooperationService {
 	}
 
 	@Override
-	public List<ServiceProviderOnePhotoDTOres> findAllByServiceProvider(UUID serviceProviderId) {
-		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId).get();
+	public List<ServiceProviderOnePhotoResponseDTO> findAllByServiceProvider(UUID serviceProviderId) {
+		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId).orElseThrow(() -> 
+		new IllegalArgumentException("Service Provider with id " + serviceProviderId + " dosen't exist."));
 		
 		List<ServiceProvider> servicesProvider = new ArrayList<ServiceProvider>();
 		if(!serviceProvider.getPlayRoom().isEmpty()) {
@@ -57,9 +58,10 @@ public class CooperationServiceImpl implements CooperationService {
 		}
 		return serviceProviderMapper.listToListDTO(servicesProvider);
 	}
+	
 
 	@Override
-	public boolean delete(CooperationDTOreq cooperationDTOreq) {
+	public boolean delete(CooperationRequestDTO cooperationDTOreq) {
 		Optional<ServiceProvider> playRoomOptional = serviceProviderRepository.findById(cooperationDTOreq.getPlayRoomId());
 		Optional<ServiceProvider> cooperationServiceOptional = serviceProviderRepository.findById(cooperationDTOreq.getCooperationServiceId());
 		if(playRoomOptional.isPresent() && cooperationServiceOptional.isPresent() && playRoomOptional.get().getCooperationService().contains(cooperationServiceOptional.get())) {

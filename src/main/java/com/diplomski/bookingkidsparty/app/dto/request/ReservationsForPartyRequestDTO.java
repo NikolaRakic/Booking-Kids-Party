@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class ReservationsForPartyDTOreq {
+public class ReservationsForPartyRequestDTO {
 	
 	UUID playRoomId;
 	LocalDate dateOfReservation;

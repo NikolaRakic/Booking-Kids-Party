@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderRequestDTO;
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderEditDTO;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.service.ServiceProviderService;
 import com.diplomski.bookingkidsparty.app.util.GeneratePassword;
@@ -37,22 +37,22 @@ public class ServiceProviderController {
 	
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	@PostMapping
-	public ResponseEntity<UUID> add(@RequestBody ServiceProviderDTOreq serviceProviderDTO) throws Exception{
+	public ResponseEntity<UUID> add(@RequestBody ServiceProviderRequestDTO serviceProviderDTO) throws Exception{
 			UUID id = serviceProviderService.add(serviceProviderDTO);
 			return new ResponseEntity<UUID>(id, HttpStatus.CREATED);
 	}
 	
 	@PreAuthorize("hasRole('USER')")
 	@GetMapping
-	public ResponseEntity<List<ServiceProviderOnePhotoDTOres>> findAll(){
-			List<ServiceProviderOnePhotoDTOres> services = serviceProviderService.findAll();
-			return new ResponseEntity<List<ServiceProviderOnePhotoDTOres>>(services, HttpStatus.OK);
+	public ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>> findAll(){
+			List<ServiceProviderOnePhotoResponseDTO> services = serviceProviderService.findAll();
+			return new ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>>(services, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") UUID id) throws Exception{
-			ServiceProviderDTOres serviceProviderDTO = serviceProviderService.findById(id);
-			return new ResponseEntity<ServiceProviderDTOres>(serviceProviderDTO, HttpStatus.OK);			
+			ServiceProviderResponseDTO serviceProviderDTO = serviceProviderService.findById(id);
+			return new ResponseEntity<ServiceProviderResponseDTO>(serviceProviderDTO, HttpStatus.OK);			
 	}
 	
 	@DeleteMapping("/{id}")
@@ -85,8 +85,8 @@ public class ServiceProviderController {
 	@GetMapping("/type/{type}")
 	public ResponseEntity<?> findAllByType(@PathVariable("type") TypeOfServiceProvider typeOfServiceProvider){
 			try {
-				List<ServiceProviderOnePhotoDTOres> typesDTO = serviceProviderService.findAllByType(typeOfServiceProvider);
-				return new ResponseEntity<List<ServiceProviderOnePhotoDTOres>>(typesDTO, HttpStatus.OK);
+				List<ServiceProviderOnePhotoResponseDTO> typesDTO = serviceProviderService.findAllByType(typeOfServiceProvider);
+				return new ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>>(typesDTO, HttpStatus.OK);
 			} catch (NotFoundException e) {
 				return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 			}

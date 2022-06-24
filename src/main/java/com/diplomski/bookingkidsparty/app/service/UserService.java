@@ -3,10 +3,10 @@ package com.diplomski.bookingkidsparty.app.service;
 import java.util.List;
 import java.util.UUID;
 
-import com.diplomski.bookingkidsparty.app.dto.request.LoginDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.request.ParentDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.LoggedInUserDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.ParentDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.LoginRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.request.ParentRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.LoggedInUserResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ParentResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.User;
 
 import javassist.NotFoundException;

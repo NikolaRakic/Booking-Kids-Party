@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diplomski.bookingkidsparty.app.dto.request.RatingDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.StarRatingDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.RatingDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.RatingRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.StarRatingResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.RatingResponseDTO;
 import com.diplomski.bookingkidsparty.app.service.RatingService;
 
 @RestController
@@ -29,7 +29,7 @@ public class RatingController {
 	RatingService ratingService;
 	
 	@PostMapping
-	public ResponseEntity<?> create(@RequestBody RatingDTOreq ratingDto){
+	public ResponseEntity<?> create(@RequestBody RatingRequestDTO ratingDto){
 		try {
 			UUID id = ratingService.create(ratingDto);
 			return new ResponseEntity<UUID>(id, HttpStatus.CREATED);
@@ -39,16 +39,16 @@ public class RatingController {
 	}
 	
 	@GetMapping("/{serviceProviderId}")
-	public ResponseEntity<List<RatingDTOres>> getAllRatingForServiceProvider(@PathVariable("serviceProviderId") UUID serviceProviderId){
-		List<RatingDTOres> ratings = ratingService.getAllByServiceProvider(serviceProviderId);
-		return new ResponseEntity<List<RatingDTOres>>(ratings, HttpStatus.OK);
+	public ResponseEntity<List<RatingResponseDTO>> getAllRatingForServiceProvider(@PathVariable("serviceProviderId") UUID serviceProviderId){
+		List<RatingResponseDTO> ratings = ratingService.getAllByServiceProvider(serviceProviderId);
+		return new ResponseEntity<List<RatingResponseDTO>>(ratings, HttpStatus.OK);
 	}
 	
 	@GetMapping
-	public ResponseEntity<StarRatingDTOres> getAverageRatingForServiceProvider(
+	public ResponseEntity<StarRatingResponseDTO> getAverageRatingForServiceProvider(
 			@RequestParam(value="serviceProviderId", required=true) UUID serviceProviderId){
-		StarRatingDTOres averageRating = ratingService.getAverageRatingByServiceProvider(serviceProviderId);
-		return new ResponseEntity<StarRatingDTOres>(averageRating, HttpStatus.OK);
+		StarRatingResponseDTO averageRating = ratingService.getAverageRatingByServiceProvider(serviceProviderId);
+		return new ResponseEntity<StarRatingResponseDTO>(averageRating, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")

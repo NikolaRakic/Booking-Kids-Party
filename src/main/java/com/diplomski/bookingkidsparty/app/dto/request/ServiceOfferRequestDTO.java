@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import lombok.Data;
 
 @Data
-public class ServiceOfferDTOreq {
+public class ServiceOfferRequestDTO {
 
 	private LocalDate startDate;
 	private LocalDate endDate;

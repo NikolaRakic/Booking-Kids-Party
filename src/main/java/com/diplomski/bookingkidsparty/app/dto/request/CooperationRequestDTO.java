@@ -1,8 +1,6 @@
-package com.diplomski.bookingkidsparty.app.dto.response;
+package com.diplomski.bookingkidsparty.app.dto.request;
 
 import java.util.UUID;
-
-import javax.persistence.Lob;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,10 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class PhotoDTOres {
+public class CooperationRequestDTO {
+	
+	private UUID playRoomId;
+	private UUID cooperationServiceId;
 
-	private UUID id;
-	private String name;
-	@Lob
-	private byte[] data;
 }

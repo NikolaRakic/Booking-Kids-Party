@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StarRatingDTOres {
+public class StarRatingResponseDTO {
 
 	private double averageRating;
 	

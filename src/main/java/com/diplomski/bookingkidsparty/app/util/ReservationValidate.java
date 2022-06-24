@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.diplomski.bookingkidsparty.app.model.Reservation;
+import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ReservationRepository;
 
 @Component
@@ -18,6 +19,7 @@ public class ReservationValidate {
 	ReservationRepository reservationRepository;
 	
 	public void requestValidation(Reservation newReservation) throws Exception {
+		System.out.println("1");
 		if(newReservation.getDateOfReservation().isBefore(LocalDate.now())){
 			throw new Exception("DateOfReservation is in the past");
 		}
@@ -34,10 +36,13 @@ public class ReservationValidate {
 				newReservation.getDateOfReservation().isAfter(newReservation.getServiceOffer().getEndDate())){
 				throw new Exception("The offer is not valid for a this date");
 			}
-		if(newReservation.getServiceOffer().getServiceProvider().getTypeOfServiceProvider().valueOf("IGRAONICA") != null) {
+		System.out.println("2");
+		if(newReservation.getServiceOffer().getServiceProvider().getTypeOfServiceProvider() == TypeOfServiceProvider.IGRAONICA) {
 			validateForPlayroom(newReservation);
+			System.out.println("3");
 		}
 		else {
+			System.out.println("4");
 			//provera da li postoji rezervisana igraonica za dati termin
 			List<Reservation> res = reservationRepository.findAllByPlayroomIdAndDateOfReservationAndStartTime(newReservation.getPlayroom().getId(),
 					newReservation.getDateOfReservation(), newReservation.getStartTime());
@@ -45,10 +50,10 @@ public class ReservationValidate {
 				throw new Exception("Reservation for playroom doesn't exist");				
 			}
 		}
+		return;
 	}
 
 	private void validateForPlayroom(Reservation newReservation) throws Exception {
-		
 		List<Reservation> existsReservationsByDay = reservationRepository
 				.findAllByDateOfReservationAndServiceOfferServiceProviderId(newReservation.getDateOfReservation(), newReservation.getServiceOffer().getServiceProvider().getId());
 
@@ -56,7 +61,7 @@ public class ReservationValidate {
 				newReservation.getEndTime().isAfter(newReservation.getServiceOffer().getServiceProvider().getEndOfWork())){
 				throw new Exception("The playroom is closed at that time");
 			}
-		
+	
 		//ako postoji rezervacija za dan nove rezervacije
 		if(!existsReservationsByDay.isEmpty()) {
 			//provera da li se pokloapaju vremena	
@@ -70,6 +75,6 @@ public class ReservationValidate {
 				
 			}
 		}
-		
+		return;
 	}	
 }

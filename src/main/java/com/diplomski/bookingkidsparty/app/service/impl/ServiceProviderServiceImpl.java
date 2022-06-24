@@ -3,13 +3,15 @@ package com.diplomski.bookingkidsparty.app.service.impl;
 import java.util.List;
 import java.util.UUID;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderRequestDTO;
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderEditDTO;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.mapper.ServiceProviderMapper;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
@@ -36,7 +38,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	WebSecurityConfig configuration;
 
 	@Override
-	public UUID add(ServiceProviderDTOreq serviceProviderDTO) throws Exception {
+	public UUID add(ServiceProviderRequestDTO serviceProviderDTO) throws NotFoundException, MessagingException {
 		ServiceProvider serviceProvider = serviceMapper.dtoReqToEntity(serviceProviderDTO);
 		String plainPassword = generatePassword.generete();
 		emailSender.sendMail(serviceProvider.getEmail(), plainPassword);
@@ -46,15 +48,15 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	}
 
 	@Override
-	public List<ServiceProviderOnePhotoDTOres> findAll() {
+	public List<ServiceProviderOnePhotoResponseDTO> findAll() {
 		List<ServiceProvider> services = serviceProviderRepository.findAll();
 		return serviceMapper.listToListDTO(services);
 	}
 
 	@Override
-	public ServiceProviderDTOres findById(UUID id) throws Exception {
+	public ServiceProviderResponseDTO findById(UUID id) {
 		ServiceProvider serviceProvider = getServiceProvider(id);
-		ServiceProviderDTOres serviceProviderDTO = serviceMapper.entityToDTOres(serviceProvider);
+		ServiceProviderResponseDTO serviceProviderDTO = serviceMapper.entityToDTOres(serviceProvider);
 		return serviceProviderDTO;
 	}
 
@@ -65,7 +67,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	}
 
 	@Override
-	public void edit(UUID id, ServiceProviderEditDTO serviceProviderDTO) throws NotFoundException {
+	public void edit(UUID id, ServiceProviderEditDTO serviceProviderDTO) {
 		ServiceProvider serviceProvider = getServiceProvider(id);
 		serviceProvider.setUsername(serviceProviderDTO.getUsername());
 		serviceProvider.setAccountNumber(serviceProviderDTO.getAccountNumber());
@@ -83,7 +85,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	}
 
 	@Override
-	public List<ServiceProviderOnePhotoDTOres> findAllByType(TypeOfServiceProvider typeOfServiceProvider) {
+	public List<ServiceProviderOnePhotoResponseDTO> findAllByType(TypeOfServiceProvider typeOfServiceProvider) {
 		List<ServiceProvider> services = serviceProviderRepository
 				.findAllByTypeOfServiceProvider(typeOfServiceProvider);
 		return serviceMapper.listToListDTO(services);

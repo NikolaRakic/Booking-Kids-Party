@@ -6,15 +6,15 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.diplomski.bookingkidsparty.app.dto.response.PhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.PhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.Photo;
 
 public interface PhotoService {
 
-	PhotoDTOres add(MultipartFile multipartFile, UUID serviceProviderId) throws IOException;
+	PhotoResponseDTO add(MultipartFile multipartFile, UUID serviceProviderId) throws IOException;
 
 	boolean delete(UUID photoId);
 
-	List<PhotoDTOres> getPhotos(UUID serviceProviderId);
+	List<PhotoResponseDTO> getPhotos(UUID serviceProviderId);
 
 }

@@ -9,8 +9,8 @@ import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
@@ -24,19 +24,22 @@ public class ServiceOfferMapper {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	public ServiceOfferDTOres entityToDTO(ServiceOffer serviceOffer) {
-		return modelMapper.map(serviceOffer, ServiceOfferDTOres.class);
+	public ServiceOfferResponseDTO entityToDTO(ServiceOffer serviceOffer) {
+		return modelMapper.map(serviceOffer, ServiceOfferResponseDTO.class);
 	}
 
-	public List<ServiceOfferDTOres> ListToListDTO(List<ServiceOffer> serviceOffers){
-		List<ServiceOfferDTOres> serviceOffersDTOres = new ArrayList<ServiceOfferDTOres>();
+	public List<ServiceOfferResponseDTO> listToListDTO(List<ServiceOffer> serviceOffers){
+		List<ServiceOfferResponseDTO> serviceOffersDTOres = new ArrayList<ServiceOfferResponseDTO>();
+		System.out.println("mapper");
 		for (ServiceOffer serviceOffer : serviceOffers) {
+			System.out.println("for");
 			serviceOffersDTOres.add(entityToDTO(serviceOffer));
 		}
+		System.out.println("return");
 		return serviceOffersDTOres;
 	}
 	
-	public ServiceOffer dtoToEntity(ServiceOfferDTOreq serviceOfferDTOreq) {
+	public ServiceOffer dtoToEntity(ServiceOfferRequestDTO serviceOfferDTOreq) {
 		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceOfferDTOreq.getServiceProviderId()).get();
 		
 		 if(serviceProvider.getTypeOfServiceProvider() == TypeOfServiceProvider.KETERING) {
@@ -46,10 +49,10 @@ public class ServiceOfferMapper {
 	        	 serviceOfferDTOreq.setPricePerKid(0);
 	         }
 		
-		TypeMap<ServiceOfferDTOreq, ServiceOffer> typeMap = modelMapper.getTypeMap(ServiceOfferDTOreq.class, ServiceOffer.class);
+		TypeMap<ServiceOfferRequestDTO, ServiceOffer> typeMap = modelMapper.getTypeMap(ServiceOfferRequestDTO.class, ServiceOffer.class);
 		if(typeMap == null) {
 
-			modelMapper.addMappings(new PropertyMap<ServiceOfferDTOreq, ServiceOffer>() {
+			modelMapper.addMappings(new PropertyMap<ServiceOfferRequestDTO, ServiceOffer>() {
 	            @Override
 	            protected void configure() {
 	                skip(destination.getId());

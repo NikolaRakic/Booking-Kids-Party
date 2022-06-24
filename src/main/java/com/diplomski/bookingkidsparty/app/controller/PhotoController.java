@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.diplomski.bookingkidsparty.app.dto.response.PhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.PhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.service.PhotoService;
 
 @RestController
@@ -26,17 +26,17 @@ public class PhotoController {
 	PhotoService photoService;
 
 	@PostMapping("/{serviceProviderId}/upload")
-	public ResponseEntity<PhotoDTOres> savePhoto(@RequestParam("image") MultipartFile multipartFile,
+	public ResponseEntity<PhotoResponseDTO> savePhoto(@RequestParam("image") MultipartFile multipartFile,
 			@PathVariable("serviceProviderId") UUID serviceProviderId) throws Exception {
-		PhotoDTOres photoDto = photoService.add(multipartFile, serviceProviderId);
+		PhotoResponseDTO photoDto = photoService.add(multipartFile, serviceProviderId);
 
-		return new ResponseEntity<PhotoDTOres>(photoDto, HttpStatus.OK);
+		return new ResponseEntity<PhotoResponseDTO>(photoDto, HttpStatus.OK);
 	}
 
 	@GetMapping("/{serviceProviderId}")
-	public ResponseEntity<List<PhotoDTOres>> getPhotosByServiceProviderId(
+	public ResponseEntity<List<PhotoResponseDTO>> getPhotosByServiceProviderId(
 			@PathVariable("serviceProviderId") UUID serviceProviderId) {
-		List<PhotoDTOres> photos = photoService.getPhotos(serviceProviderId);
+		List<PhotoResponseDTO> photos = photoService.getPhotos(serviceProviderId);
 		return new ResponseEntity<>(photos, HttpStatus.OK);
 	}
 

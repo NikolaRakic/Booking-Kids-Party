@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ReservationDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ReservationDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.ReservationRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ReservationResponseDTO;
 import com.diplomski.bookingkidsparty.app.service.ReservationService;
 
 @RestController
@@ -30,7 +30,7 @@ public class ReservationController {
 	ReservationService reservationService;
 
 	@PostMapping
-	public ResponseEntity<?> add(@RequestBody ReservationDTOreq reservationDTOreq) {
+	public ResponseEntity<?> add(@RequestBody ReservationRequestDTO reservationDTOreq) {
 		try {
 			UUID id = reservationService.add(reservationDTOreq);
 			return new ResponseEntity<UUID>(id, HttpStatus.OK);
@@ -40,21 +40,21 @@ public class ReservationController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ReservationDTOres>> getAll() {
-		List<ReservationDTOres> reservationsDTOres = reservationService.getAll();
-		return new ResponseEntity<List<ReservationDTOres>>(reservationsDTOres, HttpStatus.OK);
+	public ResponseEntity<List<ReservationResponseDTO>> getAll() {
+		List<ReservationResponseDTO> reservationsDTOres = reservationService.getAll();
+		return new ResponseEntity<List<ReservationResponseDTO>>(reservationsDTOres, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{playRoomId}")
-	public ResponseEntity<List<ReservationDTOres>> getAllByParty(
+	public ResponseEntity<List<ReservationResponseDTO>> getAllByParty(
 			@PathVariable("playRoomId") UUID playRoomId,
 			@RequestParam(value="dateOfReservation", required=true) String dateOfReservationStr,
 			@RequestParam(value="startTime", required=true) String startTimeStr) {
 		LocalDate dateOfReservation = LocalDate.parse(dateOfReservationStr);
 		LocalTime startTime = LocalTime.parse(startTimeStr);
-		List<ReservationDTOres> reservationByParty = reservationService.getAllByParty(playRoomId, dateOfReservation,
+		List<ReservationResponseDTO> reservationByParty = reservationService.getAllByParty(playRoomId, dateOfReservation,
 				startTime);
-		return new ResponseEntity<List<ReservationDTOres>>(reservationByParty, HttpStatus.OK);
+		return new ResponseEntity<List<ReservationResponseDTO>>(reservationByParty, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
@@ -63,16 +63,16 @@ public class ReservationController {
 	}
 	
 	@GetMapping("/serviceProvider/{serviceProviderId}")
-	public ResponseEntity<List<ReservationDTOres>> getAllByServisProvider(
+	public ResponseEntity<List<ReservationResponseDTO>> getAllByServisProvider(
 			@PathVariable("serviceProviderId") UUID serviceProviderId) {
-		List<ReservationDTOres> reservationsDTOres = reservationService.getAllByServisProvider(serviceProviderId);
-		return new ResponseEntity<List<ReservationDTOres>>(reservationsDTOres, HttpStatus.OK);
+		List<ReservationResponseDTO> reservationsDTOres = reservationService.getAllByServisProvider(serviceProviderId);
+		return new ResponseEntity<List<ReservationResponseDTO>>(reservationsDTOres, HttpStatus.OK);
 	}
 
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<ReservationDTOres>> getAllByUser(@PathVariable("userId") UUID userId) {
-		List<ReservationDTOres> reservationsDTOres = reservationService.getAllByUser(userId);
-		return new ResponseEntity<List<ReservationDTOres>>(reservationsDTOres, HttpStatus.OK);
+	public ResponseEntity<List<ReservationResponseDTO>> getAllByUser(@PathVariable("userId") UUID userId) {
+		List<ReservationResponseDTO> reservationsDTOres = reservationService.getAllByUser(userId);
+		return new ResponseEntity<List<ReservationResponseDTO>>(reservationsDTOres, HttpStatus.OK);
 	}
 
 }

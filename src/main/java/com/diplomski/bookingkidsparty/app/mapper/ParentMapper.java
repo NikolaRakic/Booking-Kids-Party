@@ -7,8 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ParentDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ParentDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.ParentRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ParentResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.Parent;
 import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.model.enums.Role;
@@ -23,7 +23,7 @@ public class ParentMapper {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	public Parent DTOreqToEntity(ParentDTOreq parentDTOreq) {
+	public Parent DTOreqToEntity(ParentRequestDTO parentDTOreq) {
 		Parent parent = new Parent();
 		parent.setEmail(parentDTOreq.getEmail());
 		parent.setName(parentDTOreq.getName());
@@ -37,12 +37,12 @@ public class ParentMapper {
 		return parent;
 	}
 	
-	public ParentDTOres EntityToDTOres(Parent parent) {
-		return modelMapper.map(parent, ParentDTOres.class);
+	public ParentResponseDTO EntityToDTOres(Parent parent) {
+		return modelMapper.map(parent, ParentResponseDTO.class);
 	}
 	
-	public List<ParentDTOres> ListToListDTO(List<Parent> parents){
-		List<ParentDTOres> parentsDTO = new ArrayList<ParentDTOres>();
+	public List<ParentResponseDTO> ListToListDTO(List<Parent> parents){
+		List<ParentResponseDTO> parentsDTO = new ArrayList<ParentResponseDTO>();
 		for (Parent parent : parents) {
 			parentsDTO.add(EntityToDTOres(parent));
 		}

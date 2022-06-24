@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class ServiceOfferDTOres {
+public class ServiceOfferResponseDTO {
 
 	private UUID id;
 	private LocalDate startDate;
@@ -23,8 +23,8 @@ public class ServiceOfferDTOres {
 	private String description;
 	private String name;
 	private UUID serviceProviderId;
-	private String serviceProviderName;
+	private String serviceProviderUsername;
 	private String serviceProviderAdress;
 	private String serviceProviderCity;
-	private Set<PhotoDTOres> serviceProviderPhotos;
+	private Set<PhotoResponseDTO> serviceProviderPhotos;
 }

@@ -11,8 +11,8 @@ import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.diplomski.bookingkidsparty.app.dto.request.RatingDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.RatingDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.RatingRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.RatingResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.Rating;
 import com.diplomski.bookingkidsparty.app.model.Reservation;
 import com.diplomski.bookingkidsparty.app.repository.ReservationRepository;
@@ -25,13 +25,13 @@ public class RatingMapper {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	public Rating dtoToEntity(RatingDTOreq ratingDto) {
-		TypeMap<RatingDTOreq, Rating> typeMap = modelMapper.getTypeMap(RatingDTOreq.class, Rating.class);
+	public Rating dtoToEntity(RatingRequestDTO ratingDto) {
+		TypeMap<RatingRequestDTO, Rating> typeMap = modelMapper.getTypeMap(RatingRequestDTO.class, Rating.class);
 		if(typeMap == null) {
 			Optional<Reservation> reservationForRatingOptional = reservationRepository.findById(ratingDto.getReservationId());
 			if(reservationForRatingOptional.isPresent()) {
 				Reservation reservation = reservationForRatingOptional.get();
-				modelMapper.addMappings(new PropertyMap<RatingDTOreq, Rating>() {
+				modelMapper.addMappings(new PropertyMap<RatingRequestDTO, Rating>() {
 				@Override
 				protected void configure() {
 					skip(destination.getId());
@@ -44,12 +44,12 @@ public class RatingMapper {
 		return modelMapper.map(ratingDto, Rating.class); 
 	}
 	
-	public RatingDTOres entityToDto(Rating rating) {
-		return modelMapper.map(rating, RatingDTOres.class);
+	public RatingResponseDTO entityToDto(Rating rating) {
+		return modelMapper.map(rating, RatingResponseDTO.class);
 	}
 	
-	public List<RatingDTOres> listToListDTO(List<Rating> ratings){
-		List<RatingDTOres> ratingsDto = new ArrayList<>();
+	public List<RatingResponseDTO> listToListDTO(List<Rating> ratings){
+		List<RatingResponseDTO> ratingsDto = new ArrayList<>();
 		for (Rating rating : ratings) {
 			ratingsDto.add(entityToDto(rating));
 		}

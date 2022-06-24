@@ -10,9 +10,9 @@ import javax.persistence.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.diplomski.bookingkidsparty.app.dto.request.RatingDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.StarRatingDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.RatingDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.RatingRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.StarRatingResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.RatingResponseDTO;
 import com.diplomski.bookingkidsparty.app.mapper.RatingMapper;
 import com.diplomski.bookingkidsparty.app.model.Rating;
 import com.diplomski.bookingkidsparty.app.repository.RatingRepository;
@@ -30,7 +30,7 @@ public class RatingServiceImpl implements RatingService {
 	RatingMapper ratingMapper;
 	
 	@Override
-	public UUID create(RatingDTOreq ratingDto) throws Exception {
+	public UUID create(RatingRequestDTO ratingDto) throws Exception {
 		if(ratingDto.getRate() < 0 || ratingDto.getRate() > 5) {
 			throw new Exception("Rate must be between 0 and 5!");
 		}
@@ -43,7 +43,7 @@ public class RatingServiceImpl implements RatingService {
 	}
 
 	@Override
-	public List<RatingDTOres> getAllByServiceProvider(UUID serviceProviderId) {
+	public List<RatingResponseDTO> getAllByServiceProvider(UUID serviceProviderId) {
 		List<Rating> ratings = ratingRespository.findAllByReservationServiceOfferServiceProviderId(serviceProviderId);
 		return ratingMapper.listToListDTO(ratings);
 	}
@@ -59,9 +59,9 @@ public class RatingServiceImpl implements RatingService {
 	}
 
 	@Override
-	public StarRatingDTOres getAverageRatingByServiceProvider(UUID serviceProviderId) {
+	public StarRatingResponseDTO getAverageRatingByServiceProvider(UUID serviceProviderId) {
 		List<Tuple> avg = ratingRespository.avg(serviceProviderId);
-		StarRatingDTOres averageRatingDTOres = new StarRatingDTOres(0,0);
+		StarRatingResponseDTO averageRatingDTOres = new StarRatingResponseDTO(0,0);
 		
 			for (Tuple long1 : avg) {
 				averageRatingDTOres.setCountOfRate( (long) long1.get(0));

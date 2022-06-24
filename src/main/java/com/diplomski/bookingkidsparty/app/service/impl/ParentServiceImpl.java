@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ParentDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ParentDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.ParentRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ParentResponseDTO;
 import com.diplomski.bookingkidsparty.app.mapper.ParentMapper;
 import com.diplomski.bookingkidsparty.app.model.Parent;
 import com.diplomski.bookingkidsparty.app.repository.ParentRepository;
@@ -26,7 +26,7 @@ public class ParentServiceImpl implements ParentService {
 	ParentMapper parentMapper;
 	
 	@Override
-	public UUID registration(ParentDTOreq parentDTOreq) throws Exception {
+	public UUID registration(ParentRequestDTO parentDTOreq) throws Exception {
 		Parent parent = parentMapper.DTOreqToEntity(parentDTOreq);
 		Optional<Parent> parentOptional = parentRepository.findByUsernameOrEmail(parent.getUsername(), parent.getEmail());
 		if(!parentOptional.isPresent()) {
@@ -37,7 +37,7 @@ public class ParentServiceImpl implements ParentService {
 	}
 
 	@Override
-	public void edit(UUID id, ParentDTOreq parentDTOreq) throws NotFoundException {
+	public void edit(UUID id, ParentRequestDTO parentDTOreq) throws NotFoundException {
 		Optional<Parent> parentOptional = parentRepository.findById(id);
 		if(parentOptional.isPresent()) {
 			Parent parentForEdit = parentOptional.get();
@@ -56,7 +56,7 @@ public class ParentServiceImpl implements ParentService {
 	}
 	
 	@Override
-	public ParentDTOres findById(UUID id) throws NotFoundException {
+	public ParentResponseDTO findById(UUID id) throws NotFoundException {
 		Optional<Parent> parentOptional = parentRepository.findById(id);
 		if(parentOptional.isPresent()) {
 			return parentMapper.EntityToDTOres(parentOptional.get());
@@ -65,7 +65,7 @@ public class ParentServiceImpl implements ParentService {
 	}
 
 	@Override
-	public List<ParentDTOres> findAll() {
+	public List<ParentResponseDTO> findAll() {
 		return parentMapper.ListToListDTO(parentRepository.findAll());
 	}
 

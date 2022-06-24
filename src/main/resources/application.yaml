@@ -26,3 +26,5 @@ spring:
 spring.devtools.remote.restart.enabled: false
 
 spring.servlet.multipart.max-file-size: 5MB
+
+STRIPE_SECRET_KEY: sk_test_51L96moCadxqwLTZTMyoZNqstmJ1XG8BHXqO2PUB0LhE12NFUrSLSbZU2GFxxnVkFMU5fNHbN9LfhVkuww0furSFB00zOW7bBNC

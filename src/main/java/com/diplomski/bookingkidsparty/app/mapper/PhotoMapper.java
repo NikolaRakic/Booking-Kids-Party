@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.diplomski.bookingkidsparty.app.dto.response.PhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.PhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.Photo;
 
 @Component
@@ -16,12 +16,12 @@ public class PhotoMapper {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	public PhotoDTOres entityToDto(Photo photo) {
-		return modelMapper.map(photo, PhotoDTOres.class);
+	public PhotoResponseDTO entityToDto(Photo photo) {
+		return modelMapper.map(photo, PhotoResponseDTO.class);
 	}
 	
-	public List<PhotoDTOres> listToListDTO(List<Photo> photos){
-		List<PhotoDTOres> photosDto = new ArrayList<>();
+	public List<PhotoResponseDTO> listToListDTO(List<Photo> photos){
+		List<PhotoResponseDTO> photosDto = new ArrayList<>();
 		for (Photo photo : photos) {
 			photosDto.add(entityToDto(photo));
 		}

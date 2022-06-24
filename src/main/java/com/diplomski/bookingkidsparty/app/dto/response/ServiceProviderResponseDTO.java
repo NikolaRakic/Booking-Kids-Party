@@ -1,21 +1,21 @@
-package com.diplomski.bookingkidsparty.app.dto.request;
+package com.diplomski.bookingkidsparty.app.dto.response;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class ServiceProviderDTOreq {
+public class ServiceProviderResponseDTO {
 
+	private UUID id;
 	private String username;
 	private String accountNumber;
 	private String email;
-	private String password;
 	private String pib;
 	private LocalTime startOfWork;
 	private LocalTime endOfWork;
@@ -24,4 +24,5 @@ public class ServiceProviderDTOreq {
 	private String city;
 	private String adress;
 	private String telephoneNumber;
+	//private List<PhotoDTOres> photos;
 }

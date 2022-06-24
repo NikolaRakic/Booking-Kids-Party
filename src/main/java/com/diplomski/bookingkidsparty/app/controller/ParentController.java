@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ParentDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ParentDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.ParentRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ParentResponseDTO;
 import com.diplomski.bookingkidsparty.app.service.ParentService;
 
 import javassist.NotFoundException;
@@ -29,7 +29,7 @@ public class ParentController {
 	ParentService parentService;
 	
 	@PostMapping
-	public ResponseEntity<?> registration (@RequestBody ParentDTOreq parentDTOreq){
+	public ResponseEntity<?> registration (@RequestBody ParentRequestDTO parentDTOreq){
 		UUID id;
 		try {
 			id = parentService.registration(parentDTOreq);
@@ -40,7 +40,7 @@ public class ParentController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> edit(@PathVariable("id") UUID id, @RequestBody ParentDTOreq parentDTOreq){
+	public ResponseEntity<?> edit(@PathVariable("id") UUID id, @RequestBody ParentRequestDTO parentDTOreq){
 		try {
 			parentService.edit(id, parentDTOreq);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -54,16 +54,16 @@ public class ParentController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") UUID id){
 		try {
-			ParentDTOres parentDTOres = parentService.findById(id);
-			return new ResponseEntity<ParentDTOres>(parentDTOres, HttpStatus.OK);
+			ParentResponseDTO parentDTOres = parentService.findById(id);
+			return new ResponseEntity<ParentResponseDTO>(parentDTOres, HttpStatus.OK);
 		} catch (NotFoundException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
 		}		
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<ParentDTOres>> findAll(){
-		List<ParentDTOres> parentsDTOres = parentService.findAll();
-		return new ResponseEntity<List<ParentDTOres>>(parentsDTOres, HttpStatus.OK);
+	public ResponseEntity<List<ParentResponseDTO>> findAll(){
+		List<ParentResponseDTO> parentsDTOres = parentService.findAll();
+		return new ResponseEntity<List<ParentResponseDTO>>(parentsDTOres, HttpStatus.OK);
 	}
 }

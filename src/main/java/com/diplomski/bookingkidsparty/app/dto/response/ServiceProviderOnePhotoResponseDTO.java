@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class ServiceProviderOnePhotoDTOres {
+public class ServiceProviderOnePhotoResponseDTO {
 
 	private UUID id;
 	private String username;
@@ -23,5 +23,5 @@ public class ServiceProviderOnePhotoDTOres {
 	private String city;
 	private String adress;
 	private String telephoneNumber;
-	private PhotoDTOres photo;
+	private PhotoResponseDTO photo;
 }

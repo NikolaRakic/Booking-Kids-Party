@@ -5,20 +5,20 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ReservationDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ReservationDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.ReservationRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ReservationResponseDTO;
 
 public interface ReservationService {
 
-	UUID add(ReservationDTOreq reservationDTOreq) throws Exception;
+	UUID add(ReservationRequestDTO reservationDTOreq) throws Exception;
 
-	List<ReservationDTOres> getAll();
+	List<ReservationResponseDTO> getAll();
 
-	List<ReservationDTOres> getAllByParty(UUID playRoomId, LocalDate dateOfReservation, LocalTime startTime);
+	List<ReservationResponseDTO> getAllByParty(UUID playRoomId, LocalDate dateOfReservation, LocalTime startTime);
 
-	List<ReservationDTOres> getAllByServisProvider(UUID serviceProviderId);
+	List<ReservationResponseDTO> getAllByServisProvider(UUID serviceProviderId);
 
-	List<ReservationDTOres> getAllByUser(UUID userId);
+	List<ReservationResponseDTO> getAllByUser(UUID userId);
 
 	boolean delete(UUID id);
 

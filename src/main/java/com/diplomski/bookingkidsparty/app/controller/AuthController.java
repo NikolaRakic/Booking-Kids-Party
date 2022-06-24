@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.diplomski.bookingkidsparty.app.dto.request.LoginDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.request.ParentDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderDTOreq;
+import com.diplomski.bookingkidsparty.app.dto.request.LoginRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.request.ParentRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.request.ServiceProviderRequestDTO;
 import com.diplomski.bookingkidsparty.app.dto.request.UserTokenStateDTO;
 import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.security.TokenUtils;
@@ -48,7 +48,7 @@ public class AuthController {
 	private AuthenticationManager authenticationManager;
 
 	@PostMapping("/login")
-	public ResponseEntity<UserTokenStateDTO> createAuthenticationToken(@RequestBody LoginDTOreq loginDTOreq,
+	public ResponseEntity<UserTokenStateDTO> createAuthenticationToken(@RequestBody LoginRequestDTO loginDTOreq,
 			HttpServletResponse response) {
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginDTOreq.getUsernameOrEmail(),
@@ -67,7 +67,7 @@ public class AuthController {
 	}
 	
 	@PostMapping("/parent/signup")
-	public ResponseEntity<UUID> registrationParent(@RequestBody ParentDTOreq parentRequest, UriComponentsBuilder ucBuilder) throws Exception {
+	public ResponseEntity<UUID> registrationParent(@RequestBody ParentRequestDTO parentRequest, UriComponentsBuilder ucBuilder) throws Exception {
 		UUID parentId = parentService.registration(parentRequest);
 		return new ResponseEntity<>(parentId, HttpStatus.CREATED);
 	}

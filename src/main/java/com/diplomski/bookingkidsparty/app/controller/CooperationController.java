@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.diplomski.bookingkidsparty.app.dto.request.CooperationDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.CooperationRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.service.CooperationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,8 +40,7 @@ public class CooperationController {
 			@ApiResponse(responseCode = "204", description = "CooperationRequest added"),
 			@ApiResponse(responseCode = "400", description = "Illegal argument exception")
 	})
-	public ResponseEntity<?> add(@RequestBody CooperationDTOreq cooperationDTOreq) {
-		// TODO: Should named as CooperationRequestDTO
+	public ResponseEntity<?> add(@RequestBody CooperationRequestDTO cooperationDTOreq) {
 		try {
 			cooperationService.add(cooperationDTOreq);
 			return ResponseEntity.noContent().build();
@@ -56,16 +55,16 @@ public class CooperationController {
 //	allowEmptyValue = false, schema = @Schema(type = "uuid", format = "uuid", description = "service Provider Id", accessMode = AccessMode.AUTO)),
 	responses = {
 			@ApiResponse(responseCode = "200", description = "Return all cooperations by service provider id", 
-					content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ServiceProviderOnePhotoDTOres.class)))),
+					content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ServiceProviderOnePhotoResponseDTO.class)))),
 			@ApiResponse(responseCode = "400", description = "Illegal argument exception")
 	})
-	public ResponseEntity<List<ServiceProviderOnePhotoDTOres>> getAllByServiceProvider(@PathVariable("serviceProviderId") UUID serviceProviderId){
-		List<ServiceProviderOnePhotoDTOres> services = cooperationService.findAllByServiceProvider(serviceProviderId);
-		return new ResponseEntity<List<ServiceProviderOnePhotoDTOres>>(services, HttpStatus.OK);
+	public ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>> getAllByServiceProvider(@PathVariable("serviceProviderId") UUID serviceProviderId){
+		List<ServiceProviderOnePhotoResponseDTO> services = cooperationService.findAllByServiceProvider(serviceProviderId);
+		return new ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>>(services, HttpStatus.OK);
 	}
 	
 	@DeleteMapping()
-	public ResponseEntity<?> delete(@RequestBody CooperationDTOreq cooperationDTOreq){
+	public ResponseEntity<?> delete(@RequestBody CooperationRequestDTO cooperationDTOreq){
 		return new ResponseEntity<>(cooperationService.delete(cooperationDTOreq) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 }

@@ -4,16 +4,16 @@ package com.diplomski.bookingkidsparty.app.service;
 import java.util.List;
 import java.util.UUID;
 
-import com.diplomski.bookingkidsparty.app.dto.request.CooperationDTOreq;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderDTOres;
-import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.request.CooperationRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoResponseDTO;
 
 public interface CooperationService {
 
-	void add(CooperationDTOreq cooperationDTOreq) throws Exception;
+	void add(CooperationRequestDTO cooperationDTOreq) throws Exception;
 
-	List<ServiceProviderOnePhotoDTOres> findAllByServiceProvider(UUID serviceProviderId);
+	List<ServiceProviderOnePhotoResponseDTO> findAllByServiceProvider(UUID serviceProviderId);
 
-	boolean delete(CooperationDTOreq cooperationDTOreq);
+	boolean delete(CooperationRequestDTO cooperationDTOreq);
 
 }

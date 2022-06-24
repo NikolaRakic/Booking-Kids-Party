@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.diplomski.bookingkidsparty.app.dto.response.PhotoDTOres;
+import com.diplomski.bookingkidsparty.app.dto.response.PhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.mapper.PhotoMapper;
 import com.diplomski.bookingkidsparty.app.model.Photo;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
@@ -23,7 +23,7 @@ import com.diplomski.bookingkidsparty.app.service.PhotoService;
 import com.diplomski.bookingkidsparty.app.util.FileUploadUtil;
 
 @Service
-public class PhotoServiceImpl implements PhotoService{
+public class PhotoServiceImpl implements PhotoService {
 
 	@Autowired
 	PhotoRepository photoRepository;
@@ -31,49 +31,47 @@ public class PhotoServiceImpl implements PhotoService{
 	ServiceProviderRepository serviceProviderRepository;
 	@Autowired
 	PhotoMapper photoMapper;
-	
-	@Override
-	public PhotoDTOres add(MultipartFile multipartFile, UUID serviceProviderId) throws IOException {
-		
-		ServiceProvider serviceProviderOptional = serviceProviderRepository.findById(serviceProviderId).orElseThrow(() -> new IllegalArgumentException());
-		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-		
-		
-		
-		//String uploadDir = "../../../Documents/Projects/booking-kids-parties-front/src/assets/provider-photos/" + serviceProviderId;
 
-			int countPhotosByServiceProvider = photoRepository.getCountOfPhotosByServiceProvider(serviceProviderOptional);
-			System.out.println("BROJ SLIKA: " + countPhotosByServiceProvider);
-				FileUploadUtil.fileCheck(multipartFile, countPhotosByServiceProvider);
-		     
-			 Photo photo = new Photo();
-		     photo.setName(fileName);
-		     photo.setServiceProvider(serviceProviderOptional); 
-		     photo.setData(multipartFile.getBytes());
-		     photoRepository.save(photo);
-		     
-		     return photoMapper.entityToDto(photo);
+	@Override
+	public PhotoResponseDTO add(MultipartFile multipartFile, UUID serviceProviderId) throws IOException {
+
+		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId)
+				.orElseThrow(() -> new IllegalArgumentException());
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+		int countPhotosByServiceProvider = photoRepository.getCountOfPhotosByServiceProvider(serviceProvider);
+		FileUploadUtil.fileCheck(multipartFile, countPhotosByServiceProvider);
+
+		Photo photo = new Photo();
+		photo.setName(fileName);
+		photo.setServiceProvider(serviceProvider);
+		photo.setData(multipartFile.getBytes());
+		photoRepository.save(photo);
+
+		return photoMapper.entityToDto(photo);
 	}
 
 	@Override
 	public boolean delete(UUID photoId) {
 		Optional<Photo> photoOptional = photoRepository.findById(photoId);
-		if(photoOptional.isPresent()) {
-			//String path = photoOptional.get().getPath() + "/" + photoOptional.get().getName();
-				//Files.deleteIfExists(Paths.get(path));
+		if (photoOptional.isPresent()) {
+			// String path = photoOptional.get().getPath() + "/" +
+			// photoOptional.get().getName();
+			// Files.deleteIfExists(Paths.get(path));
 			photoRepository.deleteById(photoId);
-			return true;	
+			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public List<PhotoDTOres> getPhotos(UUID serviceProviderId) {
-		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId).orElseThrow(() -> new IllegalArgumentException("Service provider with id " + serviceProviderId + " doesn't exist."));
+	public List<PhotoResponseDTO> getPhotos(UUID serviceProviderId) {
+		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId)
+				.orElseThrow(() -> new IllegalArgumentException(
+						"Service provider with id " + serviceProviderId + " doesn't exist."));
 		List<Photo> photos = photoRepository.findAllByServiceProviderId(serviceProviderId);
 		return photoMapper.listToListDTO(photos);
-		
+
 	}
-	
 
 }
