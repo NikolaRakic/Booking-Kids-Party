@@ -20,12 +20,14 @@ import org.springframework.stereotype.Component;
 import com.diplomski.bookingkidsparty.app.dto.request.ReservationRequestDTO;
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferRequestDTO;
 import com.diplomski.bookingkidsparty.app.dto.response.ReservationResponseDTO;
+import com.diplomski.bookingkidsparty.app.model.Rating;
 import com.diplomski.bookingkidsparty.app.model.Reservation;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.model.enums.Role;
 import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
+import com.diplomski.bookingkidsparty.app.repository.RatingRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceOfferRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.repository.UserRepository;
@@ -43,6 +45,8 @@ public class ReservationMapper {
 	ServiceOfferRepository serviceOfferRepository;
 	@Autowired
 	ServiceProviderRepository serviceProviderRepository;
+	@Autowired
+	RatingRepository ratingRepository;
 
 	public List<Reservation> dtoToEntity(ReservationRequestDTO reservationDTOreq) {
 		Optional<User> userOptional = userRepository.findByUsernameOrEmail(reservationDTOreq.getUsersEmail());
@@ -117,6 +121,7 @@ public class ReservationMapper {
 		// TypeMap<Reservation, ReservationDTOres> typeMap =
 		// modelMapper.getTypeMap(Reservation.class, ReservationDTOres.class);
 
+		Rating rating = ratingRepository.findByReservationId(reservation.getId()).orElse(null);
 		long minutes = MINUTES.between(reservation.getStartTime(), reservation.getEndTime());
 		double hours = (double) minutes / 60;
 
@@ -140,12 +145,21 @@ public class ReservationMapper {
 		reservationDto.setNumberOfKids(reservation.getNumberOfKids());
 		reservationDto.setPlayroomId(reservation.getPlayroom().getId());
 		reservationDto.setPlayroomName(reservation.getPlayroom().getUsername());
-		reservationDto.setServiceOfferId(reservation.getServiceOffer().getId());
+		reservationDto.setPlayroomAdress(reservation.getPlayroom().getAdress());
+		reservationDto.setServiceProviderName(reservation.getServiceOffer().getServiceProvider().getUsername());
+		reservationDto.setServiceProviderId(reservation.getServiceOffer().getServiceProvider().getId());
 		reservationDto.setServiceOfferName(reservation.getServiceOffer().getName());
 		reservationDto.setStartTime(reservation.getStartTime());
 		reservationDto.setUserId(reservation.getUser().getId());
-		reservationDto.setUserUserName(reservation.getUser().getUsername());
+		reservationDto.setUserEmail(reservation.getUser().getEmail());
+		reservationDto.setTypeOfServiceProvider(reservation.getServiceOffer().getServiceProvider().getTypeOfServiceProvider().name());
 		reservationDto.setTotalPrice(totalPrice);
+		if(rating != null) {
+			reservationDto.setHasRating(true);
+		}
+		else {
+			reservationDto.setHasRating(false);
+		}
 
 		return reservationDto;
 //			if(typeMap == null) {

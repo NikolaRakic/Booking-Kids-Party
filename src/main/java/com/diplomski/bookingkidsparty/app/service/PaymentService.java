@@ -6,4 +6,6 @@ public interface PaymentService {
 
 	String createPaymentIntent(Long amount, String username, String email) throws StripeException;
 
+	void refunde(String clientSecret) throws StripeException;
+
 }

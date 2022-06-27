@@ -8,26 +8,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.diplomski.bookingkidsparty.app.service.PaymentService;
 import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentIntent;
-
 
 @RestController
-@RequestMapping("/payment1")
+@RequestMapping("/payment")
 public class PaymentController {
-	
 
-	
 	@Autowired
 	PaymentService paymentService;
+
+	@PostMapping("/create")
+	public String createPayment(@RequestHeader(value = "amount") float amount, @RequestHeader(value = "username") String username,
+			@RequestHeader(value = "email") String email) throws StripeException {
+		Long amountLong = (long) amount;
+		return paymentService.createPaymentIntent(amountLong, username, email);
+	}
 	
-	 @PostMapping
-	    public String test( 
-				 @RequestHeader(value="amount") Long amount,
-				 @RequestHeader(value="username") String username,
-				 @RequestHeader(value="email") String email) throws StripeException {
-		 
-		 return paymentService.createPaymentIntent(amount, username, email);
-		 
-	 }
+	@PostMapping("/refund")
+	public void refunde(@RequestHeader(value = "clientSecret") String clientSecret) throws StripeException {
+		System.out.println("refundacija za: " + clientSecret);
+		paymentService.refunde(clientSecret);
+	}
 
 }

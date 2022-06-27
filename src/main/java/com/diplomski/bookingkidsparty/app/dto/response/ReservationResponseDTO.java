@@ -22,9 +22,13 @@ public class ReservationResponseDTO {
 	private int ageOfKid;
 	private long totalPrice;
 	private UUID userId;
-	private String userUserName;
-	private UUID serviceOfferId;
+	private String userEmail;
+	private UUID serviceProviderId;
+	private String serviceProviderName;
+	private String typeOfServiceProvider;
 	private String serviceOfferName;
 	private UUID playroomId;
 	private String playroomName;
+	private String playroomAdress;
+	private boolean hasRating;
 }

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,7 @@ public class ReservationServiceImpl implements ReservationService {
 	@Autowired
 	ReservationValidate reservationValidate;
 	
+	@Transactional(rollbackOn=Exception.class)
 	@Override
 	public UUID add(ReservationRequestDTO reservationDTOreq) throws Exception {
 		List<Reservation> newReservations = reservationMapper.dtoToEntity(reservationDTOreq);

@@ -13,13 +13,10 @@ import com.diplomski.bookingkidsparty.app.repository.ReservationRepository;
 @Component
 public class ReservationValidate {
 	
-	private static final String IGRAONICA = "Igraonica";
-	
 	@Autowired
 	ReservationRepository reservationRepository;
 	
 	public void requestValidation(Reservation newReservation) throws Exception {
-		System.out.println("1");
 		if(newReservation.getDateOfReservation().isBefore(LocalDate.now())){
 			throw new Exception("DateOfReservation is in the past");
 		}
@@ -36,13 +33,10 @@ public class ReservationValidate {
 				newReservation.getDateOfReservation().isAfter(newReservation.getServiceOffer().getEndDate())){
 				throw new Exception("The offer is not valid for a this date");
 			}
-		System.out.println("2");
 		if(newReservation.getServiceOffer().getServiceProvider().getTypeOfServiceProvider() == TypeOfServiceProvider.IGRAONICA) {
 			validateForPlayroom(newReservation);
-			System.out.println("3");
 		}
 		else {
-			System.out.println("4");
 			//provera da li postoji rezervisana igraonica za dati termin
 			List<Reservation> res = reservationRepository.findAllByPlayroomIdAndDateOfReservationAndStartTime(newReservation.getPlayroom().getId(),
 					newReservation.getDateOfReservation(), newReservation.getStartTime());

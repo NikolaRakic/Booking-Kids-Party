@@ -1,5 +1,7 @@
 package com.diplomski.bookingkidsparty.app.service.impl;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +12,11 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerSearchResult;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.CustomerSearchParams;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.stripe.param.RefundCreateParams;
 
 @Service
 public class PaymentStripeImpl implements PaymentService{
@@ -22,8 +26,10 @@ public class PaymentStripeImpl implements PaymentService{
 	
     static class CreatePaymentResponse {
         private String clientSecret;
-        public CreatePaymentResponse(String clientSecret) {
+		private String paymentIntentId;
+        public CreatePaymentResponse(String clientSecret, String paymentIntentId) {
           this.clientSecret = clientSecret;
+          this.paymentIntentId = paymentIntentId;
         }
       }
     
@@ -41,7 +47,7 @@ public class PaymentStripeImpl implements PaymentService{
 		          PaymentIntentCreateParams.builder()
 		            .setAmount(amount)
 		            .setCurrency("EUR")
-//		            .setReceiptEmail(email)
+		            .setReceiptEmail(email)
 		            .setCustomer(customerId)
 		            .setAutomaticPaymentMethods(
 		              PaymentIntentCreateParams.AutomaticPaymentMethods
@@ -52,7 +58,7 @@ public class PaymentStripeImpl implements PaymentService{
 		            .build();
 		
 		 PaymentIntent paymentIntent = PaymentIntent.create(params);
-	     CreatePaymentResponse paymentResponse = new CreatePaymentResponse(paymentIntent.getClientSecret());
+	     CreatePaymentResponse paymentResponse = new CreatePaymentResponse(paymentIntent.getClientSecret(), paymentIntent.getId());
 	     return gson.toJson(paymentResponse);
 	}
 	
@@ -88,6 +94,17 @@ public class PaymentStripeImpl implements PaymentService{
   				return result.getData().get(0).getId();
   			}
   			return null;
+	}
+
+	@Override
+	public void refunde(String paymentIntentId) throws StripeException {
+		Stripe.apiKey = secretKey;
+
+		RefundCreateParams params =
+		  RefundCreateParams.builder().setPaymentIntent(paymentIntentId).build();
+
+		Refund.create(params);
+		
 	}
 
 	
