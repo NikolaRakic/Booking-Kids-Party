@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ReservationRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.PageableResponse;
 import com.diplomski.bookingkidsparty.app.dto.response.ReservationResponseDTO;
 import com.diplomski.bookingkidsparty.app.service.ReservationService;
 
@@ -40,9 +43,9 @@ public class ReservationController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ReservationResponseDTO>> getAll() {
-		List<ReservationResponseDTO> reservationsDTOres = reservationService.getAll();
-		return new ResponseEntity<List<ReservationResponseDTO>>(reservationsDTOres, HttpStatus.OK);
+	public ResponseEntity<?> getAll(Pageable pageable) {
+		PageableResponse pageableResponse = reservationService.getAll(pageable);
+		return ResponseEntity.ok().headers(pageableResponse.getHeader()).body(pageableResponse.getList());
 	}
 	
 	@GetMapping("/{playRoomId}")
@@ -63,16 +66,18 @@ public class ReservationController {
 	}
 	
 	@GetMapping("/serviceProvider/{serviceProviderId}")
-	public ResponseEntity<List<ReservationResponseDTO>> getAllByServisProvider(
-			@PathVariable("serviceProviderId") UUID serviceProviderId) {
-		List<ReservationResponseDTO> reservationsDTOres = reservationService.getAllByServisProvider(serviceProviderId);
-		return new ResponseEntity<List<ReservationResponseDTO>>(reservationsDTOres, HttpStatus.OK);
+	public ResponseEntity<?> getAllByServisProvider(
+			@PathVariable("serviceProviderId") UUID serviceProviderId, Pageable pageable) {
+		PageableResponse pageableResponse = reservationService.getAllByServisProvider(serviceProviderId, pageable);
+		return ResponseEntity.ok().headers(pageableResponse.getHeader()).body(pageableResponse.getList());
 	}
 
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<ReservationResponseDTO>> getAllByUser(@PathVariable("userId") UUID userId) {
-		List<ReservationResponseDTO> reservationsDTOres = reservationService.getAllByUser(userId);
-		return new ResponseEntity<List<ReservationResponseDTO>>(reservationsDTOres, HttpStatus.OK);
+	public ResponseEntity<?> getAllByUser(@PathVariable("userId") UUID userId,
+			Pageable pageable) {
+		PageableResponse pageableResponse = reservationService.getAllByUser(userId, pageable);
+	
+		return ResponseEntity.ok().headers(pageableResponse.getHeader()).body(pageableResponse.getList());
 	}
 
 }
