@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class CooperationRequestDTO {
 	
-	private UUID playRoomId;
+	private UUID playroomId;
 	private UUID cooperationServiceId;
 
 }

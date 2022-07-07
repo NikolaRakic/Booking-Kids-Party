@@ -29,7 +29,7 @@ public interface ServiceOfferRepository extends JpaRepository<ServiceOffer, UUID
 			" and (?3 <= r.start_time and ?4 >= r.start_time OR ?3 between r.start_time and r.end_time)", nativeQuery = true)
 	List<ServiceOffer> findAllForRemoved(String city, LocalDate dateOfReservation, LocalTime startTime, LocalTime endTime);
 	
-	List<ServiceOffer> findAllByServiceProviderPlayRoomIdAndServiceProviderTypeOfServiceProviderAndServiceProviderCityAndServiceProviderMaxNumberOfKidsGreaterThanEqual(UUID playroomId, TypeOfServiceProvider typeOfServiceProvider, String city, int numberOfKids);
+	List<ServiceOffer> findAllByServiceProviderServicesCooperationsPlayroomIdAndServiceProviderServicesCooperationsConfirmedAndServiceProviderTypeOfServiceProviderAndServiceProviderCityAndServiceProviderMaxNumberOfKidsGreaterThanEqual(UUID playroomId, Boolean confirm, TypeOfServiceProvider typeOfServiceProvider, String city, int numberOfKids);
 
 	List<ServiceOffer> findAllByServiceProviderTypeOfServiceProviderAndServiceProviderCityAndStartDateLessThanEqualAndEndDateGreaterThanEqual(TypeOfServiceProvider type, String city, LocalDate date1, LocalDate date2);
 }

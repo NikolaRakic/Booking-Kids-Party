@@ -66,9 +66,8 @@ public class PhotoServiceImpl implements PhotoService {
 
 	@Override
 	public List<PhotoResponseDTO> getPhotos(UUID serviceProviderId) {
-		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId)
-				.orElseThrow(() -> new IllegalArgumentException(
-						"Service provider with id " + serviceProviderId + " doesn't exist."));
+		serviceProviderRepository.findById(serviceProviderId).orElseThrow(() -> new IllegalArgumentException(
+				"Service provider with id " + serviceProviderId + " doesn't exist."));
 		List<Photo> photos = photoRepository.findAllByServiceProviderId(serviceProviderId);
 		return photoMapper.listToListDTO(photos);
 

@@ -1,7 +1,9 @@
 package com.diplomski.bookingkidsparty.app.mapper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,15 @@ public class PhotoMapper {
 		return modelMapper.map(photo, PhotoResponseDTO.class);
 	}
 	
-	public List<PhotoResponseDTO> listToListDTO(List<Photo> photos){
-		List<PhotoResponseDTO> photosDto = new ArrayList<>();
-		for (Photo photo : photos) {
-			photosDto.add(entityToDto(photo));
-		}
+	public Set<PhotoResponseDTO> listToListDTO(Set<Photo> photos){
+		Set<PhotoResponseDTO> photosDto = new HashSet<PhotoResponseDTO>();
+		photos.forEach(photo -> photosDto.add(entityToDto(photo)));
+		return photosDto;
+	}
+
+	public List<PhotoResponseDTO> listToListDTO(List<Photo> photos) {
+		List<PhotoResponseDTO> photosDto = new ArrayList<PhotoResponseDTO>();
+		photos.forEach(photo -> photosDto.add(entityToDto(photo)));
 		return photosDto;
 	}
 }

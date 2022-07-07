@@ -8,21 +8,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.diplomski.bookingkidsparty.app.dto.request.ParentRequestDTO;
-import com.diplomski.bookingkidsparty.app.dto.response.ParentResponseDTO;
 import com.diplomski.bookingkidsparty.app.mapper.ParentMapper;
 import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.repository.UserRepository;
-import com.diplomski.bookingkidsparty.app.security.TokenUtils;
 import com.diplomski.bookingkidsparty.app.service.UserService;
-
-import javassist.NotFoundException;
 
 @Service("UserServiceImpl")
 public class UserServiceImpl implements UserService, UserDetailsService{
@@ -35,12 +30,6 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	@Autowired
 	ParentMapper userMapper;
 	
-	@Qualifier("userDetailsServiceImpl")
-	@Autowired
-	private UserDetailsService userDetailsService;
-	
-	@Autowired
-	TokenUtils tokenUtils;
 	//-*-*-*-*-*-*-*-*-
 //	@Override
 //	public UUID registration(ParentDTOreq userDTOreq) throws Exception {
@@ -102,9 +91,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	public void changePassword(String oldPassword, String newPassword) {
 
 		// Ocitavamo trenutno ulogovanog korisnika
-		System.out.println("*************//////////////////");
-		//User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		//System.out.println(SecurityContextHolder.getContext().getAuthentication());
+		User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		//System.out.println("*************" + currentUser);
 		//String username = currentUser.getName();
 //		System.out.println("*************" + username);

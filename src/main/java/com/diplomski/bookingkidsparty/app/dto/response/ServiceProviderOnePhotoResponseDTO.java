@@ -24,4 +24,5 @@ public class ServiceProviderOnePhotoResponseDTO {
 	private String adress;
 	private String telephoneNumber;
 	private PhotoResponseDTO photo;
+	private Double averageRating; 
 }

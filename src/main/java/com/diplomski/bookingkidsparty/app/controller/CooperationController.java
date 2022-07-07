@@ -3,6 +3,8 @@ package com.diplomski.bookingkidsparty.app.controller;
 import java.util.List;
 import java.util.UUID;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.diplomski.bookingkidsparty.app.dto.request.CooperationRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.CooperationResponseDTO;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoResponseDTO;
+import com.diplomski.bookingkidsparty.app.model.Cooperation;
 import com.diplomski.bookingkidsparty.app.service.CooperationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +54,7 @@ public class CooperationController {
 		}
 	}
 	
-	@GetMapping("/{serviceProviderId}")
+	@GetMapping
 	@Operation(summary = "Get all cooperations by service provider id",
 //	parameters = @Parameter(in = ParameterIn.PATH, name = "serviceProvicerId", required=true, description = "Service Provider identifier",
 //	allowEmptyValue = false, schema = @Schema(type = "uuid", format = "uuid", description = "service Provider Id", accessMode = AccessMode.AUTO)),
@@ -58,13 +63,22 @@ public class CooperationController {
 					content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ServiceProviderOnePhotoResponseDTO.class)))),
 			@ApiResponse(responseCode = "400", description = "Illegal argument exception")
 	})
-	public ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>> getAllByServiceProvider(@PathVariable("serviceProviderId") UUID serviceProviderId){
+	public ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>> getAllByServiceProvider(@RequestParam(value="serviceProviderId", required=true) UUID serviceProviderId){
 		List<ServiceProviderOnePhotoResponseDTO> services = cooperationService.findAllByServiceProvider(serviceProviderId);
 		return new ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>>(services, HttpStatus.OK);
 	}
 	
+	@GetMapping("/{serviceProviderId}")
+	public ResponseEntity<List<CooperationResponseDTO>> getAllByServiceProviderId(@PathVariable("serviceProviderId") UUID serviceProviderId){
+		List<CooperationResponseDTO> services = cooperationService.findAllByServiceProviderId(serviceProviderId);
+		return new ResponseEntity<List<CooperationResponseDTO>>(services, HttpStatus.OK);
+	}
+	
 	@DeleteMapping()
-	public ResponseEntity<?> delete(@RequestBody CooperationRequestDTO cooperationDTOreq){
-		return new ResponseEntity<>(cooperationService.delete(cooperationDTOreq) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
+	public ResponseEntity<?> delete(
+			@RequestParam(value="playroomId", required=true) UUID playroomId,
+			@RequestParam(value="cooperationServiceId", required=true) UUID cooperationServiceId){
+
+		return new ResponseEntity<>(cooperationService.delete(new CooperationRequestDTO(playroomId, cooperationServiceId)) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 }

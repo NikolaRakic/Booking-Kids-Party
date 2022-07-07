@@ -80,7 +80,8 @@ public class ReservationServiceImpl implements ReservationService {
 		Page<Reservation> reservationsPage = reservationRepository.findAllByServiceOfferServiceProviderId(serviceProviderId, pageable);
 		HttpHeaders headers = new HttpHeaders();
         headers.set("total", String.valueOf(reservationsPage.getTotalPages()));
-
+        reservationsPage.getContent().forEach(reservation -> reservationMapper.entityToDTO(reservation));
+        
         List<ReservationResponseDTO> reservationsDTO = reservationMapper.listToListDTO(reservationsPage.getContent());
 		return new PageableResponse(reservationsDTO, headers);
 	}
@@ -88,7 +89,6 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	public PageableResponse getAllByUser(UUID userId, Pageable pageable) {
 		Page<Reservation> reservationsPage = reservationRepository.findAllByUserId(userId, pageable);
-		
 		HttpHeaders headers = new HttpHeaders();
         headers.set("total", String.valueOf(reservationsPage.getTotalPages()));
      

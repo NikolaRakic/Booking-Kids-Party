@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import com.diplomski.bookingkidsparty.app.dto.request.CooperationRequestDTO;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderResponseDTO;
+import com.diplomski.bookingkidsparty.app.model.Cooperation;
+import com.diplomski.bookingkidsparty.app.dto.response.CooperationResponseDTO;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoResponseDTO;
 
 public interface CooperationService {
@@ -15,5 +17,7 @@ public interface CooperationService {
 	List<ServiceProviderOnePhotoResponseDTO> findAllByServiceProvider(UUID serviceProviderId);
 
 	boolean delete(CooperationRequestDTO cooperationDTOreq);
+
+	List<CooperationResponseDTO> findAllByServiceProviderId(UUID serviceProviderId);
 
 }

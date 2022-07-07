@@ -17,6 +17,7 @@ import com.diplomski.bookingkidsparty.app.model.Photo;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.model.enums.Role;
 import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
+import com.diplomski.bookingkidsparty.app.service.RatingService;
 
 import javassist.NotFoundException;
 
@@ -30,6 +31,9 @@ public class ServiceProviderMapper {
 	//SecurityConfiguration configuration;
 	@Autowired
 	PhotoMapper photoMapper;
+	
+	@Autowired
+	RatingService ratingService;
 	
 	
 	public ServiceProvider dtoReqToEntity(ServiceProviderRequestDTO serviceProviderDTO) throws NotFoundException {
@@ -62,11 +66,12 @@ public class ServiceProviderMapper {
 	}
 	
 	public ServiceProviderOnePhotoResponseDTO entityToDTOresWithOnePhoto(ServiceProvider serviceProvider) {
+		Double averageRating = ratingService.getAverageRatingByServiceProvider(serviceProvider.getId()).getAverageRating();
 		return new ServiceProviderOnePhotoResponseDTO(serviceProvider.getId(), serviceProvider.getUsername(),
 				serviceProvider.getAccountNumber(), serviceProvider.getEmail(), serviceProvider.getPib(), serviceProvider.getStartOfWork(),
 				serviceProvider.getEndOfWork(), serviceProvider.getMaxNumberOfKids(), serviceProvider.getTypeOfServiceProvider().name(),
 				serviceProvider.getCity(), serviceProvider.getAdress(), serviceProvider.getTelephoneNumber(),
-				photoMapper.entityToDto(serviceProvider.getPhotos().stream().findFirst().orElse(new Photo())));
+				photoMapper.entityToDto(serviceProvider.getPhotos().stream().findFirst().orElse(new Photo())), averageRating);
 	}
 	
 	public List<ServiceProviderOnePhotoResponseDTO> listToListDTO(List<ServiceProvider> services){

@@ -27,4 +27,5 @@ public class ServiceOfferResponseDTO {
 	private String serviceProviderAdress;
 	private String serviceProviderCity;
 	private Set<PhotoResponseDTO> serviceProviderPhotos;
+	private Double averageRating;
 }

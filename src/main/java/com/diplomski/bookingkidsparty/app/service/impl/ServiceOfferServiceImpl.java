@@ -169,8 +169,8 @@ public class ServiceOfferServiceImpl implements ServiceOfferService {
 
 		TypeOfServiceProvider typeOfServiceProvider = TypeOfServiceProvider.valueOf(additionalOffersType);
 		List<ServiceOffer> offers = serviceOfferRepository
-				.findAllByServiceProviderPlayRoomIdAndServiceProviderTypeOfServiceProviderAndServiceProviderCityAndServiceProviderMaxNumberOfKidsGreaterThanEqual(
-						playroomsOffer.getServiceProvider().getId(), typeOfServiceProvider, city, numberOfKids);
+				.findAllByServiceProviderServicesCooperationsPlayroomIdAndServiceProviderServicesCooperationsConfirmedAndServiceProviderTypeOfServiceProviderAndServiceProviderCityAndServiceProviderMaxNumberOfKidsGreaterThanEqual(
+						playroomsOffer.getServiceProvider().getId(), true, typeOfServiceProvider, city, numberOfKids);
 
 		// if the chosen playroom hasn't cooperation, get all additional offers
 		if (offers.isEmpty()) {

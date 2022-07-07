@@ -2,6 +2,7 @@ package com.diplomski.bookingkidsparty.app.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -10,11 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ServiceOfferRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.PhotoResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.RatingResponseDTO;
 import com.diplomski.bookingkidsparty.app.dto.response.ServiceOfferResponseDTO;
+import com.diplomski.bookingkidsparty.app.dto.response.StarRatingResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
 import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
+import com.diplomski.bookingkidsparty.app.service.RatingService;
 
 @Component
 public class ServiceOfferMapper {
@@ -23,19 +28,41 @@ public class ServiceOfferMapper {
 	ServiceProviderRepository serviceProviderRepository;
 	@Autowired
 	ModelMapper modelMapper;
+	@Autowired
+	RatingService ratingService;
+	@Autowired
+	PhotoMapper photoMapper;
 	
 	public ServiceOfferResponseDTO entityToDTO(ServiceOffer serviceOffer) {
-		return modelMapper.map(serviceOffer, ServiceOfferResponseDTO.class);
+		Double averageRating = ratingService.getAverageRatingByServiceProvider(serviceOffer.getServiceProvider().getId()).getAverageRating();
+		Set<PhotoResponseDTO> photoDTO = photoMapper.listToListDTO(serviceOffer.getServiceProvider().getPhotos());
+		
+		ServiceOfferResponseDTO serviceOfferDTO = new ServiceOfferResponseDTO();
+		serviceOfferDTO.setDescription(serviceOffer.getDescription());
+		serviceOfferDTO.setEndDate(serviceOffer.getEndDate());
+		serviceOfferDTO.setId(serviceOffer.getId());
+		serviceOfferDTO.setMaxNumberOfAdults(serviceOffer.getMaxNumberOfAdults());
+		serviceOfferDTO.setMaxNumberOfKids(serviceOffer.getMaxNumberOfKids());
+		serviceOfferDTO.setName(serviceOffer.getName());
+		serviceOfferDTO.setPricePerAdult(serviceOffer.getPricePerAdult());
+		serviceOfferDTO.setPricePerHour(serviceOffer.getPricePerHour());
+		serviceOfferDTO.setPricePerKid(serviceOffer.getPricePerKid());
+		serviceOfferDTO.setAverageRating(averageRating);
+		serviceOfferDTO.setServiceProviderAdress(serviceOffer.getServiceProvider().getAdress());
+		serviceOfferDTO.setServiceProviderCity(serviceOffer.getServiceProvider().getCity());
+		serviceOfferDTO.setServiceProviderId(serviceOffer.getServiceProvider().getId());
+		serviceOfferDTO.setServiceProviderPhotos(photoDTO);
+		serviceOfferDTO.setServiceProviderUsername(serviceOffer.getServiceProvider().getUsername());
+		serviceOfferDTO.setStartDate(serviceOffer.getStartDate());
+		
+		return serviceOfferDTO;
 	}
 
 	public List<ServiceOfferResponseDTO> listToListDTO(List<ServiceOffer> serviceOffers){
 		List<ServiceOfferResponseDTO> serviceOffersDTOres = new ArrayList<ServiceOfferResponseDTO>();
-		System.out.println("mapper");
 		for (ServiceOffer serviceOffer : serviceOffers) {
-			System.out.println("for");
 			serviceOffersDTOres.add(entityToDTO(serviceOffer));
 		}
-		System.out.println("return");
 		return serviceOffersDTOres;
 	}
 	
