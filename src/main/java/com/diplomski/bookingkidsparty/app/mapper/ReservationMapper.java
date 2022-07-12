@@ -31,6 +31,7 @@ import com.diplomski.bookingkidsparty.app.repository.RatingRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceOfferRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.repository.UserRepository;
+import com.diplomski.bookingkidsparty.app.util.Price;
 
 import javassist.NotFoundException;
 
@@ -47,6 +48,8 @@ public class ReservationMapper {
 	ServiceProviderRepository serviceProviderRepository;
 	@Autowired
 	RatingRepository ratingRepository;
+	@Autowired
+	Price price;
 
 	public List<Reservation> dtoToEntity(ReservationRequestDTO reservationDTOreq) {
 		Optional<User> userOptional = userRepository.findByUsernameOrEmail(reservationDTOreq.getUsersEmail());
@@ -122,17 +125,9 @@ public class ReservationMapper {
 		// modelMapper.getTypeMap(Reservation.class, ReservationDTOres.class);
 
 		Rating rating = ratingRepository.findByReservationId(reservation.getId()).orElse(null);
-		long minutes = MINUTES.between(reservation.getStartTime(), reservation.getEndTime());
-		double hours = (double) minutes / 60;
-
-		long totalPrice = 999999999;
-		if (reservation.getServiceOffer().getServiceProvider()
-				.getTypeOfServiceProvider() == TypeOfServiceProvider.KETERING) {
-			totalPrice = Math.round(reservation.getNumberOfKids() * reservation.getServiceOffer().getPricePerKid()
-					+ reservation.getNumberOfAdults() * reservation.getServiceOffer().getPricePerAdult());
-		} else {
-			totalPrice = Math.round(reservation.getServiceOffer().getPricePerHour() * hours);
-		}
+		
+		
+		long totalPrice = price.getPrice(reservation);
 
 		ReservationResponseDTO reservationDto = new ReservationResponseDTO();
 

@@ -26,6 +26,7 @@ import com.diplomski.bookingkidsparty.app.model.Reservation;
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ReservationRepository;
+import com.diplomski.bookingkidsparty.app.service.EmailSenderService;
 import com.diplomski.bookingkidsparty.app.service.ReservationService;
 import com.diplomski.bookingkidsparty.app.util.ReservationValidate;
 
@@ -38,6 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
 	ReservationMapper reservationMapper;
 	@Autowired
 	ReservationValidate reservationValidate;
+	@Autowired EmailSenderService emailSenderService;
 
 	@Transactional(rollbackOn = Exception.class)
 	@Override
@@ -53,6 +55,7 @@ public class ReservationServiceImpl implements ReservationService {
 		for (Reservation reservation : newReservations) {
 			reservationValidate.requestValidation(reservation);
 			reservationRepository.save(reservation);
+			emailSenderService.sendConfirmReservationOnMail(reservationDTOreq.getUsersEmail(), playroom, newReservations);
 		}
 		return playroom.getId();
 	}
@@ -76,8 +79,9 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public PageableResponse getAllByServisProvider(UUID serviceProviderId, Pageable pageable) {
-		Page<Reservation> reservationsPage = reservationRepository.findAllByServiceOfferServiceProviderId(serviceProviderId, pageable);
+	public PageableResponse getAllByServisProvider(UUID serviceProviderId, int pageNo, int pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("dateOfReservation").descending());
+		Page<Reservation> reservationsPage = reservationRepository.findAllByServiceOfferServiceProviderId(serviceProviderId, paging);
 		HttpHeaders headers = new HttpHeaders();
         headers.set("total", String.valueOf(reservationsPage.getTotalPages()));
         reservationsPage.getContent().forEach(reservation -> reservationMapper.entityToDTO(reservation));

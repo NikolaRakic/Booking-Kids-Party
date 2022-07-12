@@ -41,7 +41,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	public UUID add(ServiceProviderRequestDTO serviceProviderDTO) throws NotFoundException, MessagingException {
 		ServiceProvider serviceProvider = serviceMapper.dtoReqToEntity(serviceProviderDTO);
 		String plainPassword = generatePassword.generete();
-		emailSender.sendMail(serviceProvider.getEmail(), plainPassword);
+		emailSender.sendPasswordOnMail(serviceProvider.getEmail(), plainPassword);
 		serviceProvider.setPassword(configuration.passwordEncoder().encode(plainPassword));
 		serviceProviderRepository.saveAndFlush(serviceProvider);
 		return serviceProvider.getId();

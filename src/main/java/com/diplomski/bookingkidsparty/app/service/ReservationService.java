@@ -20,7 +20,7 @@ public interface ReservationService {
 
 	List<ReservationResponseDTO> getAllByParty(UUID playRoomId, LocalDate dateOfReservation, LocalTime startTime);
 
-	PageableResponse getAllByServisProvider(UUID serviceProviderId, Pageable pageable);
+	PageableResponse getAllByServisProvider(UUID serviceProviderId, int pageNo, int pageSize);
 
 	PageableResponse getAllByUser(UUID userId, Pageable pageable);
 

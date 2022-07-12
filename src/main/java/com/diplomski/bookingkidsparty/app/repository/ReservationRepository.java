@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID>{
 	
 	List<Reservation> findAllByPlayroomIdAndDateOfReservationAndStartTime(UUID playRoomId, LocalDate dateOfReservation, LocalTime startTime);
 
-	Page<Reservation> findAllByServiceOfferServiceProviderId(UUID serviceProviderId, Pageable pagable);
+	Page<Reservation> findAllByServiceOfferServiceProviderId(UUID serviceProviderId, Pageable pagable );
 
 	Page<Reservation> findAllByUserId(UUID userId, Pageable pagable);
 	

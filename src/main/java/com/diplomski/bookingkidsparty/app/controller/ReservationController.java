@@ -67,8 +67,9 @@ public class ReservationController {
 	
 	@GetMapping("/serviceProvider/{serviceProviderId}")
 	public ResponseEntity<?> getAllByServisProvider(
-			@PathVariable("serviceProviderId") UUID serviceProviderId, Pageable pageable) {
-		PageableResponse pageableResponse = reservationService.getAllByServisProvider(serviceProviderId, pageable);
+			@PathVariable("serviceProviderId") UUID serviceProviderId, @RequestParam(defaultValue = "0") Integer pageNo, 
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+		PageableResponse pageableResponse = reservationService.getAllByServisProvider(serviceProviderId, pageNo, pageSize );
 		return ResponseEntity.ok().headers(pageableResponse.getHeader()).body(pageableResponse.getList());
 	}
 
