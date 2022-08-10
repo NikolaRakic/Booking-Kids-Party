@@ -12,7 +12,7 @@ import com.diplomski.bookingkidsparty.app.model.Parent;
 @Repository
 public interface ParentRepository extends JpaRepository<Parent, UUID>{
 
-	@Query("SELECT p FROM Parent p WHERE p.username = ?1 OR p.email = ?2")
+	//@Query("SELECT p FROM Parent p WHERE p.username = ?1 OR p.email = ?2")
 	Optional<Parent> findByUsernameOrEmail(String username, String email);
 
 }

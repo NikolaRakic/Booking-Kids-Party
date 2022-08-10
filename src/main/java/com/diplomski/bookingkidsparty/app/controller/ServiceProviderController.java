@@ -37,26 +37,26 @@ public class ServiceProviderController {
 	
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	@PostMapping
-	public ResponseEntity<UUID> add(@RequestBody ServiceProviderRequestDTO serviceProviderDTO) throws Exception{
-			UUID id = serviceProviderService.add(serviceProviderDTO);
-			return new ResponseEntity<UUID>(id, HttpStatus.CREATED);
+	public ResponseEntity<?> add(@RequestBody ServiceProviderRequestDTO serviceProviderDTO){
+			ServiceProviderResponseDTO serviceProviderResponseDTO = serviceProviderService.add(serviceProviderDTO);
+			return new ResponseEntity<>(serviceProviderResponseDTO, HttpStatus.CREATED);
 	}
 	
 	@PreAuthorize("hasRole('USER')")
 	@GetMapping
-	public ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>> findAll(){
+	public ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>> getAll(){
 			List<ServiceProviderOnePhotoResponseDTO> services = serviceProviderService.findAll();
-			return new ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>>(services, HttpStatus.OK);
+			return new ResponseEntity<>(services, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> findById(@PathVariable("id") UUID id) throws Exception{
+	public ResponseEntity<?> getById(@PathVariable("id") UUID id){
 			ServiceProviderResponseDTO serviceProviderDTO = serviceProviderService.findById(id);
-			return new ResponseEntity<ServiceProviderResponseDTO>(serviceProviderDTO, HttpStatus.OK);			
+			return new ResponseEntity<>(serviceProviderDTO, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable("id") UUID id) throws Exception{
+	public ResponseEntity<Void> delete(@PathVariable("id") UUID id){
 		serviceProviderService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
@@ -64,33 +64,22 @@ public class ServiceProviderController {
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('SERVICE_PROVIDER')")
 	public ResponseEntity<?> edit(@PathVariable("id") UUID id, @RequestBody ServiceProviderEditDTO serviceProviderDTO){
-		try {
-			serviceProviderService.edit(id, serviceProviderDTO);
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (NotFoundException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
-		}catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);	
-		}
+			ServiceProviderResponseDTO serviceProviderResponseDTO = serviceProviderService.edit(id, serviceProviderDTO);
+			return new ResponseEntity<>(serviceProviderResponseDTO, HttpStatus.OK);
 	}
 	
 	//@PreAuthorize("hasRole('SERVICE_PROVIDER')")
 	@GetMapping("/typeByServiceProviderId/{id}")
-	public ResponseEntity<?> getServiceProviderType(@PathVariable("id") UUID id) throws Exception{
+	public ResponseEntity<?> getServiceProviderType(@PathVariable("id") UUID id){
 		String type = serviceProviderService.getType(id);
-		return new ResponseEntity<String>(type, HttpStatus.OK);
+		return new ResponseEntity<>(type, HttpStatus.OK);
 	}
 	
 	
 	@GetMapping("/type/{type}")
-	public ResponseEntity<?> findAllByType(@PathVariable("type") TypeOfServiceProvider typeOfServiceProvider){
-			try {
+	public ResponseEntity<?> getAllByType(@PathVariable("type") TypeOfServiceProvider typeOfServiceProvider){
 				List<ServiceProviderOnePhotoResponseDTO> typesDTO = serviceProviderService.findAllByType(typeOfServiceProvider);
-				return new ResponseEntity<List<ServiceProviderOnePhotoResponseDTO>>(typesDTO, HttpStatus.OK);
-			} catch (NotFoundException e) {
-				return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-			}
-			
+				return new ResponseEntity<>(typesDTO, HttpStatus.OK);
 	}
 	
 }

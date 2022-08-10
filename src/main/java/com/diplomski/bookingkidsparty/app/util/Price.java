@@ -16,7 +16,7 @@ public class Price {
 
 		long totalPrice;
 		if (reservation.getServiceOffer().getServiceProvider()
-				.getTypeOfServiceProvider() == TypeOfServiceProvider.KETERING) {
+				.getTypeOfServiceProvider() == TypeOfServiceProvider.CATERING) {
 			totalPrice = Math.round(reservation.getNumberOfKids() * reservation.getServiceOffer().getPricePerKid()
 					+ reservation.getNumberOfAdults() * reservation.getServiceOffer().getPricePerAdult());
 		} else {

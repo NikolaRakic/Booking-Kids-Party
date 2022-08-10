@@ -69,7 +69,7 @@ public class ServiceOfferMapper {
 	public ServiceOffer dtoToEntity(ServiceOfferRequestDTO serviceOfferDTOreq) {
 		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceOfferDTOreq.getServiceProviderId()).get();
 		
-		 if(serviceProvider.getTypeOfServiceProvider() == TypeOfServiceProvider.KETERING) {
+		 if(serviceProvider.getTypeOfServiceProvider() == TypeOfServiceProvider.CATERING) {
 			 serviceOfferDTOreq.setPricePerHour(0);
 	         }else {
 	        	 serviceOfferDTOreq.setPricePerAdult(0);

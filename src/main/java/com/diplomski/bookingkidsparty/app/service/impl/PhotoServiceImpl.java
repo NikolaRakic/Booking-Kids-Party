@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.diplomski.bookingkidsparty.app.exceptions.AccessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import com.diplomski.bookingkidsparty.app.dto.response.PhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.mapper.PhotoMapper;
 import com.diplomski.bookingkidsparty.app.model.Photo;
 import com.diplomski.bookingkidsparty.app.model.ServiceProvider;
+import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.repository.PhotoRepository;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.PhotoService;
@@ -37,6 +40,11 @@ public class PhotoServiceImpl implements PhotoService {
 
 		ServiceProvider serviceProvider = serviceProviderRepository.findById(serviceProviderId)
 				.orElseThrow(() -> new IllegalArgumentException());
+		User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if(!serviceProvider.getId().equals(currentUser.getId())) {
+			throw new AccessException("Only a logged-in service provider can add photo for himself");
+		}
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
 		int countPhotosByServiceProvider = photoRepository.getCountOfPhotosByServiceProvider(serviceProvider);
@@ -55,9 +63,6 @@ public class PhotoServiceImpl implements PhotoService {
 	public boolean delete(UUID photoId) {
 		Optional<Photo> photoOptional = photoRepository.findById(photoId);
 		if (photoOptional.isPresent()) {
-			// String path = photoOptional.get().getPath() + "/" +
-			// photoOptional.get().getName();
-			// Files.deleteIfExists(Paths.get(path));
 			photoRepository.deleteById(photoId);
 			return true;
 		}
@@ -70,7 +75,6 @@ public class PhotoServiceImpl implements PhotoService {
 				"Service provider with id " + serviceProviderId + " doesn't exist."));
 		List<Photo> photos = photoRepository.findAllByServiceProviderId(serviceProviderId);
 		return photoMapper.listToListDTO(photos);
-
 	}
 
 }

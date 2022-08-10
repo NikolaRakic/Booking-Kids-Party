@@ -8,7 +8,7 @@ import com.diplomski.bookingkidsparty.app.model.Reservation;
 
 public interface EmailSenderService {
 
-	void sendPasswordOnMail(String toEmail, String plainPassword) throws MessagingException;
+	void sendPasswordOnMail(String toEmail, String plainPassword);
 	
-	void sendConfirmReservationOnMail(String toEmail, Reservation playroomReservation, List<Reservation> additionalReservations) throws MessagingException;
+	void sendConfirmReservationOnMail(String toEmail, Reservation playroomReservation, List<Reservation> additionalReservations);
 }

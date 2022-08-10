@@ -36,14 +36,14 @@ public class ServiceProviderMapper {
 	RatingService ratingService;
 	
 	
-	public ServiceProvider dtoReqToEntity(ServiceProviderRequestDTO serviceProviderDTO) throws NotFoundException {
+	public ServiceProvider dtoReqToEntity(ServiceProviderRequestDTO serviceProviderDTO){
 		TypeMap<ServiceProviderRequestDTO, ServiceProvider> typeMap = modelMapper.getTypeMap(ServiceProviderRequestDTO.class, ServiceProvider.class);
 		//String encodedPassword = configuration.passwordEncoder().encode(serviceProviderDTO.getPassword());
 		try {
 			TypeOfServiceProvider.valueOf(serviceProviderDTO.getTypeOfServiceProvider());
 		}
 		catch (Exception e) {
-			throw new NotFoundException("TypeOfServiceProvider is invalid");
+			throw new IllegalArgumentException("TypeOfServiceProvider is invalid");
 		}
 		
 		if(typeMap == null) {

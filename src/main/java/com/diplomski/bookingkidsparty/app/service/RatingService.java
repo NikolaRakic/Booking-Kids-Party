@@ -9,7 +9,7 @@ import com.diplomski.bookingkidsparty.app.dto.response.RatingResponseDTO;
 
 public interface RatingService {
 
-	UUID create(RatingRequestDTO ratingDto) throws Exception;
+	RatingResponseDTO create(RatingRequestDTO ratingDto);
 
 	List<RatingResponseDTO> getAllByServiceProvider(UUID serviceProviderId);
 

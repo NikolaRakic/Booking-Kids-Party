@@ -32,25 +32,8 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-//	@GetMapping("/user/{id}")
-//	public ResponseEntity<?> findById(@PathVariable("id") UUID id){
-//		try {
-//			ParentDTOres userDTOres = userService.findById(id);
-//			return new ResponseEntity<ParentDTOres>(userDTOres, HttpStatus.OK);
-//		} catch (NotFoundException e) {
-//			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);	
-//		}		
-//	}
-//	
-//	@GetMapping("/user")
-//	public ResponseEntity<List<ParentDTOres>> findAll(){
-//		List<ParentDTOres> usersDTOres = userService.findAll();
-//		return new ResponseEntity<List<ParentDTOres>>(usersDTOres, HttpStatus.OK);
-//	}
-	
-	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> delete(@PathVariable("id") UUID id) throws Exception{
+	public ResponseEntity<?> delete(@PathVariable("id") UUID id){
 		return new ResponseEntity<>(userService.delete(id) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 	}
 	

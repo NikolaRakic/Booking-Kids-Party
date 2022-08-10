@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -30,29 +31,34 @@ public class EmailSenderServiceImpl implements EmailSenderService{
 	Price price;
 	
 	@Override
-	public void sendPasswordOnMail(String toEmail, String plainPassword) throws MessagingException{
+	public void sendPasswordOnMail(String toEmail, String plainPassword){
 		
 		MimeMessage msg = javaMailSender.createMimeMessage();
 
-        // true = multipart message
-        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-        helper.setTo(toEmail);
+		try{
+			// true = multipart message
+			MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+			helper.setTo(toEmail);
 
-        helper.setSubject("Booking kids parties");
+			helper.setSubject("Booking kids parties");
 
-        // default = text/plain
-        //helper.setText("Check attachment for image!");
+			// default = text/plain
+			//helper.setText("Check attachment for image!");
 
-        // true = text/html
-        helper.setText("<b>Vaš nalog je kreiran!<b> <br/> <h1>Vaša lozinka je: <b>"+ plainPassword +"</b></h1>", true);
+			// true = text/html
+			helper.setText("<b>Vaš nalog je kreiran!<b> <br/> <h1>Vaša lozinka je: <b>"+ plainPassword +"</b></h1>", true);
 
-        //helper.addAttachment("my_photo.png", new ClassPathResource("android.png"));
+			//helper.addAttachment("my_photo.png", new ClassPathResource("android.png"));
+		}catch (MessagingException ex){
+			new MessagingException();
+		}
+
 
         javaMailSender.send(msg);
 	}
 
 	@Override
-	public void sendConfirmReservationOnMail(String toEmail, Reservation playroomReservation, List<Reservation> additionalReservations) throws MessagingException {
+	public void sendConfirmReservationOnMail(String toEmail, Reservation playroomReservation, List<Reservation> additionalReservations) {
 		long minutes = MINUTES.between(playroomReservation.getStartTime(), playroomReservation.getEndTime());
 		double hours = (double) minutes / 60;
 		
@@ -77,41 +83,46 @@ public class EmailSenderServiceImpl implements EmailSenderService{
 		
 		
 		MimeMessage msg = javaMailSender.createMimeMessage();
-		
-		MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-        helper.setTo(toEmail);
-        helper.setSubject("Booking kids parties");
-        
-        helper.setText("<b>Uspešna rezervacija!<b> <br/><br/><br/> "
-        		+ "<table style=\"font-family: Arial, Helvetica, sans-serif;\r\n" + 
-        		"  border-collapse: collapse;\r\n" + 
-        		"  width: 60%;\">"
-        		+ "<tr><th>IGRAONICA</th></tr>"
-        		
-+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Naziv</th>"
-+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getServiceOffer().getServiceProvider().getUsername()+"</b><td></tr>"
-        		
-+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Naziv usluge</th>"
-+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getServiceOffer().getName()+"</b><td></tr>"
+
+		 try{
+			 MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+			 helper.setTo(toEmail);
+			 helper.setSubject("Booking kids parties");
+
+			 helper.setText("<b>Uspešna rezervacija!<b> <br/><br/><br/> "
+							 + "<table style=\"font-family: Arial, Helvetica, sans-serif;\r\n" +
+							 "  border-collapse: collapse;\r\n" +
+							 "  width: 60%;\">"
+							 + "<tr><th>IGRAONICA</th></tr>"
+
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Naziv</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getServiceOffer().getServiceProvider().getUsername()+"</b><td></tr>"
+
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Naziv usluge</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getServiceOffer().getName()+"</b><td></tr>"
 
 
-+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Broj dece</th>"
-+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getNumberOfKids()+"</b><td></tr>"
-		+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Broj odraslih</th>"
-		+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getNumberOfAdults()+"</b><td></tr>"
-        		+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Datum proslave</th>"
-        		+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getDateOfReservation()+"</b><td></tr>"
-        		+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Početak</th>"
-        		+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getStartTime()+"</b><td></tr>"
-        		+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Kraj</th>"
-        		+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getEndTime()+"</b><td></tr>"
-        		+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Mesto održavanja</th>"
-        		+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getPlayroom().getAdress()+", " + playroomReservation.getServiceOffer().getServiceProvider().getCity()+"</b><td></tr>"
-        				+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Cena</th>"
-        				+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ price.getPrice(playroomReservation) +" din</b><td></tr>"
-        		+ "</table"
-        		+ addiotalReservationsTable
-        		, true);
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Broj dece</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getNumberOfKids()+"</b><td></tr>"
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Broj odraslih</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getNumberOfAdults()+"</b><td></tr>"
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Datum proslave</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getDateOfReservation()+"</b><td></tr>"
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Početak</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getStartTime()+"</b><td></tr>"
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Kraj</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getEndTime()+"</b><td></tr>"
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Mesto održavanja</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getPlayroom().getAdress()+", " + playroomReservation.getServiceOffer().getServiceProvider().getCity()+"</b><td></tr>"
+							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Cena</th>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ price.getPrice(playroomReservation) +" din</b><td></tr>"
+							 + "</table"
+							 + addiotalReservationsTable
+					 , true);
+		 } catch (MessagingException ex){
+		 		new MessagingException();
+		 }
+
         javaMailSender.send(msg);
 
 	}

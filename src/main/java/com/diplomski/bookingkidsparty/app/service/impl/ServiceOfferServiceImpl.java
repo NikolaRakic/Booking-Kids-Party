@@ -28,107 +28,104 @@ import com.diplomski.bookingkidsparty.app.util.OfferValidate;
 
 import javassist.NotFoundException;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 public class ServiceOfferServiceImpl implements ServiceOfferService {
 
-	@Autowired
-	ServiceOfferRepository serviceOfferRepository;
-	@Autowired
-	ServiceProviderRepository serviceProviderRepository;
-	@Autowired
-	ServiceOfferMapper serviceOfferMapper;
-	@Autowired
-	OfferValidate offerValidate;
+    @Autowired
+    ServiceOfferRepository serviceOfferRepository;
+    @Autowired
+    ServiceProviderRepository serviceProviderRepository;
+    @Autowired
+    ServiceOfferMapper serviceOfferMapper;
+    @Autowired
+    OfferValidate offerValidate;
 
-	@Override
-	public List<ServiceOfferResponseDTO> findAll() {
-		List<ServiceOffer> serviceOffers = serviceOfferRepository.findAll();
-		return serviceOfferMapper.listToListDTO(serviceOffers);
-	}
+    @Override
+    public List<ServiceOfferResponseDTO> findAll() {
+        List<ServiceOffer> serviceOffers = serviceOfferRepository.findAll();
+        return serviceOfferMapper.listToListDTO(serviceOffers);
+    }
 
-	@Override
-	public UUID add(ServiceOfferRequestDTO serviceOfferDTOreq) throws Exception {
-		ServiceOffer serviceOffer = serviceOfferMapper.dtoToEntity(serviceOfferDTOreq);
-		offerValidate.dateValidate(serviceOffer);
-		serviceOfferRepository.saveAndFlush(serviceOffer);
-		return serviceOffer.getId();
-	}
+    @Override
+    public ServiceOfferResponseDTO add(ServiceOfferRequestDTO serviceOfferDTOreq) {
+        ServiceOffer serviceOffer = serviceOfferMapper.dtoToEntity(serviceOfferDTOreq);
+        offerValidate.dateValidate(serviceOffer);
+        return serviceOfferMapper.entityToDTO(serviceOfferRepository.saveAndFlush(serviceOffer));
+    }
 
-	@Override
-	public ServiceOfferResponseDTO findById(UUID id) throws Exception {
-		Optional<ServiceOffer> serviceOfferOptional = serviceOfferRepository.findById(id);
-		if (serviceOfferOptional.isPresent()) {
-			ServiceOfferResponseDTO serviceOfferDTOres = serviceOfferMapper.entityToDTO(serviceOfferOptional.get());
-			return serviceOfferDTOres;
-		}
-		throw new Exception("ServiceOffer with this id doesn't exist!");
-	}
+    @Override
+    public ServiceOfferResponseDTO findById(UUID id) {
+        return serviceOfferMapper.entityToDTO(serviceOfferRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Service offer with id " + id + " is not found")));
+    }
 
-	@Override
-	public boolean delete(UUID id) {
-		Optional<ServiceOffer> serviceOfferOptional = serviceOfferRepository.findById(id);
-		if (serviceOfferOptional.isPresent()) {
-			serviceOfferRepository.delete(serviceOfferOptional.get());
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean delete(UUID id) {
+        Optional<ServiceOffer> serviceOfferOptional = serviceOfferRepository.findById(id);
+        if (serviceOfferOptional.isPresent()) {
+            serviceOfferRepository.delete(serviceOfferOptional.get());
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public void edit(UUID id, ServiceOfferRequestDTO serviceOfferDTO) throws Exception {
-		Optional<ServiceOffer> serviceOfferOptional = serviceOfferRepository.findById(id);
-		if (serviceOfferOptional.isPresent()) {
-			ServiceOffer serviceOfferForEdit = serviceOfferOptional.get();
-			serviceOfferForEdit.setEndDate(serviceOfferDTO.getEndDate());
-			serviceOfferForEdit.setMaxNumberOfAdults(serviceOfferDTO.getMaxNumberOfAdults());
-			serviceOfferForEdit.setMaxNumberOfKids(serviceOfferDTO.getMaxNumberOfKids());
-			serviceOfferForEdit.setName(serviceOfferDTO.getName());
-			serviceOfferForEdit.setPricePerAdult(serviceOfferDTO.getPricePerAdult());
-			serviceOfferForEdit.setPricePerKid(serviceOfferDTO.getPricePerKid());
-			serviceOfferForEdit.setDescription(serviceOfferDTO.getDescription());
-			serviceOfferForEdit.setStartDate(serviceOfferDTO.getStartDate());
+    @Override
+    public ServiceOfferResponseDTO edit(UUID id, ServiceOfferRequestDTO serviceOfferDTO) {
+        Optional<ServiceOffer> serviceOfferOptional = serviceOfferRepository.findById(id);
+        if (serviceOfferOptional.isPresent()) {
+            ServiceOffer serviceOfferForEdit = serviceOfferOptional.get();
+            serviceOfferForEdit.setEndDate(serviceOfferDTO.getEndDate());
+            serviceOfferForEdit.setMaxNumberOfAdults(serviceOfferDTO.getMaxNumberOfAdults());
+            serviceOfferForEdit.setMaxNumberOfKids(serviceOfferDTO.getMaxNumberOfKids());
+            serviceOfferForEdit.setName(serviceOfferDTO.getName());
+            serviceOfferForEdit.setPricePerAdult(serviceOfferDTO.getPricePerAdult());
+            serviceOfferForEdit.setPricePerKid(serviceOfferDTO.getPricePerKid());
+            serviceOfferForEdit.setDescription(serviceOfferDTO.getDescription());
+            serviceOfferForEdit.setStartDate(serviceOfferDTO.getStartDate());
 
-			serviceOfferRepository.saveAndFlush(serviceOfferForEdit);
-		} else {
-			throw new NotFoundException("ServiceOffer with this id doesn't exist!");
-		}
-	}
+            return serviceOfferMapper.entityToDTO(serviceOfferRepository.saveAndFlush(serviceOfferForEdit));
+        } else {
+            throw new EntityNotFoundException("ServiceOffer with this id doesn't exist!");
+        }
+    }
 
-	@Override
-	public List<ServiceOfferResponseDTO> findAllByServiceProvider(UUID id) throws NotFoundException {
-		Optional<ServiceProvider> serviceProviderOptional = serviceProviderRepository.findById(id);
-		if (!serviceProviderOptional.isPresent()) {
-			throw new NotFoundException("ServiceProvider with this id doesn't exist!");
-		}
-		List<ServiceOffer> serviceOffers = serviceOfferRepository
-				.findAllByServiceProvider(serviceProviderOptional.get());
-		return serviceOfferMapper.listToListDTO(serviceOffers);
-	}
+    @Override
+    public List<ServiceOfferResponseDTO> findAllByServiceProvider(UUID id) {
+        Optional<ServiceProvider> serviceProviderOptional = serviceProviderRepository.findById(id);
+        if (!serviceProviderOptional.isPresent()) {
+            throw new IllegalArgumentException("ServiceProvider with this id doesn't exist!");
+        }
+        List<ServiceOffer> serviceOffers = serviceOfferRepository
+                .findAllByServiceProvider(serviceProviderOptional.get());
+        return serviceOfferMapper.listToListDTO(serviceOffers);
+    }
 
-	@Override
-	public List<ServiceOfferResponseDTO> findAllPlayroomByBookingDetails(String city, int numberOfKids,
-			int numberOfAdults, LocalDate date, LocalTime startTime, LocalTime endTime) throws Exception {
+    @Override
+    public List<ServiceOfferResponseDTO> findAllPlayroomByBookingDetails(String city, int numberOfKids,
+                                                                         int numberOfAdults, LocalDate date, LocalTime startTime, LocalTime endTime) {
 
-		if (startTime.isAfter(endTime) || startTime.equals(endTime)) {
-			throw new DateTimeException("End time must be after start time");
-		}
+        if (startTime.isAfter(endTime) || startTime.equals(endTime)) {
+            throw new IllegalArgumentException("End time must be after start time");
+        }
 
-		List<ServiceOffer> offers = serviceOfferRepository.findAllByBookingDetails(date, startTime, endTime, city,
-				numberOfKids, numberOfAdults, TypeOfServiceProvider.IGRAONICA);
-		
+        List<ServiceOffer> offers = serviceOfferRepository.findAllByBookingDetails(date, startTime, endTime, city,
+                numberOfKids, numberOfAdults, TypeOfServiceProvider.PLAYROOM);
 
-		List<ServiceOffer> offersForDelete = serviceOfferRepository.findAllForRemoved(city, date, startTime, endTime);
 
-		List<ServiceOffer> offerForResponse = new ArrayList<ServiceOffer>();
+        List<ServiceOffer> offersForDelete = serviceOfferRepository.findAllForRemoved(city, date, startTime, endTime);
 
-		for (ServiceOffer serviceOffer : offers) {
-			for (ServiceOffer serviceOfferForDelete : offersForDelete) {
-				if (serviceOffer.getServiceProvider().getId() == serviceOfferForDelete.getServiceProvider().getId()) {
-					offerForResponse.add(serviceOffer);
-				}
-			}
-		}
-		offers.removeAll(offerForResponse);
+        List<ServiceOffer> listOffersForDelete = new ArrayList<>();
+
+        for (ServiceOffer serviceOffer : offers) {
+            for (ServiceOffer serviceOfferForDelete : offersForDelete) {
+                if (serviceOffer.getServiceProvider().getId() == serviceOfferForDelete.getServiceProvider().getId()) {
+                    listOffersForDelete.add(serviceOffer);
+                }
+            }
+        }
+        offers.removeAll(listOffersForDelete);
 
 //		//prolazi kroz sve ponude koje su aktivne dobijenog datuma
 //		for (ServiceOffer serviceOffer : offers) {
@@ -152,33 +149,33 @@ public class ServiceOfferServiceImpl implements ServiceOfferService {
 //		}
 //		
 //		offers.removeAll(offersForDelete);
-		return serviceOfferMapper.listToListDTO(offers);
-	}
+        return serviceOfferMapper.listToListDTO(offers);
+    }
 
-	@Override
-	public List<ServiceOfferResponseDTO> findAdditionalOffersByPlayroom(UUID playroomOfferId,
-			String additionalOffersType, String city, int numberOfKids, int numberOfAdults, LocalDate date,
-			LocalTime startTime, LocalTime endTime) throws Exception {
+    @Override
+    public List<ServiceOfferResponseDTO> findAdditionalOffersByPlayroom(UUID playroomOfferId,
+                                                                        String additionalOffersType, String city, int numberOfKids, int numberOfAdults, LocalDate date,
+                                                                        LocalTime startTime, LocalTime endTime) {
 
-		if (startTime.isAfter(endTime) || startTime.equals(endTime)) {
-			throw new Exception("End time must be after start time");
-		}
+        if (startTime.isAfter(endTime) || startTime.equals(endTime)) {
+            throw new IllegalArgumentException("End time must be after start time");
+        }
 
-		ServiceOffer playroomsOffer = serviceOfferRepository.findById(playroomOfferId).orElseThrow(
-				() -> new IllegalArgumentException("Offer with id " + playroomOfferId + " dosen't exist."));
+        ServiceOffer playroomsOffer = serviceOfferRepository.findById(playroomOfferId).orElseThrow(
+                () -> new IllegalArgumentException("Offer with id " + playroomOfferId + " dosen't exist."));
 
-		TypeOfServiceProvider typeOfServiceProvider = TypeOfServiceProvider.valueOf(additionalOffersType);
-		List<ServiceOffer> offers = serviceOfferRepository
-				.findAllByServiceProviderServicesCooperationsPlayroomIdAndServiceProviderServicesCooperationsConfirmedAndServiceProviderTypeOfServiceProviderAndServiceProviderCityAndServiceProviderMaxNumberOfKidsGreaterThanEqual(
-						playroomsOffer.getServiceProvider().getId(), true, typeOfServiceProvider, city, numberOfKids);
+        TypeOfServiceProvider typeOfServiceProvider = TypeOfServiceProvider.valueOf(additionalOffersType);
+        List<ServiceOffer> offers = serviceOfferRepository
+                .findAllByServiceProviderServicesCooperationsPlayroomIdAndServiceProviderServicesCooperationsConfirmedAndServiceProviderTypeOfServiceProviderAndServiceProviderCityAndServiceProviderMaxNumberOfKidsGreaterThanEqual(
+                        playroomsOffer.getServiceProvider().getId(), true, typeOfServiceProvider, city, numberOfKids);
 
-		// if the chosen playroom hasn't cooperation, get all additional offers
-		if (offers.isEmpty()) {
-			offers = serviceOfferRepository
-					.findAllByServiceProviderTypeOfServiceProviderAndServiceProviderCityAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-							typeOfServiceProvider, city, date, date);
-		}
-		return serviceOfferMapper.listToListDTO(offers);
-	}
+        // if the chosen playroom hasn't cooperation, get all additional offers
+        if (offers.isEmpty()) {
+            offers = serviceOfferRepository
+                    .findAllByServiceProviderTypeOfServiceProviderAndServiceProviderCityAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                            typeOfServiceProvider, city, date, date);
+        }
+        return serviceOfferMapper.listToListDTO(offers);
+    }
 
 }

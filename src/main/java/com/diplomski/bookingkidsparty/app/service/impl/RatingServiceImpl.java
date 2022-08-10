@@ -30,16 +30,15 @@ public class RatingServiceImpl implements RatingService {
 	RatingMapper ratingMapper;
 	
 	@Override
-	public UUID create(RatingRequestDTO ratingDto) throws Exception {
+	public RatingResponseDTO create(RatingRequestDTO ratingDto){
 		if(ratingDto.getRate() < 0 || ratingDto.getRate() > 5) {
-			throw new Exception("Rate must be between 0 and 5!");
+			throw new IllegalArgumentException("Rate must be between 0 and 5!");
 		}
 		if(ratingRespository.findByReservationId(ratingDto.getReservationId()).isPresent()) {
-			throw new Exception("Rating for this reservation arleady exists");
+			throw new IllegalArgumentException("Rating for this reservation arleady exists");
 		}
 		Rating rating = ratingMapper.dtoToEntity(ratingDto);
-		ratingRespository.saveAndFlush(rating);
-		return rating.getId();
+		return ratingMapper.entityToDto(ratingRespository.saveAndFlush(rating));
 	}
 
 	@Override

@@ -10,11 +10,11 @@ import javassist.NotFoundException;
 
 public interface ParentService {
 
-	UUID registration(ParentRequestDTO userDTOreq) throws Exception;
+	ParentResponseDTO registration(ParentRequestDTO userDTOreq);
+
+	ParentResponseDTO edit(UUID id, ParentRequestDTO userDTOreq);
 	
-	void edit(UUID id, ParentRequestDTO userDTOreq) throws NotFoundException;
-	
-	ParentResponseDTO findById(UUID id) throws NotFoundException;
+	ParentResponseDTO findById(UUID id);
 
 	List<ParentResponseDTO> findAll();
 }

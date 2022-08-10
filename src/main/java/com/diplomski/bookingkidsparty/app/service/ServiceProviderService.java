@@ -13,18 +13,18 @@ import javassist.NotFoundException;
 
 public interface ServiceProviderService {
 
-	UUID add(ServiceProviderRequestDTO serviceProviderDTO) throws Exception;
+	ServiceProviderResponseDTO add(ServiceProviderRequestDTO serviceProviderDTO);
 
 	List<ServiceProviderOnePhotoResponseDTO> findAll();
 
-	ServiceProviderResponseDTO findById(UUID id) throws Exception;
+	ServiceProviderResponseDTO findById(UUID id);
 
 	void delete(UUID id);
 
-	void edit(UUID id, ServiceProviderEditDTO serviceProviderDTO) throws NotFoundException;
+	ServiceProviderResponseDTO edit(UUID id, ServiceProviderEditDTO serviceProviderDTO);
 
-	List<ServiceProviderOnePhotoResponseDTO> findAllByType(TypeOfServiceProvider typeOfServiceProvider) throws NotFoundException;
+	List<ServiceProviderOnePhotoResponseDTO> findAllByType(TypeOfServiceProvider typeOfServiceProvider);
 
-	String getType(UUID id) throws Exception;
+	String getType(UUID id);
 
 }

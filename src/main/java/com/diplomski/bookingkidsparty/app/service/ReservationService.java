@@ -14,7 +14,7 @@ import com.diplomski.bookingkidsparty.app.dto.response.ReservationResponseDTO;
 
 public interface ReservationService {
 
-	UUID add(ReservationRequestDTO reservationDTOreq) throws Exception;
+	UUID add(ReservationRequestDTO reservationDTOreq);
 
 	PageableResponse getAll(Pageable pageable);
 

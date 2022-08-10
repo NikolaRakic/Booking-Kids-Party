@@ -12,7 +12,7 @@ import com.diplomski.bookingkidsparty.app.dto.response.ServiceProviderOnePhotoRe
 
 public interface CooperationService {
 
-	void add(CooperationRequestDTO cooperationDTOreq) throws Exception;
+	void add(CooperationRequestDTO cooperationDTOreq);
 
 	List<ServiceProviderOnePhotoResponseDTO> findAllByServiceProvider(UUID serviceProviderId);
 

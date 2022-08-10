@@ -14,18 +14,18 @@ public interface ServiceOfferService {
 
 	List<ServiceOfferResponseDTO> findAll();
 
-	UUID add(ServiceOfferRequestDTO serviceOfferDTOreq) throws Exception;
+	ServiceOfferResponseDTO add(ServiceOfferRequestDTO serviceOfferDTOreq);
 
-	ServiceOfferResponseDTO findById(UUID id) throws Exception;
+	ServiceOfferResponseDTO findById(UUID id);
 
 	boolean delete(UUID id);
 
-	void edit(UUID id, ServiceOfferRequestDTO serviceOfferDTO) throws Exception;
+	ServiceOfferResponseDTO edit(UUID id, ServiceOfferRequestDTO serviceOfferDTO);
 
-	List<ServiceOfferResponseDTO> findAllByServiceProvider(UUID id) throws NotFoundException;
+	List<ServiceOfferResponseDTO> findAllByServiceProvider(UUID id);
 
-	List<ServiceOfferResponseDTO> findAllPlayroomByBookingDetails(String city, int numberOfKids, int numberOfAdults, LocalDate date, LocalTime startTime, LocalTime endTime) throws NotFoundException, Exception;
+	List<ServiceOfferResponseDTO> findAllPlayroomByBookingDetails(String city, int numberOfKids, int numberOfAdults, LocalDate date, LocalTime startTime, LocalTime endTime);
 
 	List<ServiceOfferResponseDTO> findAdditionalOffersByPlayroom(UUID playroomOfferId, String additionalOffersType, String city,
-			int numberOfKids, int numberOfAdults, LocalDate date, LocalTime startTime, LocalTime endTime) throws Exception;
+			int numberOfKids, int numberOfAdults, LocalDate date, LocalTime startTime, LocalTime endTime);
 }

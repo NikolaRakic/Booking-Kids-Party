@@ -30,25 +30,21 @@ public class RatingController {
 	
 	@PostMapping
 	public ResponseEntity<?> create(@RequestBody RatingRequestDTO ratingDto){
-		try {
-			UUID id = ratingService.create(ratingDto);
-			return new ResponseEntity<UUID>(id, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
+			RatingResponseDTO ratingResponseDTO = ratingService.create(ratingDto);
+			return new ResponseEntity<>(ratingResponseDTO, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{serviceProviderId}")
 	public ResponseEntity<List<RatingResponseDTO>> getAllRatingForServiceProvider(@PathVariable("serviceProviderId") UUID serviceProviderId){
 		List<RatingResponseDTO> ratings = ratingService.getAllByServiceProvider(serviceProviderId);
-		return new ResponseEntity<List<RatingResponseDTO>>(ratings, HttpStatus.OK);
+		return new ResponseEntity<>(ratings, HttpStatus.OK);
 	}
 	
 	@GetMapping
 	public ResponseEntity<StarRatingResponseDTO> getAverageRatingForServiceProvider(
 			@RequestParam(value="serviceProviderId", required=true) UUID serviceProviderId){
 		StarRatingResponseDTO averageRating = ratingService.getAverageRatingByServiceProvider(serviceProviderId);
-		return new ResponseEntity<StarRatingResponseDTO>(averageRating, HttpStatus.OK);
+		return new ResponseEntity<>(averageRating, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")

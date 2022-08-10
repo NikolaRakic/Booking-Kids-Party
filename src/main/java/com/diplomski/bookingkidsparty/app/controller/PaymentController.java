@@ -1,6 +1,8 @@
 package com.diplomski.bookingkidsparty.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,16 +19,15 @@ public class PaymentController {
 	PaymentService paymentService;
 
 	@PostMapping("/create")
-	public String createPayment(@RequestHeader(value = "amount") float amount, @RequestHeader(value = "username") String username,
+	public String createPayment(@RequestHeader(value = "amount") double amount, @RequestHeader(value = "username") String username,
 			@RequestHeader(value = "email") String email) throws StripeException {
-		Long amountLong = (long) amount;
-		return paymentService.createPaymentIntent(amountLong, username, email);
+		return paymentService.createPaymentIntent(amount, username, email);
 	}
-	
+
 	@PostMapping("/refund")
-	public void refunde(@RequestHeader(value = "clientSecret") String clientSecret) throws StripeException {
-		System.out.println("refundacija za: " + clientSecret);
+	public ResponseEntity<?> refunde(@RequestHeader(value = "clientSecret") String clientSecret) throws StripeException {
 		paymentService.refunde(clientSecret);
+		return new ResponseEntity<>(HttpStatus.ACCEPTED);
 	}
 
 }

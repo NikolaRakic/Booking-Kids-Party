@@ -1,5 +1,6 @@
 package com.diplomski.bookingkidsparty.app.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,27 +23,27 @@ import com.diplomski.bookingkidsparty.app.service.PhotoService;
 @RequestMapping("/photos")
 public class PhotoController {
 
-	@Autowired
-	PhotoService photoService;
+    @Autowired
+    PhotoService photoService;
 
-	@PostMapping("/{serviceProviderId}/upload")
-	public ResponseEntity<PhotoResponseDTO> savePhoto(@RequestParam("image") MultipartFile multipartFile,
-			@PathVariable("serviceProviderId") UUID serviceProviderId) throws Exception {
-		PhotoResponseDTO photoDto = photoService.add(multipartFile, serviceProviderId);
+    @PostMapping("/{serviceProviderId}/upload")
+    public ResponseEntity<PhotoResponseDTO> savePhoto(
+            @RequestParam("image") MultipartFile multipartFile,
+            @PathVariable("serviceProviderId") UUID serviceProviderId) throws IOException {
+        PhotoResponseDTO photoDto = photoService.add(multipartFile, serviceProviderId);
+        return new ResponseEntity<>(photoDto, HttpStatus.CREATED);
+    }
 
-		return new ResponseEntity<PhotoResponseDTO>(photoDto, HttpStatus.OK);
-	}
+    @GetMapping("/{serviceProviderId}")
+    public ResponseEntity<List<PhotoResponseDTO>> getPhotosByServiceProviderId(
+            @PathVariable("serviceProviderId") UUID serviceProviderId) {
+        List<PhotoResponseDTO> photos = photoService.getPhotos(serviceProviderId);
+        return new ResponseEntity<>(photos, HttpStatus.OK);
+    }
 
-	@GetMapping("/{serviceProviderId}")
-	public ResponseEntity<List<PhotoResponseDTO>> getPhotosByServiceProviderId(
-			@PathVariable("serviceProviderId") UUID serviceProviderId) {
-		List<PhotoResponseDTO> photos = photoService.getPhotos(serviceProviderId);
-		return new ResponseEntity<>(photos, HttpStatus.OK);
-	}
-
-	@DeleteMapping("/{photoId}")
-	public ResponseEntity<?> delete(@PathVariable("photoId") UUID photoId) throws Exception {
-		return new ResponseEntity<>(photoService.delete(photoId) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
-	}
+    @DeleteMapping("/{photoId}")
+    public ResponseEntity<?> delete(@PathVariable("photoId") UUID photoId) {
+        return new ResponseEntity<>(photoService.delete(photoId) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
+    }
 
 }

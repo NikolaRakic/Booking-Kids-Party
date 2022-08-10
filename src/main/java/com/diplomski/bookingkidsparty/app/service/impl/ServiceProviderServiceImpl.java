@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,26 +39,23 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	WebSecurityConfig configuration;
 
 	@Override
-	public UUID add(ServiceProviderRequestDTO serviceProviderDTO) throws NotFoundException, MessagingException {
+	public ServiceProviderResponseDTO add(ServiceProviderRequestDTO serviceProviderDTO) {
 		ServiceProvider serviceProvider = serviceMapper.dtoReqToEntity(serviceProviderDTO);
 		String plainPassword = generatePassword.generete();
 		emailSender.sendPasswordOnMail(serviceProvider.getEmail(), plainPassword);
 		serviceProvider.setPassword(configuration.passwordEncoder().encode(plainPassword));
-		serviceProviderRepository.saveAndFlush(serviceProvider);
-		return serviceProvider.getId();
+		return serviceMapper.entityToDTOres(serviceProviderRepository.saveAndFlush(serviceProvider));
 	}
 
 	@Override
 	public List<ServiceProviderOnePhotoResponseDTO> findAll() {
-		List<ServiceProvider> services = serviceProviderRepository.findAll();
-		return serviceMapper.listToListDTO(services);
+		return serviceMapper.listToListDTO(serviceProviderRepository.findAll());
 	}
 
 	@Override
 	public ServiceProviderResponseDTO findById(UUID id) {
 		ServiceProvider serviceProvider = getServiceProvider(id);
-		ServiceProviderResponseDTO serviceProviderDTO = serviceMapper.entityToDTOres(serviceProvider);
-		return serviceProviderDTO;
+		return serviceMapper.entityToDTOres(serviceProvider);
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	}
 
 	@Override
-	public void edit(UUID id, ServiceProviderEditDTO serviceProviderDTO) {
+	public ServiceProviderResponseDTO edit(UUID id, ServiceProviderEditDTO serviceProviderDTO) {
 		ServiceProvider serviceProvider = getServiceProvider(id);
 		serviceProvider.setUsername(serviceProviderDTO.getUsername());
 		serviceProvider.setAccountNumber(serviceProviderDTO.getAccountNumber());
@@ -81,7 +79,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 		serviceProvider.setTelephoneNumber(serviceProviderDTO.getTelephoneNumber());
 		// serviceProviderForEdit.setTypeOfServiceProvider(TypeOfServiceProvider.valueOf(serviceProviderDTO.getTypeOfServiceProvider()));
 
-		serviceProviderRepository.saveAndFlush(serviceProvider);
+		return serviceMapper.entityToDTOres(serviceProviderRepository.saveAndFlush(serviceProvider));
 	}
 
 	@Override
@@ -92,13 +90,13 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	}
 
 	@Override
-	public String getType(UUID id) throws Exception {
+	public String getType(UUID id){
 		return findById(id).getTypeOfServiceProvider();
 	}
 
 	private ServiceProvider getServiceProvider(UUID id) {
 		return serviceProviderRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Service Provider with id " + id + " dosen't exist."));
+				.orElseThrow(() -> new EntityNotFoundException("Service Provider with id " + id + " dosen't exist."));
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.diplomski.bookingkidsparty.app.exceptions.AccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class CooperationServiceImpl implements CooperationService {
 	CooperationMapper cooperationMapper;
 
 	@Override
-	public void add(CooperationRequestDTO cooperationDTOreq) throws Exception {
+	public void add(CooperationRequestDTO cooperationDTOreq){
 		ServiceProvider playroom = serviceProviderRepository.findById(cooperationDTOreq.getPlayroomId())
 				.orElseThrow(() -> new IllegalArgumentException());
 		ServiceProvider cooperationService = serviceProviderRepository
@@ -46,15 +47,10 @@ public class CooperationServiceImpl implements CooperationService {
 		Optional<Cooperation> cooperationOptional = cooperationRepository
 				.findByPlayroomIdAndCooperationServiceId(playroom.getId(), cooperationService.getId());
 
-		System.out.println(loggedUser.getId());
-		System.out.println(playroom.getId());
-		System.out.println();
-		System.out.println(loggedUser.getId());
-		System.out.println(cooperationService.getId());
-		
 		if(!loggedUser.getId().equals(playroom.getId()) && !loggedUser.getId().equals(cooperationService.getId())) {
-			throw new IllegalArgumentException("Logged service provider can only send requests for himself");
+			throw new AccessException("Only logged service provider can send requests for himself");
 		}
+
 		// confirm request for cooperation
 		if (cooperationOptional.isPresent()) {
 			Cooperation cooperation = cooperationOptional.get();
@@ -68,8 +64,8 @@ public class CooperationServiceImpl implements CooperationService {
 		}
 		// create new request for cooperation
 		else {
-			if (playroom.getTypeOfServiceProvider() != TypeOfServiceProvider.IGRAONICA
-					|| cooperationService.getTypeOfServiceProvider() == TypeOfServiceProvider.IGRAONICA) {
+			if (playroom.getTypeOfServiceProvider() != TypeOfServiceProvider.PLAYROOM
+					|| cooperationService.getTypeOfServiceProvider() == TypeOfServiceProvider.PLAYROOM) {
 				throw new IllegalArgumentException();
 			}
 
@@ -86,7 +82,7 @@ public class CooperationServiceImpl implements CooperationService {
 						"Service Provider with id " + serviceProviderId + " dosen't exist."));
 
 		List<ServiceProvider> servicesProvider = new ArrayList<ServiceProvider>();
-		if (serviceProvider.getTypeOfServiceProvider() == TypeOfServiceProvider.IGRAONICA) {
+		if (serviceProvider.getTypeOfServiceProvider() == TypeOfServiceProvider.PLAYROOM) {
 			cooperationRepository.findAllByPlayroomId(serviceProvider.getId()).forEach(
 					cooperation -> servicesProvider.add(cooperation.getCooperationService()));
 		} else {
@@ -119,7 +115,7 @@ public class CooperationServiceImpl implements CooperationService {
 				.orElseThrow(() -> new IllegalArgumentException(
 						"Service Provider with id " + serviceProviderId + " dosen't exist."));
 		
-		if (serviceProvider.getTypeOfServiceProvider() == TypeOfServiceProvider.IGRAONICA) {
+		if (serviceProvider.getTypeOfServiceProvider() == TypeOfServiceProvider.PLAYROOM) {
 			return cooperationMapper.listToListDTO(cooperationRepository.findAllByPlayroomId(serviceProvider.getId()));
 		} else {
 			return cooperationMapper.listToListDTO(cooperationRepository.findAllByCooperationServiceId(serviceProvider.getId()));	

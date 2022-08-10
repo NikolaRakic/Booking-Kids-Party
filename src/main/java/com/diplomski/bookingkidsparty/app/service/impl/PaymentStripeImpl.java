@@ -2,6 +2,8 @@ package com.diplomski.bookingkidsparty.app.service.impl;
 
 import javax.transaction.Transactional;
 
+import com.diplomski.bookingkidsparty.app.service.CurrencyConverterService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,13 @@ import com.stripe.param.CustomerSearchParams;
 import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.RefundCreateParams;
 
+import java.io.IOException;
+
 @Service
 public class PaymentStripeImpl implements PaymentService{
+
+	@Autowired
+	CurrencyConverterService currencyConverterService;
 
 	@Value("${STRIPE_SECRET_KEY}")
 	private String secretKey;
@@ -36,16 +43,22 @@ public class PaymentStripeImpl implements PaymentService{
     private static Gson gson = new Gson();
     
 	@Override
-	public String createPaymentIntent(Long amount, String username, String email) throws StripeException {
+	public String createPaymentIntent(double amount, String username, String email) throws StripeException {
 		Stripe.apiKey = secretKey;
-		
+		int amountInt = (int) amount;
+		Long amountEur = null;
+		try {
+			amountEur = (new Double(currencyConverterService.convert(amountInt, "RSD", "EUR")).longValue());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		String customerId = hasCustomer(email);
 		if(customerId == null) {
 			customerId = createCustomer(email, username);
 		}
 		PaymentIntentCreateParams params =
 		          PaymentIntentCreateParams.builder()
-		            .setAmount(amount)
+		            .setAmount(amountEur*100)
 		            .setCurrency("EUR")
 		            .setReceiptEmail(email)
 		            .setCustomer(customerId)

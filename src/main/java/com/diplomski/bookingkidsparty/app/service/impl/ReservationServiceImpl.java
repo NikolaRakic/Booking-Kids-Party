@@ -10,12 +10,15 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import com.diplomski.bookingkidsparty.app.exceptions.AccessException;
+import com.diplomski.bookingkidsparty.app.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ReservationRequestDTO;
@@ -43,12 +46,12 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Transactional(rollbackOn = Exception.class)
 	@Override
-	public UUID add(ReservationRequestDTO reservationDTOreq) throws Exception {
+	public UUID add(ReservationRequestDTO reservationDTOreq) {
 		List<Reservation> newReservations = reservationMapper.dtoToEntity(reservationDTOreq);
 		Reservation playroom = newReservations.stream()
 				.filter(sf -> sf.getServiceOffer().getServiceProvider()
-						.getTypeOfServiceProvider() == TypeOfServiceProvider.IGRAONICA)
-				.findFirst().orElseThrow(() -> new IllegalArgumentException("Playroom must exist!"));
+						.getTypeOfServiceProvider() == TypeOfServiceProvider.PLAYROOM)
+				.findFirst().orElseThrow(() -> new IllegalArgumentException("Playroom must exists!"));
 		reservationValidate.requestValidation(playroom);
 		reservationRepository.save(playroom);
 		newReservations.remove(playroom);
@@ -92,6 +95,11 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	public PageableResponse getAllByUser(UUID userId, Pageable pageable) {
+		User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if(!userId.equals(currentUser.getId())) {
+			throw new AccessException("Only a logged-in user can get his reservations");
+		}
 		Page<Reservation> reservationsPage = reservationRepository.findAllByUserId(userId, pageable);
 		HttpHeaders headers = new HttpHeaders();
         headers.set("total", String.valueOf(reservationsPage.getTotalPages()));

@@ -4,10 +4,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.diplomski.bookingkidsparty.app.dto.request.LoginRequestDTO;
+import com.diplomski.bookingkidsparty.app.dto.request.UserTokenStateDTO;
+import com.diplomski.bookingkidsparty.app.security.TokenUtils;
+import com.diplomski.bookingkidsparty.app.service.ParentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,34 +37,12 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	
 	@Autowired
 	ParentMapper userMapper;
-	
-	//-*-*-*-*-*-*-*-*-
-//	@Override
-//	public UUID registration(ParentDTOreq userDTOreq) throws Exception {
-//		User user = userMapper.DTOreqToEntity(userDTOreq);
-//		Optional<User> userOptional = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
-//		if(!userOptional.isPresent()) {
-//			userRepository.saveAndFlush(user);
-//			return user.getId();
-//		}
-//		throw new Exception("User with this username or email arleady exist!");
-//	}
 
-//	@Override
-//	public ParentDTOres findById(UUID id) throws NotFoundException {
-//		Optional<User> userOptional = userRepository.findById(id);
-//		if(userOptional.isPresent()) {
-//			return userMapper.EntityToDTOres(userOptional.get());
-//		}
-//		throw new NotFoundException("User with this id doesn't exist!");
-//	}
-//
-//	@Override
-//	public List<ParentDTOres> findAll() {
-//		return userMapper.ListToListDTO(userRepository.findAll());
-//	}
+	@Autowired
+	private TokenUtils tokenUtils;
 
-
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@Override
 	public boolean delete(UUID id) {
@@ -69,52 +55,33 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 	}
 
 	@Override
+	public UserTokenStateDTO login(LoginRequestDTO loginDTOreq) {
+		Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(loginDTOreq.getUsernameOrEmail(),
+						loginDTOreq.getPassword()));
+
+		// Ubaci korisnika u trenutni security kontekst
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		// Kreiraj token za tog korisnika
+		User user = (User) authentication.getPrincipal();
+		String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getUserRole().toString());
+		Long expiresIn = tokenUtils.getExpiredIn();
+		System.out.println(user.getAuthorities());
+		// Vrati token kao odgovor na uspesnu autentifikaciju
+		return new UserTokenStateDTO(jwt, expiresIn);
+	}
+
+	@Override
 	public User findByUsernameOrEmail(String userNameOrEmail) {
-		Optional<User> userOptional = userRepository.findByUsernameOrEmail(userNameOrEmail);
-		if(userOptional.isPresent()) {
-			return userOptional.get();
-		}
-		return null;
+		return userRepository.findByUsernameOrEmail(userNameOrEmail)
+				.orElseThrow(()-> new UsernameNotFoundException(String.format("No user found with username '%s'.", userNameOrEmail)));
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("loaduserbyusername -> userService");
-		Optional<User> userOptional = userRepository.findByUsernameOrEmail(username);
-		if (!userOptional.isPresent()) {
-			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
-		} else {
-			return userOptional.get();
-		}
-	}
-	
-	public void changePassword(String oldPassword, String newPassword) {
-
-		// Ocitavamo trenutno ulogovanog korisnika
-		User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		//System.out.println("*************" + currentUser);
-		//String username = currentUser.getName();
-//		System.out.println("*************" + username);
-//
-//		if (authenticationManager != null) {
-//			LOGGER.debug("Re-authenticating user '" + username + "' for password change request.");
-//
-//			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
-//		} else {
-//			LOGGER.debug("No authentication manager set. can't change Password!");
-//
-//			return;
-//		}
-//
-//		LOGGER.debug("Changing password for user '" + username + "'");
-//
-//		User user = (User) loadUserByUsername(username);
-
-		// pre nego sto u bazu upisemo novu lozinku, potrebno ju je hesirati
-		// ne zelimo da u bazi cuvamo lozinke u plain text formatu
-//		user.setPassword(passwordEncoder.encode(newPassword));
-//		userRepository.save(user);
-
+		return userRepository.findByUsernameOrEmail(username)
+				.orElseThrow(()-> new UsernameNotFoundException(String.format("No user found with username '%s'.", username)));
 	}
 
 

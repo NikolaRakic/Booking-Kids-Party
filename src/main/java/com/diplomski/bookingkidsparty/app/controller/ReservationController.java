@@ -34,12 +34,8 @@ public class ReservationController {
 
 	@PostMapping
 	public ResponseEntity<?> add(@RequestBody ReservationRequestDTO reservationDTOreq) {
-		try {
-			UUID id = reservationService.add(reservationDTOreq);
-			return new ResponseEntity<UUID>(id, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
+			UUID reservationId = reservationService.add(reservationDTOreq);
+			return new ResponseEntity<>(reservationId, HttpStatus.CREATED);
 	}
 
 	@GetMapping
@@ -57,7 +53,7 @@ public class ReservationController {
 		LocalTime startTime = LocalTime.parse(startTimeStr);
 		List<ReservationResponseDTO> reservationByParty = reservationService.getAllByParty(playRoomId, dateOfReservation,
 				startTime);
-		return new ResponseEntity<List<ReservationResponseDTO>>(reservationByParty, HttpStatus.OK);
+		return new ResponseEntity<>(reservationByParty, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
@@ -77,7 +73,6 @@ public class ReservationController {
 	public ResponseEntity<?> getAllByUser(@PathVariable("userId") UUID userId,
 			Pageable pageable) {
 		PageableResponse pageableResponse = reservationService.getAllByUser(userId, pageable);
-	
 		return ResponseEntity.ok().headers(pageableResponse.getHeader()).body(pageableResponse.getList());
 	}
 

@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.info.License;
             version = "1.0",
             description = "Spring boot application for booking playroom for kids party",
             license = @License(name = "FTN", url = "ftn.rs"),
-            contact = @Contact(url = "http://localhost:3000", name = "Nikola Rakic", email = "bookingkidsparties@gmail.com")))
+            contact = @Contact(url = "http://localhost:3000", name = "Nikola Rakic", email = "nikolarakic15@gmail.com")))
 public class BookingKidsPartyApplication {
 
 	public static void main(String[] args) {

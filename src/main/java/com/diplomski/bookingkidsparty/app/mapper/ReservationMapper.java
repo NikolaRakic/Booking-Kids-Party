@@ -68,7 +68,7 @@ public class ReservationMapper {
 		for (UUID serviceOfferId : reservationDTOreq.getServiceOffers()) {
 			ServiceOffer serviceOffer = serviceOfferRepository.findById(serviceOfferId).orElseThrow(
 					() -> new IllegalArgumentException("ServiceOffer with id " + serviceOfferId + " doesn't exist."));
-			if (serviceOffer.getServiceProvider().getTypeOfServiceProvider() == TypeOfServiceProvider.IGRAONICA)
+			if (serviceOffer.getServiceProvider().getTypeOfServiceProvider() == TypeOfServiceProvider.PLAYROOM)
 				playroom = serviceOffer.getServiceProvider();
 			serviceOffers.add(serviceOffer);
 		}

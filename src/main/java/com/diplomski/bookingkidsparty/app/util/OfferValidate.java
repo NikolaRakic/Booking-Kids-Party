@@ -9,12 +9,13 @@ import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 @Component
 public class OfferValidate {
 	
-	public void dateValidate(ServiceOffer serviceOffer) throws Exception{
+	//boolean
+	public void dateValidate(ServiceOffer serviceOffer) {
 		if(serviceOffer.getStartDate().isBefore(LocalDate.now())) {
-			throw new Exception("Start date must be in future");
+			throw new IllegalArgumentException("Start date must be in future");
 		}
 		if(serviceOffer.getEndDate().isBefore(serviceOffer.getStartDate())) {
-			throw new Exception("End date must be after start date");
+			throw new IllegalArgumentException("End date must be after start date");
 		}
 	}
 	

@@ -16,7 +16,8 @@ public class FileUploadUtil {
         try (InputStream input = multipartFile.getInputStream()) {
         	//if multipartFile is an image
                 ImageIO.read(input).toString();
-        } 
+        }
+
         if(countOfPhotos >= 5) {
         	throw new NumberOfPhotoException("Service Provider can't have more than 5 photos");
         }

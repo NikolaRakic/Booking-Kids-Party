@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.diplomski.bookingkidsparty.app.dto.request.ParentRequestDTO;
@@ -16,6 +17,8 @@ import com.diplomski.bookingkidsparty.app.service.ParentService;
 
 import javassist.NotFoundException;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 public class ParentServiceImpl implements ParentService {
 
@@ -26,18 +29,17 @@ public class ParentServiceImpl implements ParentService {
 	ParentMapper parentMapper;
 	
 	@Override
-	public UUID registration(ParentRequestDTO parentDTOreq) throws Exception {
+	public ParentResponseDTO registration(ParentRequestDTO parentDTOreq) {
 		Parent parent = parentMapper.DTOreqToEntity(parentDTOreq);
 		Optional<Parent> parentOptional = parentRepository.findByUsernameOrEmail(parent.getUsername(), parent.getEmail());
 		if(!parentOptional.isPresent()) {
-			parentRepository.saveAndFlush(parent);
-			return parent.getId();
+			return parentMapper.EntityToDTOres(parentRepository.saveAndFlush(parent));
 		}
-		throw new Exception("User with this username or email arleady exist!");
+		throw new IllegalArgumentException("User with this username or email arleady exists!");
 	}
 
 	@Override
-	public void edit(UUID id, ParentRequestDTO parentDTOreq) throws NotFoundException {
+	public ParentResponseDTO edit(UUID id, ParentRequestDTO parentDTOreq){
 		Optional<Parent> parentOptional = parentRepository.findById(id);
 		if(parentOptional.isPresent()) {
 			Parent parentForEdit = parentOptional.get();
@@ -49,19 +51,16 @@ public class ParentServiceImpl implements ParentService {
 			parentForEdit.setTelephoneNumber(parentDTOreq.getTelephoneNumber());
 			parentForEdit.setUsername(parentDTOreq.getUsername());
 			
-			parentRepository.saveAndFlush(parentForEdit);
-		}else {
-			throw new NotFoundException("User with this id doesn't exist!");
+			return  parentMapper.EntityToDTOres(parentRepository.saveAndFlush(parentForEdit));
 		}
+			throw new EntityNotFoundException("Parent with id: " + id + " doesn't exists");
 	}
 	
 	@Override
-	public ParentResponseDTO findById(UUID id) throws NotFoundException {
-		Optional<Parent> parentOptional = parentRepository.findById(id);
-		if(parentOptional.isPresent()) {
-			return parentMapper.EntityToDTOres(parentOptional.get());
-		}
-		throw new NotFoundException("User with this id doesn't exist!");
+	public ParentResponseDTO findById(UUID id) {
+		Parent parent = parentRepository.findById(id).orElseThrow(
+				() -> new EntityNotFoundException("Parent with id: " + id + " doesn't exists"));
+		return parentMapper.EntityToDTOres(parent);
 	}
 
 	@Override
