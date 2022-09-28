@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.diplomski.bookingkidsparty.app.exceptions.AccessException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,14 +27,12 @@ import com.diplomski.bookingkidsparty.app.service.PhotoService;
 import com.diplomski.bookingkidsparty.app.util.FileUploadUtil;
 
 @Service
+@RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
 
-	@Autowired
-	PhotoRepository photoRepository;
-	@Autowired
-	ServiceProviderRepository serviceProviderRepository;
-	@Autowired
-	PhotoMapper photoMapper;
+	private final PhotoRepository photoRepository;
+	private final ServiceProviderRepository serviceProviderRepository;
+	private final PhotoMapper photoMapper;
 
 	@Override
 	public PhotoResponseDTO add(MultipartFile multipartFile, UUID serviceProviderId) throws IOException {

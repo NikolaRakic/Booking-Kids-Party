@@ -3,6 +3,7 @@ package com.diplomski.bookingkidsparty.app.util;
 import java.time.LocalDate;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +12,10 @@ import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 import com.diplomski.bookingkidsparty.app.repository.ReservationRepository;
 
 @Component
+@RequiredArgsConstructor
 public class ReservationValidate {
 	
-	@Autowired
-	ReservationRepository reservationRepository;
+	private final ReservationRepository reservationRepository;
 	
 	public void requestValidation(Reservation newReservation) {
 		if(newReservation.getDateOfReservation().isBefore(LocalDate.now())){

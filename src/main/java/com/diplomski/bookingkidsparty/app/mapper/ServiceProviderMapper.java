@@ -3,6 +3,7 @@ package com.diplomski.bookingkidsparty.app.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeMap;
@@ -23,17 +24,14 @@ import javassist.NotFoundException;
 
 @Component
 @Configuration
+@RequiredArgsConstructor
 public class ServiceProviderMapper {
 
-	@Autowired
-	ModelMapper modelMapper;
-	//@Autowired
-	//SecurityConfiguration configuration;
-	@Autowired
-	PhotoMapper photoMapper;
-	
-	@Autowired
-	RatingService ratingService;
+	private final ModelMapper modelMapper;
+
+	private final PhotoMapper photoMapper;
+
+	private final RatingService ratingService;
 	
 	
 	public ServiceProvider dtoReqToEntity(ServiceProviderRequestDTO serviceProviderDTO){

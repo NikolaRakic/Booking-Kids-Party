@@ -3,6 +3,7 @@ package com.diplomski.bookingkidsparty.app.controller;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +31,10 @@ import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("serviceProviders")
+@RequiredArgsConstructor
 public class ServiceProviderController {
 
-	@Autowired
-	ServiceProviderService serviceProviderService;
+	private final ServiceProviderService serviceProviderService;
 	
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	@PostMapping

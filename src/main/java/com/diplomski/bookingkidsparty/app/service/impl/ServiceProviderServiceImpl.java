@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,23 +26,18 @@ import com.diplomski.bookingkidsparty.app.util.GeneratePassword;
 import javassist.NotFoundException;
 
 @Service
+@RequiredArgsConstructor
 public class ServiceProviderServiceImpl implements ServiceProviderService {
 
-	@Autowired
-	ServiceProviderRepository serviceProviderRepository;
-	@Autowired
-	ServiceProviderMapper serviceMapper;
-	@Autowired
-	EmailSenderService emailSender;
-	@Autowired
-	GeneratePassword generatePassword;
-	@Autowired
-	WebSecurityConfig configuration;
+	private final ServiceProviderRepository serviceProviderRepository;
+	private final ServiceProviderMapper serviceMapper;
+	private final EmailSenderService emailSender;
+	private final WebSecurityConfig configuration;
 
 	@Override
 	public ServiceProviderResponseDTO add(ServiceProviderRequestDTO serviceProviderDTO) {
 		ServiceProvider serviceProvider = serviceMapper.dtoReqToEntity(serviceProviderDTO);
-		String plainPassword = generatePassword.generete();
+		String plainPassword = GeneratePassword.generete();
 		emailSender.sendPasswordOnMail(serviceProvider.getEmail(), plainPassword);
 		serviceProvider.setPassword(configuration.passwordEncoder().encode(plainPassword));
 		return serviceMapper.entityToDTOres(serviceProviderRepository.saveAndFlush(serviceProvider));

@@ -3,6 +3,7 @@ package com.diplomski.bookingkidsparty.app.service.impl;
 import javax.transaction.Transactional;
 
 import com.diplomski.bookingkidsparty.app.service.CurrencyConverterService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,10 @@ import com.stripe.param.RefundCreateParams;
 import java.io.IOException;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentStripeImpl implements PaymentService{
 
-	@Autowired
-	CurrencyConverterService currencyConverterService;
+	private final CurrencyConverterService currencyConverterService;
 
 	@Value("${STRIPE_SECRET_KEY}")
 	private String secretKey;
@@ -48,7 +49,7 @@ public class PaymentStripeImpl implements PaymentService{
 		int amountInt = (int) amount;
 		Long amountEur = null;
 		try {
-			amountEur = (new Double(currencyConverterService.convert(amountInt, "RSD", "EUR")).longValue());
+			amountEur = (new Double(currencyConverterService.convert("RSD", "EUR", amountInt)).longValue());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -92,7 +93,6 @@ public class PaymentStripeImpl implements PaymentService{
 
   			Customer customer = Customer.create(customerParams);
   			return customer.getId();
-		
 	}
 
 	private String hasCustomer(String email) throws StripeException {

@@ -21,20 +21,18 @@ import java.util.Collections;
 public class CurrencyConverterServiceImpl implements CurrencyConverterService {
 
     @Override
-    public double convert(int amount, String from, String to) throws IOException {
+    public double convert(String from, String to, int amount) throws IOException {
 
-        String uri = MessageFormat.format("https://api.apilayer.com/fixer/convert?to={0}&from={1}&amount="+amount,  to, from);
+        String uri = "https://api.exchangerate.host/convert?from="+from+"&to="+to+"&amount="+amount;
 
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .header("apikey", "HzVUG5rJNIT9BXaHa7B4UiIooegOiMMR")
                 .url(uri)
                 .build();
 
         try{
             Response response = client.newCall(request).execute();
-            System.out.println("USEPSNO!");
             String responseString = response.body().string();
             Gson g = new Gson();
             CurrencyConverterResponseDTO responseJson = g.fromJson(responseString, CurrencyConverterResponseDTO.class);

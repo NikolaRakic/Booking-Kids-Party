@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.persistence.Tuple;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +21,11 @@ import com.diplomski.bookingkidsparty.app.repository.ReservationRepository;
 import com.diplomski.bookingkidsparty.app.service.RatingService;
 
 @Service
+@RequiredArgsConstructor
 public class RatingServiceImpl implements RatingService {
 
-	@Autowired
-	RatingRepository ratingRespository;
-	@Autowired
-	ReservationRepository reservationRepository;
-	@Autowired
-	RatingMapper ratingMapper;
+	private final RatingRepository ratingRespository;
+	private final RatingMapper ratingMapper;
 	
 	@Override
 	public RatingResponseDTO create(RatingRequestDTO ratingDto){

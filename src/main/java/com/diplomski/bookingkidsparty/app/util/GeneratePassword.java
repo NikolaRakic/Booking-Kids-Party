@@ -6,10 +6,9 @@ import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.springframework.stereotype.Component;
 
-@Component
 public class GeneratePassword {
 	
-	public String generete() {
+	public static String generete() {
 		PasswordGenerator gen = new PasswordGenerator();
 		  CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
 		  CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);  

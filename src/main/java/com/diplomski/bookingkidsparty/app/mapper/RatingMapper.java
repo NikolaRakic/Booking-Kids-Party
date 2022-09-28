@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeMap;
@@ -18,12 +19,12 @@ import com.diplomski.bookingkidsparty.app.model.Reservation;
 import com.diplomski.bookingkidsparty.app.repository.ReservationRepository;
 
 @Component
+@RequiredArgsConstructor
 public class RatingMapper {
 
-	@Autowired
-	ReservationRepository reservationRepository;
-	@Autowired
-	ModelMapper modelMapper;
+	private final ReservationRepository reservationRepository;
+
+	private final ModelMapper modelMapper;
 	
 	public Rating dtoToEntity(RatingRequestDTO ratingDto) {
 		TypeMap<RatingRequestDTO, Rating> typeMap = modelMapper.getTypeMap(RatingRequestDTO.class, Rating.class);

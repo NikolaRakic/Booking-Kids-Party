@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface CurrencyConverterService {
 
-    double convert(int amount, String from, String to) throws IOException;
+    double convert(String from, String to, int amount) throws IOException;
 }

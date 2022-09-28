@@ -3,6 +3,7 @@ package com.diplomski.bookingkidsparty.app.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,20 +19,22 @@ import com.diplomski.bookingkidsparty.app.model.User;
 import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 
 @Component
+@RequiredArgsConstructor
 public class CooperationMapper {
-	
-	@Autowired
-	ServiceProviderRepository serviceProviderRepository;
-	
-	@Autowired
-	ModelMapper modelMapper;
+
+	private final ServiceProviderRepository serviceProviderRepository;
+	private final ModelMapper modelMapper;
 
 	public Cooperation dtoToEntity(CooperationRequestDTO cooperationDto) {
 		ServiceProvider playroom = serviceProviderRepository.getById(cooperationDto.getPlayroomId());
 		ServiceProvider cooperationsService = serviceProviderRepository.getById(cooperationDto.getCooperationServiceId());
 		User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		return new Cooperation(null, playroom, cooperationsService, false, currentUser.getId());
+
+		return new Cooperation()
+				.withCooperationService(cooperationsService)
+				.withPlayroom(playroom)
+				.withConfirmed(false)
+				.withRequestSender(currentUser.getId());
 	}
 	
 	public CooperationResponseDTO EntityToDTOres(Cooperation cooperation) {

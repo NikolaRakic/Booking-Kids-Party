@@ -1,5 +1,6 @@
 package com.diplomski.bookingkidsparty.app.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,10 @@ import com.stripe.exception.StripeException;
 
 @RestController
 @RequestMapping("/payment")
+@RequiredArgsConstructor
 public class PaymentController {
 
-	@Autowired
-	PaymentService paymentService;
+	private final PaymentService paymentService;
 
 	@PostMapping("/create")
 	public String createPayment(@RequestHeader(value = "amount") double amount, @RequestHeader(value = "username") String username,

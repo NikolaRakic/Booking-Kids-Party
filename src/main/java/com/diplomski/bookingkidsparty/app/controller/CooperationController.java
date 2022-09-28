@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +32,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("cooperations")
 @Tag(name = "Cooperation Controller", description = "Manage cooperation between playroom, animators and kettering")
+@RequiredArgsConstructor
 public class CooperationController {
 
-    @Autowired
-    CooperationService cooperationService;
+    private final CooperationService cooperationService;
 
     @PostMapping()
     @Operation(summary = "Added new cooperation",

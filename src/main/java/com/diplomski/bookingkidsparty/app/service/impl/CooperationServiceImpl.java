@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.diplomski.bookingkidsparty.app.exceptions.AccessException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,16 +26,13 @@ import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.CooperationService;
 
 @Service
+@RequiredArgsConstructor
 public class CooperationServiceImpl implements CooperationService {
 
-	@Autowired
-	ServiceProviderRepository serviceProviderRepository;
-	@Autowired
-	CooperationRepository cooperationRepository;
-	@Autowired
-	ServiceProviderMapper serviceProviderMapper;
-	@Autowired
-	CooperationMapper cooperationMapper;
+	private final ServiceProviderRepository serviceProviderRepository;
+	private final CooperationRepository cooperationRepository;
+	private final ServiceProviderMapper serviceProviderMapper;
+	private final CooperationMapper cooperationMapper;
 
 	@Override
 	public void add(CooperationRequestDTO cooperationDTOreq){

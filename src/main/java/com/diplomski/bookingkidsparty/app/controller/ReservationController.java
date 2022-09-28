@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +28,10 @@ import com.diplomski.bookingkidsparty.app.service.ReservationService;
 
 @RestController
 @RequestMapping("reservations")
+@RequiredArgsConstructor
 public class ReservationController {
 
-	@Autowired
-	ReservationService reservationService;
+	private final ReservationService reservationService;
 
 	@PostMapping
 	public ResponseEntity<?> add(@RequestBody ReservationRequestDTO reservationDTOreq) {

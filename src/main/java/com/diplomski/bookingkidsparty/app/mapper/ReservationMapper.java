@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.NotFound;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -36,27 +37,20 @@ import com.diplomski.bookingkidsparty.app.util.Price;
 import javassist.NotFoundException;
 
 @Component
+@RequiredArgsConstructor
 public class ReservationMapper {
 
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	UserRepository userRepository;
-	@Autowired
-	ServiceOfferRepository serviceOfferRepository;
-	@Autowired
-	ServiceProviderRepository serviceProviderRepository;
-	@Autowired
-	RatingRepository ratingRepository;
-	@Autowired
-	Price price;
+	private final UserRepository userRepository;
+
+	private final ServiceOfferRepository serviceOfferRepository;
+
+	private final RatingRepository ratingRepository;
 
 	public List<Reservation> dtoToEntity(ReservationRequestDTO reservationDTOreq) {
 		Optional<User> userOptional = userRepository.findByUsernameOrEmail(reservationDTOreq.getUsersEmail());
 		User user;
 		if (!userOptional.isPresent()) {
-			user = new User(null, reservationDTOreq.getUsersEmail(), null, null, null, false, null, null,
-					Role.ROLE_UNREGISTERED);
+			user = new User().withUserRole(Role.ROLE_UNREGISTERED);
 			userRepository.saveAndFlush(user);
 		} else {
 			user = userOptional.get();
@@ -127,7 +121,7 @@ public class ReservationMapper {
 		Rating rating = ratingRepository.findByReservationId(reservation.getId()).orElse(null);
 		
 		
-		long totalPrice = price.getPrice(reservation);
+		long totalPrice = Price.getTotalPrice(reservation);
 
 		ReservationResponseDTO reservationDto = new ReservationResponseDTO();
 

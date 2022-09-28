@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeMap;
@@ -22,16 +23,16 @@ import com.diplomski.bookingkidsparty.app.repository.ServiceProviderRepository;
 import com.diplomski.bookingkidsparty.app.service.RatingService;
 
 @Component
+@RequiredArgsConstructor
 public class ServiceOfferMapper {
-	
-	@Autowired
-	ServiceProviderRepository serviceProviderRepository;
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	RatingService ratingService;
-	@Autowired
-	PhotoMapper photoMapper;
+
+	private final ServiceProviderRepository serviceProviderRepository;
+
+	private final ModelMapper modelMapper;
+
+	private final RatingService ratingService;
+
+	private final PhotoMapper photoMapper;
 	
 	public ServiceOfferResponseDTO entityToDTO(ServiceOffer serviceOffer) {
 		Double averageRating = ratingService.getAverageRatingByServiceProvider(serviceOffer.getServiceProvider().getId()).getAverageRating();

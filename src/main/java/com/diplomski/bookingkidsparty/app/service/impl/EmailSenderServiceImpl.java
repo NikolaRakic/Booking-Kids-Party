@@ -9,6 +9,7 @@ import java.util.Properties;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,12 +24,10 @@ import com.diplomski.bookingkidsparty.app.util.Price;
 
 
 @Service
+@RequiredArgsConstructor
 public class EmailSenderServiceImpl implements EmailSenderService{
-	
-	@Autowired
-    private JavaMailSender javaMailSender;
-	@Autowired
-	Price price;
+
+    private final JavaMailSender javaMailSender;
 	
 	@Override
 	public void sendPasswordOnMail(String toEmail, String plainPassword){
@@ -60,7 +59,6 @@ public class EmailSenderServiceImpl implements EmailSenderService{
 	@Override
 	public void sendConfirmReservationOnMail(String toEmail, Reservation playroomReservation, List<Reservation> additionalReservations) {
 		long minutes = MINUTES.between(playroomReservation.getStartTime(), playroomReservation.getEndTime());
-		double hours = (double) minutes / 60;
 		
 		String addiotalReservationsTable = "";
 		
@@ -77,7 +75,7 @@ public class EmailSenderServiceImpl implements EmailSenderService{
  					+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Ime usluge</th>"
  					+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ res.getServiceOffer().getName()+"</b></td></tr>"
  							+ "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Cena</th>"
- 		 					+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ price.getPrice(res)+"din</b></td></tr>"
+ 		 					+ "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ Price.getTotalPrice(res)+"din</b></td></tr>"
  					+ "</table> <br/></br>";
  		}
 		
@@ -93,7 +91,7 @@ public class EmailSenderServiceImpl implements EmailSenderService{
 							 + "<table style=\"font-family: Arial, Helvetica, sans-serif;\r\n" +
 							 "  border-collapse: collapse;\r\n" +
 							 "  width: 60%;\">"
-							 + "<tr><th>IGRAONICA</th></tr>"
+							 + "<tr><td>IGRAONICA</td></tr>"
 
 							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Naziv</th>"
 							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getServiceOffer().getServiceProvider().getUsername()+"</b><td></tr>"
@@ -115,7 +113,7 @@ public class EmailSenderServiceImpl implements EmailSenderService{
 							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Mesto održavanja</th>"
 							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ playroomReservation.getPlayroom().getAdress()+", " + playroomReservation.getServiceOffer().getServiceProvider().getCity()+"</b><td></tr>"
 							 + "<tr><th style=\"border: 1px solid #ddd; padding: 8px;\">Cena</th>"
-							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ price.getPrice(playroomReservation) +" din</b><td></tr>"
+							 + "<td style=\"border: 1px solid #ddd; padding: 8px;\"><b>"+ Price.getTotalPrice(playroomReservation) +" din</b><td></tr>"
 							 + "</table"
 							 + addiotalReservationsTable
 					 , true);

@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,16 +32,12 @@ import javassist.NotFoundException;
 import javax.persistence.EntityNotFoundException;
 
 @Service
+@RequiredArgsConstructor
 public class ServiceOfferServiceImpl implements ServiceOfferService {
 
-    @Autowired
-    ServiceOfferRepository serviceOfferRepository;
-    @Autowired
-    ServiceProviderRepository serviceProviderRepository;
-    @Autowired
-    ServiceOfferMapper serviceOfferMapper;
-    @Autowired
-    OfferValidate offerValidate;
+    private final ServiceOfferRepository serviceOfferRepository;
+    private final ServiceProviderRepository serviceProviderRepository;
+    private final ServiceOfferMapper serviceOfferMapper;
 
     @Override
     public List<ServiceOfferResponseDTO> findAll() {
@@ -51,7 +48,7 @@ public class ServiceOfferServiceImpl implements ServiceOfferService {
     @Override
     public ServiceOfferResponseDTO add(ServiceOfferRequestDTO serviceOfferDTOreq) {
         ServiceOffer serviceOffer = serviceOfferMapper.dtoToEntity(serviceOfferDTOreq);
-        offerValidate.dateValidate(serviceOffer);
+        OfferValidate.dateValidate(serviceOffer);
         return serviceOfferMapper.entityToDTO(serviceOfferRepository.saveAndFlush(serviceOffer));
     }
 

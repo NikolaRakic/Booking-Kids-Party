@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,10 @@ import com.diplomski.bookingkidsparty.app.dto.response.PhotoResponseDTO;
 import com.diplomski.bookingkidsparty.app.model.Photo;
 
 @Component
+@RequiredArgsConstructor
 public class PhotoMapper {
 
-	@Autowired
-	ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 	
 	public PhotoResponseDTO entityToDto(Photo photo) {
 		return modelMapper.map(photo, PhotoResponseDTO.class);

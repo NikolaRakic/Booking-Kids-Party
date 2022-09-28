@@ -3,6 +3,7 @@ package com.diplomski.bookingkidsparty.app.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,13 +16,12 @@ import com.diplomski.bookingkidsparty.app.model.enums.Role;
 import com.diplomski.bookingkidsparty.app.security.WebSecurityConfig;
 
 @Component
+@RequiredArgsConstructor
 public class ParentMapper {
 
-	@Autowired
-	WebSecurityConfig configuration;
-	
-	@Autowired
-	ModelMapper modelMapper;
+	private final WebSecurityConfig configuration;
+
+	private final ModelMapper modelMapper;
 	
 	public Parent DTOreqToEntity(ParentRequestDTO parentDTOreq) {
 		Parent parent = new Parent();

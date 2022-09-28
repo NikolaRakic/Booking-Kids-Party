@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 
 import com.diplomski.bookingkidsparty.app.exceptions.AccessException;
 import com.diplomski.bookingkidsparty.app.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,15 +35,13 @@ import com.diplomski.bookingkidsparty.app.service.ReservationService;
 import com.diplomski.bookingkidsparty.app.util.ReservationValidate;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
-	@Autowired
-	ReservationRepository reservationRepository;
-	@Autowired
-	ReservationMapper reservationMapper;
-	@Autowired
-	ReservationValidate reservationValidate;
-	@Autowired EmailSenderService emailSenderService;
+	private final ReservationRepository reservationRepository;
+	private final ReservationMapper reservationMapper;
+	private final ReservationValidate reservationValidate;
+	private final EmailSenderService emailSenderService;
 
 	@Transactional(rollbackOn = Exception.class)
 	@Override

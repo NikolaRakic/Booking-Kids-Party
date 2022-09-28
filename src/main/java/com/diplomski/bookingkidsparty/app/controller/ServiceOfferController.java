@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,10 @@ import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("serviceOffers")
+@RequiredArgsConstructor
 public class ServiceOfferController {
 
-    @Autowired
-    ServiceOfferService serviecOfferService;
+    private final ServiceOfferService serviecOfferService;
 
     @GetMapping
     public ResponseEntity<List<ServiceOfferResponseDTO>> getAll() {

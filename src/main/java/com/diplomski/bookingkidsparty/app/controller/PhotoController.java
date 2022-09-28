@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,10 @@ import com.diplomski.bookingkidsparty.app.service.PhotoService;
 
 @RestController
 @RequestMapping("/photos")
+@RequiredArgsConstructor
 public class PhotoController {
 
-    @Autowired
-    PhotoService photoService;
+    private final PhotoService photoService;
 
     @PostMapping("/{serviceProviderId}/upload")
     public ResponseEntity<PhotoResponseDTO> savePhoto(

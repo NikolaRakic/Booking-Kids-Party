@@ -1,6 +1,7 @@
 package com.diplomski.bookingkidsparty.app.controller;
 
 import com.diplomski.bookingkidsparty.app.dto.response.ParentResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,13 +35,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class AuthController {
-	
-	@Autowired
-	private UserService userService;
 
-	@Autowired
-	private ParentService parentService;
+	private final UserService userService;
+	private final ParentService parentService;
 
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenStateDTO> createAuthenticationToken(@RequestBody LoginRequestDTO loginDTOreq,

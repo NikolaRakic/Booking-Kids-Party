@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 import com.diplomski.bookingkidsparty.app.model.Reservation;
 import com.diplomski.bookingkidsparty.app.model.enums.TypeOfServiceProvider;
 
-@Component
 public class Price {
 
-	public Long getPrice(Reservation reservation) {
+	public static Long getTotalPrice(Reservation reservation) {
 		long minutes = MINUTES.between(reservation.getStartTime(), reservation.getEndTime());
 		double hours = (double) minutes / 60;
 

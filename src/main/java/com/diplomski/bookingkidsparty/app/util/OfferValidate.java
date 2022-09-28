@@ -6,11 +6,9 @@ import org.springframework.stereotype.Component;
 
 import com.diplomski.bookingkidsparty.app.model.ServiceOffer;
 
-@Component
 public class OfferValidate {
-	
-	//boolean
-	public void dateValidate(ServiceOffer serviceOffer) {
+
+	public static void dateValidate(ServiceOffer serviceOffer) {
 		if(serviceOffer.getStartDate().isBefore(LocalDate.now())) {
 			throw new IllegalArgumentException("Start date must be in future");
 		}

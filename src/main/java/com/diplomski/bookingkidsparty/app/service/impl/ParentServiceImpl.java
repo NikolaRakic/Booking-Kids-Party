@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,11 @@ import javassist.NotFoundException;
 import javax.persistence.EntityNotFoundException;
 
 @Service
+@RequiredArgsConstructor
 public class ParentServiceImpl implements ParentService {
 
-	@Autowired
-	ParentRepository parentRepository;
-	
-	@Autowired
-	ParentMapper parentMapper;
+	private final ParentRepository parentRepository;
+	private final ParentMapper parentMapper;
 	
 	@Override
 	public ParentResponseDTO registration(ParentRequestDTO parentDTOreq) {
